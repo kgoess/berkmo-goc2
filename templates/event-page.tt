@@ -1,0 +1,80 @@
+
+
+<div id="event-card">
+    <div class="event-name">[% event.name %]</div>
+    <div>[% event.date_pretty %]</div>
+    <div>[% event.queen %]</div>
+</div>
+
+<div id="tabs"><!-- this contains everything that's tabbable -->
+<!-- this ul is used for the tabs -->
+<ul>
+    <li><a href="#dancers-tab">Dancers</a></li>
+    <li><a href="#musos-tab"  >Musos</a></li>
+</ul>
+
+
+<div id="dancers-tab">
+    <table>
+        <thead>
+            <tr>
+                [% FOR status IN statuses %]
+                    <td>([% dancers_for_status.$status.size || 0 %])</td>
+                [% END %]
+            </tr>
+            <tr>
+                [% FOR status IN statuses %]
+                    <td>[% status | html %]</td>
+                [% END %]
+            </tr>
+            [% WHILE num_dancers %]
+                <tr bgcolor=#ffd0ff>
+                [% FOR status IN statuses %]
+                    [% person = dancers_for_status.$status.shift %]
+                    [% IF person %]
+                        [% num_dancers = num_dancers - 1 %]
+                    [% END %]
+                    <td>
+                        [% person.name %]
+                    </td>
+                [% END %]
+                </tr>
+            [% END %]
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<div id="musos-tab">
+    <table>
+        <thead>
+            <tr>
+                [% FOR status IN statuses %]
+                    <td>([% musos_for_status.$status.size || 0 %])</td>
+                [% END %]
+            </tr>
+            <tr>
+                [% FOR status IN statuses %]
+                    <td>[% status | html %]</td>
+                [% END %]
+            </tr>
+            [% WHILE num_musos %]
+                <tr bgcolor=#ffd0ff>
+                [% FOR status IN statuses %]
+                    [% person = musos_for_status.$status.shift %]
+                    [% IF person %]
+                        [% num_musos = num_musos - 1 %]
+                    [% END %]
+                    <td>
+                        [% person.name %]
+                    </td>
+                [% END %]
+                </tr>
+            [% END %]
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+

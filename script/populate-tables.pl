@@ -17,7 +17,7 @@ GoC::Model::PersonEventMap->create_table;
 my $today = DateTime->now->ymd;
 
     my $parade = GoC::Model::Event->new(
-        name => 'fourth of july parade',
+        name => 'alameda parade',
         date => $today,
         queen => 'alice',
 		type => 'gig',
@@ -96,6 +96,26 @@ my $today = DateTime->now->ymd;
         status => 'active',
     );
     $harry->save;
+    my $ingrid = GoC::Model::Person->new(
+        name => 'ingrid',
+        status => 'active',
+    );
+    $ingrid->save;
+    my $jeremy = GoC::Model::Person->new(
+        name => 'jeremy',
+        status => 'active',
+    );
+    $jeremy->save;
+    my $kyle = GoC::Model::Person->new(
+        name => 'kyle',
+        status => 'active',
+    );
+    $kyle->save;
+    my $lawrence = GoC::Model::Person->new(
+        name => 'lawrence',
+        status => 'active',
+    );
+    $lawrence->save;
 
     my $map = 'GoC::Model::PersonEventMap';
     $map->add_person_to_event($alice, $parade, 'dancer', 'y');
@@ -105,3 +125,7 @@ my $today = DateTime->now->ymd;
     $map->add_person_to_event($frances, $parade, 'muso', 'n');
     $map->add_person_to_event($gottfried, $parade, 'muso', 'n');
     $map->add_person_to_event($harry, $parade, 'muso', '?');
+    $map->add_person_to_event($ingrid, $parade, 'dancer', 'y');
+    $map->add_person_to_event($jeremy, $parade, 'dancer', 'y');
+    $map->add_person_to_event($kyle, $parade, 'dancer', 'y');
+    $map->add_person_to_event($lawrence, $parade, 'dancer', 'y');

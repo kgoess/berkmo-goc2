@@ -33,6 +33,7 @@ body {
     color: #C00000;
     font-family: Verdana,Arial,sans-serif;
     background: #ffd0ff;
+    max-width: 50em;
 }
 
 .subcol {
@@ -58,9 +59,15 @@ body {
     font-size: 400%;
 }
 
-#site-instructions {
-    max-width: 50%;
-    min-width: 1000px;
+#event-card {
+    background: #ffe5ff;
+    padding: 10px;
+    border: 1px #f21e1e solid;
+}
+
+#event-card .event-name {
+    font-size: 150%;
+    font-weight: bold;
 }
 
 /* ----------------------------- */

@@ -82,6 +82,7 @@ EOL
     while (my $row = $sth->fetchrow_hashref) {
         push @rc, GoC::Model::Person->load($row->{person_id});
     }
+    @rc = sort { $a->name cmp $b->name } @rc;
     return @rc;
 }
 sub save {
