@@ -1,0 +1,237 @@
+/* Berkeley Morris colours---reds and burgundies */
+
+
+body table.grid input.change {
+    color: white;
+	background-color: white;
+}
+
+body table.grid input.yes {
+    color: green;
+	background-color: #ffe5ff;
+    font-weight: bold;
+}
+
+body table.grid input.maybe {
+    color: black;
+	background-color: #ffe5ff;
+    font-weight: bold;
+}
+
+body table.grid input.no {
+    color: red;
+	background-color: #ffe5ff;
+    font-weight: bold;
+}
+
+body table.grid input.unknown {
+	background-color: #ffe5ff;
+}
+
+
+body {
+    color: #C00000;
+    font-family: Verdana,Arial,sans-serif;
+    background: #ffd0ff;
+}
+
+.subcol {
+    font-size: 75%;
+}
+
+.td-center {
+    text-align: center;
+}
+
+.grid-key {
+    color: grey; 
+    font-style: italic; 
+    font-size: 80%;
+}
+
+#site-title {
+    font-family: 'UnifrakturCook', cursive;
+    font-size: 400%;
+}
+
+#site-instructions {
+    max-width: 50%;
+    min-width: 1000px;
+}
+
+/* ----------------------------- */
+/*  stuff for the tabs           */
+/* ----------------------------- */
+
+
+#tabs {
+    background: #ffd0ff;
+    padding: 10px;
+}
+
+.ui-tabs .ui-tabs-hide {
+    display: none;
+}
+#tabs .ui-tabs-nav {
+    margin: 0;
+    padding: 0 0 0 0.5em;
+    overflow: hidden;
+}
+/*    background: #d0d0d0;  */
+    /* background: #ffe5ff; */ /* pink */
+#tabs .ui-tabs-nav li {
+    float: left;
+    list-style-type: none;
+    margin: 0 0.5em 0 0;
+    padding: 0.25em 1em;
+}
+#tabs .ui-tabs-active li.ui-tabs-active {
+    background: #ffe5ff;
+}
+
+#tabs .ui-state-default {
+    background: #d0d0d0;
+    border-bottom: 1px #f21e1e solid;
+}
+#tabs .ui-tabs-panel {
+    border: 1px #f21e1e solid;
+}
+
+#tabs .ui-state-active {
+    background: #ffe5ff;
+    /* border-bottom: none; */
+    border-bottom: 1px #ffe5ff solid;
+}
+#tabs .ui-state-active a {
+    cursor: text;
+}
+
+#tabs .ui-tabs-nav a {
+    text-decoration: none;
+    font-size: 1.2em;
+}
+#tabs .ui-tabs-panel {
+    /* background: #e3e3e3; */
+    padding: 0.75em 1em;
+    background: #ffe5ff;
+}
+#tabs .ui-tabs-nav {
+    margin-bottom: -1px;
+}
+
+#tabs .ui-tabs-nav li {
+    border-top: 1px #f21e1e solid;
+    border-left: 1px #f21e1e solid;
+    border-right: 1px #f21e1e solid;
+    /* border-bottom: 1px #f21e1e solid; */
+    -webkit-border-top-left-radius: 0.7em;
+    -webkit-border-top-right-radius: 0.7em;
+    -moz-border-radius-topleft: 0.7em;
+    -moz-border-radius-topright: 0.7em;
+    border-top-left-radius: 0.7em;
+    border-top-right-radius: 0.7em;
+    padding: 0
+}
+
+
+
+/* make the whole thing clickable */
+#tabs .ui-tabs-nav a {
+    display: block;
+    padding: 0.25em 1em;
+}
+
+/* otherwise the clicked-on tab stays highlighted
+  http://stackoverflow.com/questions/13838377/jquery-ui-remove-orange-tab-border-on-focus
+*/
+
+#tabs li a {
+    outline: none;
+}
+
+#site-instructions {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+/* this is a <table> that has the scroll buttons: 
+ * | event name |<| grid |>| (17) |   
+ * | event name |<| grid |>| (14) |   
+ * */
+.grid-table-wrapper {
+    /* max-width: 600px; */
+    margin-right: auto;
+    margin-left: 0px;
+    max-width: 90%; /* this is the right setting for it to include all the 
+                       columns, not completely sure why */
+}
+/* these are the columns in the grid-table-wrapper */
+.grid-table-event-name-column {
+    border-top: 1px black solid;
+    border-bottom: 1px black solid;
+    border-left: 1px black solid;
+} 
+/* this is the actual grid */
+.grid-table-data-column {
+    border-top: 1px black solid;
+    border-bottom: 1px black solid;
+}
+.grid-table-totals-column {
+    border-top: 1px black solid;
+    border-bottom: 1px black solid;
+    border-right: 1px black solid;
+
+}
+    
+
+/* this is a div around the grid's <table> */
+.grid-wrapper {
+    margin: auto;
+    max-width: 90%;
+    /*
+    width: 150px;
+    */
+    overflow: scroll;
+    background: #ffe5ff;
+}
+
+.scroll-button {
+    cursor: pointer;
+    max-width: 5%;
+    width: auto;
+    height: 100%;
+    border: 1px black solid;
+    background-color: #db99db;
+    /* box-shadow: 10px 10px 5px #888888; */
+    border-radius: 25px;
+}
+
+.turn-sideways {
+    display: none;
+}
+
+/* hide extra crap for phone displays 
+http://tobyho.com/2012/01/25/responsive-web-design/ */
+@media screen and (max-width: 760px) {
+    #site-instructions{
+        display: none;
+    }
+    .grid-key {
+        display:none;
+    }
+    #site-title {
+        font: sans-serif;
+        display: none;
+    }
+}
+@media screen and (max-width: 400px) {
+    .grid-table-wrapper {
+        display: none;
+    }
+    .turn-sideways {
+        display: block;
+        border: 1px black solid;
+        padding: 10px;
+        margin: 10px;
+    }
+}
