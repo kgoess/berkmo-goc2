@@ -21,7 +21,8 @@ sub main_page {
 	my $template = 'main-html.tt';
 	my $vars = {
 		organization_name => 'Berkeley Morris',
-		gigs => GoC::Model::Event->get_upcoming_events(type => 'gig'),
+		gigs    => GoC::Model::Event->get_upcoming_events(type => 'gig'),
+		parties => GoC::Model::Event->get_upcoming_events(type => 'party'),
 	};
 	my $output = '';
 

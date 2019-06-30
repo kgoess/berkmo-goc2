@@ -73,6 +73,44 @@
     </table>
 
 </div>
+<div id="parties-grids">
+    <table>
+        <thead>
+            <tr>
+                <td>Date</td>
+                <td>Name</td>
+                <td class="td-center">Yes<br><span class="subcol">dance/muso</span></td>
+                <td class="td-center">No<br><span class="subcol">dance/muso</span></td>
+                <td class="td-center">?<br><span class="subcol">dance/muso</span></td>
+            </tr>
+        </thead>
+        <tbody>
+            [% FOR party IN parties %]
+                <tr>
+                    <td>[% party.date | html %]</td>
+                    <td>[% party.name | html %]</td>
+                    <td class="td-center">
+                        [% party.get_persons('role', 'dancer', 'status', 'y').size || 0 | html %]
+                        /
+                        [% party.get_persons('role', 'muso', 'status', 'y').size || 0 | html %]
+                    </td>
+                    <td class="td-center">
+                        [% party.get_persons('role', 'dancer', 'status', 'n').size || 0 | html %]
+                        /
+                        [% gig.get_persons('role', 'muso', 'status', 'n').size || 0 | html %]
+                    </td>
+                    <td class="td-center">
+                        [% gig.get_persons('role', 'dancer', 'status', '?').size || 0 | html %]
+                        /
+                        [% gig.get_persons('role', 'muso', 'status', '?').size || 0 | html %]
+                    </td>
+                </tr>
+            [% END %]
+        </tbody>
+
+    </table>
+
+</div>
 
 </body>
 </html>
