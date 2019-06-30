@@ -12,16 +12,16 @@ use GoC::Utils qw/get_dbh/;
 use Class::Accessor::Lite(
     new => 1,
     rw  => [
-    'id', 
-    'name', 
+    'id',
+    'name',
     'date',
     'queen',  # name, email, whatever, not a FK
     'type', # gig, party
     'notes',
     'status',
     'deleted',
-#        'email', 
-#        'xx', 
+#        'email',
+#        'xx',
     ],
 );
 
@@ -58,7 +58,7 @@ sub get_persons {
 
     my $sql = <<EOL;
     SELECT person_id
-    FROM person_to_event_map 
+    FROM person_to_event_map
     WHERE event_id = ?
 EOL
 
@@ -98,13 +98,26 @@ sub save {
     )
     VALUES (?,?,?,?,?,?);
 EOL
-    
+
     my $dbh = get_dbh();
     my $sth = $dbh->prepare($sql);
     $sth->execute(map { $self->$_ } qw/name date queen type notes deleted/);
 
     $self->id($dbh->sqlite_last_insert_rowid);
 }
+
+sub date_pretty {
+    my ($self) = @_;
+    my ($year, $month, $day) = $self->date =~ /(\d\d\d\d)-(\d\d)-(\d\d)/;
+    my $datetime = DateTime->new(
+        year => $year,
+        month => $month,
+        day => $day,
+    );
+
+    return $datetime->strftime("%a, %b %e");
+}
+
 
 sub load {
     my ($class, $id) = @_;
@@ -161,6 +174,5 @@ EOL
     $sth->execute;
 }
 
-        
 1;
 __DATA__

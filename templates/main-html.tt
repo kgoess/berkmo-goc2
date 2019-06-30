@@ -39,8 +39,7 @@
     <table>
         <thead>
             <tr>
-                <td>Date</td>
-                <td>Name</td>
+                <td>&nbsp;</td>
                 <td class="td-center">Yes<br><span class="subcol">dance/muso</span></td>
                 <td class="td-center">No<br><span class="subcol">dance/muso</span></td>
                 <td class="td-center">?<br><span class="subcol">dance/muso</span></td>
@@ -49,7 +48,9 @@
         <tbody>
             [% FOR gig IN gigs %]
                 <tr>
-                    <td>[% gig.date | html %]</td>
+                    <td class="event-date">[% gig.date_pretty | html %]</td>
+                </tr>
+                <tr class="event-row" bgcolor=#ffd0ff ENOUGHbgcolor = #99CC99>
                     <td>[% gig.name | html %]</td>
                     <td class="td-center">
                         [% gig.get_persons('role', 'dancer', 'status', 'y').size || 0 | html %]
@@ -77,8 +78,7 @@
     <table>
         <thead>
             <tr>
-                <td>Date</td>
-                <td>Name</td>
+                <td>&nbsp;</td>
                 <td class="td-center">Yes<br><span class="subcol">dance/muso</span></td>
                 <td class="td-center">No<br><span class="subcol">dance/muso</span></td>
                 <td class="td-center">?<br><span class="subcol">dance/muso</span></td>
@@ -87,7 +87,9 @@
         <tbody>
             [% FOR party IN parties %]
                 <tr>
-                    <td>[% party.date | html %]</td>
+                    <td class="event-date">[% party.date_pretty | html %]</td>
+                </tr>
+                <tr class="event-row" bgcolor=#ffd0ff ENOUGHbgcolor = #99CC99>
                     <td>[% party.name | html %]</td>
                     <td class="td-center">
                         [% party.get_persons('role', 'dancer', 'status', 'y').size || 0 | html %]

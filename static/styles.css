@@ -43,6 +43,10 @@ body {
     text-align: center;
 }
 
+.event-date {
+    font-style: italic;
+}
+
 .grid-key {
     color: grey; 
     font-style: italic; 
