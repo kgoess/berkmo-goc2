@@ -112,6 +112,30 @@ body {
     clear: both;
 }
 
+.login-card {
+    background: #ffe5ff;
+    padding: 15px;
+    border: 1px #f21e1e solid;
+    -webkit-border-top-left-radius: 0.7em;
+    -webkit-border-top-right-radius: 0.7em;
+    -webkit-border-botton-left-radius: 0.7em;
+    -webkit-border-botton-right-radius: 0.7em;
+    -moz-border-radius-topleft: 0.7em;
+    -moz-border-radius-topright: 0.7em;
+    -moz-border-radius-bottomleft: 0.7em;
+    -moz-border-radius-bottomright: 0.7em;
+    border-top-left-radius: 0.7em;
+    border-top-right-radius: 0.7em;
+    border-bottom-left-radius: 0.7em;
+    border-bottom-right-radius: 0.7em;
+    font-size: 150%;
+}
+
+.login-card form {
+    margin: 30px;
+}
+    
+
 /* ----------------------------- */
 /*  stuff for the tabs           */
 /* ----------------------------- */

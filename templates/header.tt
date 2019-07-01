@@ -4,7 +4,8 @@
 <title>The [% organization_name %] Grid of Commitment</title>
 <meta charset="utf-8">
 
-<link rel="stylesheet" type="text/css" href="static/styles.css" />
+                                          <!-- FIXME basedir -->
+<link rel="stylesheet" type="text/css" href="/goc2-static/static/styles.css" />
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
