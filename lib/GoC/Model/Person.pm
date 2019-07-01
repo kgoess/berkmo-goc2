@@ -11,12 +11,12 @@ use Class::Accessor::Lite(
     new => 1,
     rw  => [
     'id',  # the db primary key
-    'name', 
+    'name',
     'status', # active/inactive, etc.
     'deleted',
 
-#        'email', 
-#        'xx', 
+#        'email',
+#        'xx',
     ],
 );
 
@@ -52,6 +52,30 @@ EOL
     $sth->execute($id);
     return bless $sth->fetchrow_hashref, $class;
 }
+
+sub get_all {
+    my ($class, %p) = @_;
+
+    my $sql = 'SELECT * FROM person';
+
+    my @sql_args;
+
+    if ($p{status}) {
+        $sql .= " WHERE status = ? ";
+        push @sql_args, $p{status};
+    }
+    $sql .= ' ORDER BY name ASC ';
+
+    my $dbh = get_dbh();
+    my $sth = $dbh->prepare($sql);
+    $sth->execute(@sql_args);
+    my @rc;
+    while (my $row = $sth->fetchrow_hashref) {
+        push @rc, $class->new($row);
+    }
+    return @rc;
+}
+
 
 sub update {
     my ($self) = @_;

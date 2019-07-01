@@ -22,6 +22,7 @@ test_person_CRUD();
 test_event_CRUD();
 test_person_event_map_CRUD();
 test_upcoming_events();
+test_person_get_all();
 
 
 sub test_person_CRUD {
@@ -48,7 +49,7 @@ sub test_event_CRUD {
     my $event = GoC::Model::Event->new(
         name => 'fourth of july parade',
         date => '2019-07-01',
-		type => 'gig',
+        type => 'gig',
         queen => 'alice',
         notes => 'blah',
     );
@@ -86,29 +87,29 @@ sub test_person_event_map_CRUD {
 
     GoC::Model::PersonEventMap->add_person_to_event($person, $event, 'muso', 'y');
 
-    my $persons = $event->get_persons(role => 'muso');
-    is $persons->[0]->name, 'alice';
+    my @persons = $event->get_persons(role => 'muso');
+    is $persons[0]->name, 'alice';
 
-    $persons = $event->get_persons(role => 'muso', status => 'y');
-    is $persons->[0]->name, 'alice';
+    @persons = $event->get_persons(role => 'muso', status => 'y');
+    is $persons[0]->name, 'alice';
 
-	#GoC::Model::PersonEventMap->update_person_for_event($person, $event, 'muso', 
-	# pk?
+    #GoC::Model::PersonEventMap->update_person_for_event($person, $event, 'muso', 
+    # pk?
 
 }
 
 sub test_upcoming_events {
 
-	my $dbh = get_dbh();
-	$dbh->do('DELETE FROM event');
+    my $dbh = get_dbh();
+    $dbh->do('DELETE FROM event');
 
-	my $today = DateTime->now->ymd;
-	
+    my $today = DateTime->now->ymd;
+    
     GoC::Model::Event->new(
         name => 'fourth of july parade',
         date => $today,
         queen => 'alice',
-		type => 'gig',
+        type => 'gig',
         notes => 'blah',
     )->save;
 
@@ -116,7 +117,7 @@ sub test_upcoming_events {
         name => 'some other gig',
         date => $today,
         queen => 'alice',
-		type => 'gig',
+        type => 'gig',
     )->save;
 
 
@@ -124,29 +125,61 @@ sub test_upcoming_events {
         name => 'a party',
         date => $today,
         queen => 'alice',
-		type => 'party',
+        type => 'party',
     )->save;
 
     GoC::Model::Event->new(
         name => 'old gig',
         date => '2019-01-01',
         queen => 'alice',
-		type => 'gig',
+        type => 'gig',
     )->save;
 
     GoC::Model::Event->new(
         name => 'deleted gig',
         date => '2019-01-01',
         queen => 'alice',
-		type => 'gig',
-		deleted => 1,
+        type => 'gig',
+        deleted => 1,
     )->save;
 
-	my $gigs = GoC::Model::Event->get_upcoming_events(type => 'gig');
+    my $gigs = GoC::Model::Event->get_upcoming_events(type => 'gig');
 
-	is @$gigs, 2;
-	is $gigs->[0]->name, 'fourth of july parade';
-	is $gigs->[1]->name, 'some other gig';
+    is @$gigs, 2;
+    is $gigs->[0]->name, 'fourth of july parade';
+    is $gigs->[1]->name, 'some other gig';
+
+}
+
+sub test_person_get_all {
+
+    my $dbh = get_dbh();
+    $dbh->do('DELETE FROM person');
+
+    GoC::Model::Person->new(
+        name => 'alice',
+        status => 'active',
+    )->save();
+    GoC::Model::Person->new(
+        name => 'bob',
+        status => 'active',
+    )->save();
+    GoC::Model::Person->new(
+        name => 'chuck',
+        status => 'retired',
+    )->save();
+
+    my @people = GoC::Model::Person->get_all(status => 'active');
+    is scalar @people, 2;
+    is $people[0]->name, 'alice';
+    is $people[1]->name, 'bob';
+
+
+    @people = GoC::Model::Person->get_all();
+    is scalar @people, 3;
+    is $people[0]->name, 'alice';
+    is $people[1]->name, 'bob';
+    is $people[2]->name, 'chuck';
 
 }
 
