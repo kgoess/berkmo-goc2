@@ -8,7 +8,7 @@
 </ul>
 
 <!-- gigs tab -->
-<div id="gigs-grids">
+<div id="gigs-grids" class="event-listing">
     <table>
         <thead>
             <tr>
@@ -47,7 +47,7 @@
     </table>
 
 </div>
-<div id="parties-grids">
+<div id="parties-grids" class="event-listing">
     <table>
         <thead>
             <tr>

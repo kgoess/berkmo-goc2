@@ -33,7 +33,8 @@ body {
     color: #C00000;
     font-family: Verdana,Arial,sans-serif;
     background: #ffd0ff;
-    max-width: 50em;
+    max-width: 30em;
+    margin-left: 20px;
 }
 
 .subcol {
@@ -44,8 +45,12 @@ body {
     text-align: center;
 }
 
-.event-date {
+.event-listing .event-date {
     font-style: italic;
+}
+
+.event-detail thead td {
+    text-align: center;
 }
 
 .grid-key {
@@ -58,16 +63,41 @@ body {
     font-family: 'UnifrakturCook', cursive;
     font-size: 400%;
 }
+#site-title a {
+    text-decoration: none;
+    color: inherit;
+    color: inherit;
+}
 
 #event-card {
     background: #ffe5ff;
-    padding: 10px;
+    padding: 15px;
     border: 1px #f21e1e solid;
+    -webkit-border-top-left-radius: 0.7em;
+    -webkit-border-top-right-radius: 0.7em;
+    -webkit-border-botton-left-radius: 0.7em;
+    -webkit-border-botton-right-radius: 0.7em;
+    -moz-border-radius-topleft: 0.7em;
+    -moz-border-radius-topright: 0.7em;
+    -moz-border-radius-bottomleft: 0.7em;
+    -moz-border-radius-bottomright: 0.7em;
+    border-top-left-radius: 0.7em;
+    border-top-right-radius: 0.7em;
+    border-bottom-left-radius: 0.7em;
+    border-bottom-right-radius: 0.7em;
 }
 
 #event-card .event-name {
     font-size: 150%;
     font-weight: bold;
+    float: left;
+    margin-bottom: 10px;
+}
+#event-card .event-date {
+    float: right;
+}
+#event-card .event-queen {
+    clear: both;
 }
 
 /* ----------------------------- */

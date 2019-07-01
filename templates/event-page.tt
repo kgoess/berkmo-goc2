@@ -1,9 +1,11 @@
 
 
 <div id="event-card">
-    <div class="event-name">[% event.name %]</div>
-    <div>[% event.date_pretty %]</div>
-    <div>[% event.queen %]</div>
+    <div>
+        <div class="event-name">[% event.name %]</div>
+        <div class="event-date">[% event.date_pretty %]</div>
+    </div>
+    <div class="event-queen">tour queen: [% event.queen %]</div>
 </div>
 
 <div id="tabs"><!-- this contains everything that's tabbable -->
@@ -14,7 +16,7 @@
 </ul>
 
 
-<div id="dancers-tab">
+<div id="dancers-tab" class="event-detail">
     <table>
         <thead>
             <tr>
@@ -27,6 +29,8 @@
                     <td>[% status | html %]</td>
                 [% END %]
             </tr>
+        </thead>
+        <tbody>
             [% WHILE num_dancers %]
                 <tr bgcolor=#ffd0ff>
                 [% FOR status IN statuses %]
@@ -40,13 +44,11 @@
                 [% END %]
                 </tr>
             [% END %]
-        </thead>
-        <tbody>
         </tbody>
     </table>
 </div>
 
-<div id="musos-tab">
+<div id="musos-tab" class="event-detail">
     <table>
         <thead>
             <tr>
