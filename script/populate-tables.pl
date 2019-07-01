@@ -21,7 +21,7 @@ my $today = DateTime->now->ymd;
         date => $today,
         queen => 'alice',
 		type => 'gig',
-        notes => 'blah',
+        notes => 'blah blah blah',
     );
     $parade->save;
 

@@ -7,7 +7,7 @@ use Carp qw/croak/;
 use DateTime;
 
 use GoC::Model::Person;
-use GoC::Utils qw/get_dbh/;
+use GoC::Utils qw/get_dbh today_ymd/;
 
 use Class::Accessor::Lite(
     new => 1,
@@ -20,6 +20,7 @@ use Class::Accessor::Lite(
     'notes',
     'status',
     'deleted',
+    'date_created',
 #        'email',
 #        'xx',
     ],
@@ -95,14 +96,19 @@ sub save {
         queen,
         type,
         notes,
-        deleted
+        deleted,
+        date_created
     )
-    VALUES (?,?,?,?,?,?);
+    VALUES (?,?,?,?,?,?,?);
 EOL
+
+    if (! $self->date_created) {
+        $self->date_created(today_ymd());
+    }
 
     my $dbh = get_dbh();
     my $sth = $dbh->prepare($sql);
-    $sth->execute(map { $self->$_ } qw/name date queen type notes deleted/);
+    $sth->execute(map { $self->$_ } qw/name date queen type notes deleted date_created/);
 
     $self->id($dbh->sqlite_last_insert_rowid);
 }
@@ -146,6 +152,7 @@ sub update {
             type = ?,
             notes = ?,
             deleted = ?
+            /* date_created not updatable */
         WHERE id = ?
 EOL
 
@@ -166,7 +173,8 @@ CREATE TABLE event (
     type VARCHAR(255),
     notes VARCHAR(1024), /* length is ignored */
     status VARCHAR(255),
-    deleted BOOLEAN
+    deleted BOOLEAN,
+    date_created TEXT(20)
 );
 EOL
 

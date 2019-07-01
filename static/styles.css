@@ -53,6 +53,10 @@ body {
     text-align: center;
 }
 
+.event-detail tbody td {
+    padding: 5px;
+}
+
 .grid-key {
     color: grey;
     font-style: italic;
@@ -88,13 +92,21 @@ body {
 }
 
 #event-card .event-name {
-    font-size: 150%;
+    font-size: 130%;
     font-weight: bold;
     float: left;
     margin-bottom: 10px;
 }
-#event-card .event-date {
+#event-card .event-date-section {
     float: right;
+}
+#event-card .event-date {
+    font-size: 110%;
+    font-weight: bold;
+}
+#event-card .event-date-created {
+    font-size: 80%;
+    font-style: italic;
 }
 #event-card .event-queen {
     clear: both;
