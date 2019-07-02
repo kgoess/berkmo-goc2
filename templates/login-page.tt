@@ -1,0 +1,15 @@
+
+
+<div class="login-card">
+    <div>Who are you?</div>
+    <form method="POST" action="/goc2/login">
+        <select name="login_id" size="5">
+            [% FOR person IN people %]
+                <option value="[% person.id | html %]">[% person.name | html %]</option>
+            [% END %]
+        </select>
+        <div>
+            <input type="submit">
+        </div>
+    </form>
+</div>

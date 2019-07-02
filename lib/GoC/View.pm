@@ -74,12 +74,30 @@ sub event_page {
     return $output;
 }
 
+sub login_page {
+    my ($class) = @_;
+
+    my $tt = get_tt();
+
+    my $template = 'login-page.tt';
+    my $vars = {
+        people = [ GoC::Model::Person->get_all(status => 'active') ],
+    };
+
+    my $output = '';
+
+    $tt->process($template, $vars, \$output)
+           || die $tt->error();
+
+    return $output;
+}
+
 
 my $_tt;
 sub get_tt {
 
     my $config = {
-        INCLUDE_PATH => './templates',
+        INCLUDE_PATH => ($ENV{TT_INCLUDE_PATH} || './templates'),
         PRE_PROCESS => 'header.tt', # add config as arrayref with organization_name?
         POST_PROCESS => 'footer.tt',
     };
