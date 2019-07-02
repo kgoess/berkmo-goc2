@@ -65,12 +65,19 @@ body {
 
 #site-title {
     font-family: 'UnifrakturCook', cursive;
-    font-size: 400%;
+    font-size: 300%;
+    float: left;
 }
 #site-title a {
     text-decoration: none;
     color: inherit;
     color: inherit;
+}
+#current-user {
+    float: right;
+}
+#page-header-clear {
+    clear: both;
 }
 
 #event-card {

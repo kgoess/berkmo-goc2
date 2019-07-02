@@ -50,7 +50,11 @@ EOL
     my $dbh = get_dbh();
     my $sth = $dbh->prepare($sql);
     $sth->execute($id);
-    return bless $sth->fetchrow_hashref, $class;
+    if (my $row = $sth->fetchrow_hashref) {
+        return bless $row, $class;
+    } else {
+        return;
+    }
 }
 
 sub get_all {

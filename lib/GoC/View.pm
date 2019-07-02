@@ -10,7 +10,7 @@ use Template;
 use GoC::Model::Event;
 
 sub main_page {
-    my ($class) = @_;
+    my ($class, %p) = @_;
 
     my $tt = get_tt();
 
@@ -19,6 +19,7 @@ sub main_page {
         organization_name => 'Berkeley Morris',
         gigs    => GoC::Model::Event->get_upcoming_events(type => 'gig'),
         parties => GoC::Model::Event->get_upcoming_events(type => 'party'),
+        current_user => $p{current_user},
     };
     my $output = '';
 
@@ -65,6 +66,7 @@ sub event_page {
         num_dancers => $num_dancers,
         musos_for_status => \%musos_for_status,
         num_musos => $num_musos,
+        current_user => $p{current_user},
     };
     my $output = '';
 
@@ -81,7 +83,7 @@ sub login_page {
 
     my $template = 'login-page.tt';
     my $vars = {
-        people = [ GoC::Model::Person->get_all(status => 'active') ],
+        people => [ GoC::Model::Person->get_all(status => 'active') ],
     };
 
     my $output = '';
