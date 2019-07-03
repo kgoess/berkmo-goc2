@@ -93,6 +93,23 @@ sub test_person_event_map_CRUD {
     @persons = $event->get_persons(role => 'muso', status => 'y');
     is $persons[0]->name, 'alice';
 
+    my ($status, $role) = $event->get_status_for_person($person);
+    is $status, 'y';
+    is $role, 'muso';
+
+    # test for somebody who has no status for this event
+    my $bob = GoC::Model::Person->new(
+        name => 'bob',
+        status => 'active',
+    );
+    $bob->save();
+    ($status, $role) = $event->get_status_for_person($bob);
+    ok ! $status;
+
+    GoC::Model::PersonEventMap->delete_person_from_event($person, $event);
+    ok ! $event->get_persons(role => 'muso', status => 'y');
+    ok ! $event->get_status_for_person($person);
+
     #GoC::Model::PersonEventMap->update_person_for_event($person, $event, 'muso', 
     # pk?
 

@@ -25,6 +25,11 @@
         statuses = statuses
         people_for_status = dancers_for_status
         num_people = num_dancers
+        for_role = "dancer"
+        current_user = current_user
+        current_user_status = current_user_status
+        current_user_role = current_user_role
+        event = event
     %]
 </div>
 
@@ -33,6 +38,11 @@
         statuses = statuses
         people_for_status = musos_for_status
         num_people = num_musos
+        for_role = "muso"
+        current_user = current_user
+        current_user_status = current_user_status
+        current_user_role = current_user_role
+        event = event
      %]
 </div>
 
@@ -44,6 +54,12 @@
 </div> <!-- end tabs div -->
 
 [% BLOCK peopletable %]
+[% accept_status_message = {
+    "y" = "I will definitely come"
+    "n" = "Sorry, can't make it"
+    "?" = "Not sure yet"
+}
+%]
     <table>
         <thead>
             <tr>
@@ -54,6 +70,22 @@
             <tr>
                 [% FOR status IN statuses %]
                     <td>[% status | html %]</td>
+                [% END %]
+            </tr>
+            <tr>
+                [% FOR status IN statuses %]
+                    [% IF current_user_status == status && current_user_role == for_role %]
+                        <td>this is you</td>
+                    [% ELSE %]
+                        <td>
+                            <form id="change-status-form" method="POST" action="/goc2/change-status">
+                                <input type="hidden" name="event_id" value="[% event.id %]">
+                                <input type="hidden" name="person_id" value="[% current_user.id %]">
+                                <input type="hidden" name="for_role" value="[% for_role | html %]">
+                                <input type="hidden" name="status" value="[% status | html %]">
+                                <input type="submit" class="set-status-button" value="[% accept_status_message.$status %]"></td>
+                            </form>
+                    [% END %]
                 [% END %]
             </tr>
         </thead>
@@ -73,6 +105,9 @@
             [% END %]
         </tbody>
     </table>
+    <div class="hidden">
+        </form>
+    </div>
 [% END %]
 
 

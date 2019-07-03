@@ -52,11 +52,31 @@ EOL
     return \@rc;
 }
 
+sub get_status_for_person {
+    my ($self, $person) = @_;
+
+    my $sql = <<EOL;
+    SELECT status, role
+    FROM person_to_event_map
+    WHERE event_id = ?
+    AND person_id = ?
+EOL
+
+    my $dbh = get_dbh();
+    my $sth = $dbh->prepare($sql);
+    $sth->execute($self->id, $person->id);
+
+    if (my $row = $sth->fetchrow_arrayref) {
+        return @$row;
+    }
+}
+    
+
 
 sub get_persons {
     my ($self, %p) = @_;
 
-
+    # TODO: move this into PersonEventMap.pm?
     my $sql = <<EOL;
     SELECT person_id
     FROM person_to_event_map

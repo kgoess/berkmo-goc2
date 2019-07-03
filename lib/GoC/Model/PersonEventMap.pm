@@ -6,7 +6,7 @@ use warnings;
 
 use Carp qw/croak/;
 
-use GoC::Utils qw/get_dbh/;
+use GoC::Utils qw/get_dbh today_ymd/;
 
 sub add_person_to_event {
     my ($class, $person, $event, $role, $status) = @_;
@@ -14,24 +14,38 @@ sub add_person_to_event {
     croak "missing args in call to $class->add_person_to_event"
         unless $person && $event && $role && $status;
 
-    my $dbh = get_dbh();
-
     my $sql = <<EOL;
-
 INSERT INTO person_to_event_map (
     person_id,
     event_id,
     role,
-	status
+	status,
+    updated
 )
-VALUES (?,?,?, ?)
+VALUES (?,?,?,?,?)
 EOL
 
+    my $dbh = get_dbh();
     my $sth = $dbh->prepare($sql);
-
-    $sth->execute($person->id, $event->id, $role, $status);
-
+    $sth->execute($person->id, $event->id, $role, $status, today_ymd());
 }
+
+sub delete_person_from_event {
+    my ($class, $person, $event) = @_;
+
+    croak "missing args in call to $class->delete_person_from_event"
+        unless $person && $event;
+    my $sql = <<EOL;
+DELETE FROM person_to_event_map
+WHERE person_id = ?
+AND event_id = ?
+EOL
+
+    my $dbh = get_dbh();
+    my $sth = $dbh->prepare($sql);
+    $sth->execute($person->id, $event->id);
+}
+
 
 sub create_table {
 
@@ -43,7 +57,8 @@ CREATE TABLE person_to_event_map (
     person_id INTEGER NOT NULL,
     event_id INTEGER NOT NULL,
     role NOT NULL,   /* dancer, muso, soprano, bass */
-	status NOT NULL  /* yes, no, maybe, etc */
+	status NOT NULL,  /* yes, no, maybe, etc */
+    updated TEXT(20) NOT NULl
 );
 
 EOL

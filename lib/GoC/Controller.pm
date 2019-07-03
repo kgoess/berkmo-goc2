@@ -7,14 +7,16 @@ use CGI::Cookie;
 use Data::Dump qw/dump/;
 
 use GoC::Model::Person;
+use GoC::Model::PersonEventMap;
 use GoC::View;
 
 my %handler_for_path = (
-    '' => sub { shift->main_page(@_) },
-    '/' => sub { shift->main_page(@_) },
-    '/logout' => sub { shift->logout(@_) },
-    '/login' => sub { shift->login_page(@_) },
-    '/event' => sub { shift->event_page(@_) },
+    ''               => sub { shift->main_page(@_) },
+    '/'              => sub { shift->main_page(@_) },
+    '/logout'        => sub { shift->logout(@_) },
+    '/login'         => sub { shift->login_page(@_) },
+    '/event'         => sub { shift->event_page(@_) },
+    '/change-status' => sub { shift->change_status(@_) },
 );
 
 sub go {
@@ -85,6 +87,46 @@ sub login_page {
     } else {
         die "unrecognized method $p{method} in call to login_page";
     }
+
+}
+
+sub change_status {
+    my ($class, %p) = @_;
+
+    my $person_id = $p{request}->param('person_id')
+        or die "missing person_id";
+
+    my $person = GoC::Model::Person->load($person_id)
+        or die "no user found for id $person_id";
+
+    my $event_id = $p{request}->param('event_id')
+        or die "missing event_id";
+
+    my $event = GoC::Model::Event->load($event_id)
+        or die "no event found for id $event_id";
+
+    my $for_role = $p{request}->param('for_role')
+        or die "missing for_role";
+
+    $for_role =~ /^(?:muso|dancer)$/
+        or die "wrong value for role: $for_role";
+
+    my $status = $p{request}->param('status')
+        or die "missing status";
+
+    $status =~ /^[yn?]$/
+        or die "wrong value for status: $status";
+
+    GoC::Model::PersonEventMap->delete_person_from_event($person, $event);
+    GoC::Model::PersonEventMap->add_person_to_event($person, $event, $for_role, $status);
+
+    return {
+        action => 'redirect', 
+        headers => {
+            Location  => "/goc2/event?id=$event_id",
+        },
+    };
+
 
 }
 

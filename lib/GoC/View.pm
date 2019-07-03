@@ -56,6 +56,7 @@ sub event_page {
         $musos_for_status{$status} = \@musos;
         $num_musos += @musos;
     }
+    my ($status, $role) = $event->get_status_for_person($p{current_user});
 
     my $template = 'event-page.tt';
     my $vars = {
@@ -67,6 +68,8 @@ sub event_page {
         musos_for_status => \%musos_for_status,
         num_musos => $num_musos,
         current_user => $p{current_user},
+        current_user_status => $status,
+        current_user_role => $role,
     };
     my $output = '';
 
