@@ -6,6 +6,8 @@ use warnings;
 use CGI::Cookie;
 use Data::Dump qw/dump/;
 
+use GoC::Logger;
+use GoC::Model::Event;
 use GoC::Model::Person;
 use GoC::Model::PersonEventMap;
 use GoC::View;
@@ -13,9 +15,10 @@ use GoC::View;
 my %handler_for_path = (
     ''               => sub { shift->main_page(@_) },
     '/'              => sub { shift->main_page(@_) },
+    '/admin/logs'    => sub { shift->activity_logs(@_) },
+    '/event'         => sub { shift->event_page(@_) },
     '/logout'        => sub { shift->logout(@_) },
     '/login'         => sub { shift->login_page(@_) },
-    '/event'         => sub { shift->event_page(@_) },
     '/change-status' => sub { shift->change_status(@_) },
 );
 
@@ -47,6 +50,7 @@ sub go {
             or die "no user found for id $id";;
 
         $p{current_user} = $current_user;
+        $p{logger} = GoC::Logger->new(current_user => $current_user);
     }
     if (my $handler = $handler_for_path{ $p{path_info} }) {
         return $handler->($class, %p),
@@ -77,6 +81,8 @@ sub login_page {
             -value => "user_id:$id",
          #   -expires => '-1y',
          );
+
+        GoC::Logger->new(current_user => $person)->debug("logged in");
         return {
             action => 'redirect', 
             headers => {
@@ -120,6 +126,10 @@ sub change_status {
     GoC::Model::PersonEventMap->delete_person_from_event($person, $event);
     GoC::Model::PersonEventMap->add_person_to_event($person, $event, $for_role, $status);
 
+    my $person_log_str = join '', $person->name, '(', $person->id, ')';
+    my $event_log_str  = join '', $event->name,  '(', $event->id, ')';
+    $p{logger}->info("status change $person_log_str for event $event_log_str for role $for_role to status $status");
+
     return {
         action => 'redirect', 
         headers => {
@@ -131,11 +141,13 @@ sub change_status {
 }
 
 sub logout {
+    my ($class, %p) = @_;
      my $cookie = CGI::Cookie->new(
         -name  => 'Berkmo-GoC',
         -expires => '-1y',
         -value => 'whatever',
      );
+    $p{logger}->debug("logged out") ;
     return {
         action => 'redirect', 
         headers => {
@@ -165,5 +177,16 @@ sub event_page {
         ),
     }
 }
+
+sub activity_logs {
+    my ($class, %p) = @_;
+    return {
+        action => "display",
+        content => GoC::View->activity_logs(
+            current_user => $p{current_user},
+        ),
+    }
+}
+
 
 1;

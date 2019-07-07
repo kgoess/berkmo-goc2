@@ -7,7 +7,9 @@ use warnings;
 use Carp qw/croak/;
 use Template;
 
+use GoC::Logger;
 use GoC::Model::Event;
+use GoC::Model::Person;
 
 sub main_page {
     my ($class, %p) = @_;
@@ -97,6 +99,23 @@ sub login_page {
     return $output;
 }
 
+sub activity_logs {
+    my ($class) = @_;
+
+    my $tt = get_tt();
+
+    my $template = 'activity-logs.tt';
+    my $vars = {
+        logs => GoC::Logger->get_log_lines(),
+    };
+
+    my $output = '';
+
+    $tt->process($template, $vars, \$output)
+           || die $tt->error();
+
+    return $output;
+}
 
 my $_tt;
 sub get_tt {

@@ -7,7 +7,7 @@ use warnings;
 use DBI;
 
 use Exporter 'import';
-our @EXPORT_OK = qw(get_dbh today_ymd);
+our @EXPORT_OK = qw(get_dbh today_ymd today_ymdhms);
 
 
 my $_dbh;
@@ -25,7 +25,8 @@ sub get_dbh {
 sub today_ymd {
 	return DateTime->now(time_zone => 'America/Los_Angeles')->ymd;
 }
-
-
+sub today_ymdhms {
+	return DateTime->now(time_zone => 'America/Los_Angeles')->datetime;
+}
 
 1;

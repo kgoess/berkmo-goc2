@@ -4,7 +4,7 @@ use warnings;
 
 use Data::Dump qw/dump/;
 use DateTime;
-use Test::More tests => 99;
+use Test::More tests => 26;
 
 use GoC::Model::Person;
 use GoC::Model::Event;

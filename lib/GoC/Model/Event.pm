@@ -18,7 +18,6 @@ use Class::Accessor::Lite(
     'queen',  # name, email, whatever, not a FK
     'type', # gig, party
     'notes',
-    'status',
     'deleted',
     'date_created',
 #        'email',
@@ -40,6 +39,7 @@ sub get_upcoming_events {
     SELECT * FROM event
     WHERE date >= '$yesterday'
     AND type = ?
+    AND deleted != 1
     ORDER BY date, name
 EOL
     my $dbh = get_dbh();
@@ -125,6 +125,9 @@ EOL
     if (! $self->date_created) {
         $self->date_created(today_ymd());
     }
+    if (! defined $self->deleted) {
+        $self->deleted(0)
+    }
 
     my $dbh = get_dbh();
     my $sth = $dbh->prepare($sql);
@@ -192,8 +195,7 @@ CREATE TABLE event (
     queen VARCHAR(255),
     type VARCHAR(255),
     notes VARCHAR(1024), /* length is ignored */
-    status VARCHAR(255),
-    deleted BOOLEAN,
+    deleted BOOLEAN NOT NULL DEFAULT 0,
     date_created TEXT(20)
 );
 EOL

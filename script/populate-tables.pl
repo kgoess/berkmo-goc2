@@ -4,6 +4,7 @@ use warnings;
 
 use DateTime;
 
+use GoC::Logger;
 use GoC::Model::Person;
 use GoC::Model::Event;
 use GoC::Model::PersonEventMap;
@@ -20,32 +21,44 @@ close $truncate;
 GoC::Model::Person->create_table;
 GoC::Model::Event->create_table;
 GoC::Model::PersonEventMap->create_table;
-my $today = DateTime->now->ymd;
+GoC::Logger->create_table;
+my $date_incr = 7;
+my $event_date = sub { DateTime->now->add(days => $date_incr++)->ymd };
 
     my $parade = GoC::Model::Event->new(
         name => 'alameda parade',
-        date => $today,
+        date => $event_date->(),
         queen => 'alice',
 		type => 'gig',
         notes => 'blah blah blah',
     );
     $parade->save;
 
-    GoC::Model::Event->new(
-        name => 'some other gig',
-        date => $today,
-        queen => 'alice',
-		type => 'gig',
-    )->save;
+    my @events = (
+        ['some other gig', 'frances', 'gig', 'blah blah blah git notes blah' ],
+        ['a high-paying wedding gig', 'harry', 'gig', 'blah blah blah git notes blah' ],
+        ['you come on after the dog', 'frances', 'gig', 'blah blah blah git notes blah' ],
+        ['dancing in jail', 'harry', 'gig', 'blah blah blah git notes blah' ],
+        ["buckingham palace (servant's entrance)", 'frances', 'gig', 'blah blah blah git notes blah' ],
+        ['christmas in july in october', 'harry', 'gig', 'blah blah blah git notes blah' ],
+        ['some really fun party', 'frances', 'party', 'boozing boozing'],
+        ['an example party', 'harry', 'party', 'boozing boozing'],
+        ['not a real party', 'frances', 'party', 'boozing boozing'],
+        ['some fun stuff here', 'harry', 'party', 'boozing boozing'],
+        ['birthday party for my cat', 'frances', 'party', 'boozing boozing'],
+        ['world domination planning meeting', 'harry', 'party', 'boozing boozing'],
+    );
 
-
-    GoC::Model::Event->new(
-        name => 'a party',
-        date => $today,
-        queen => 'alice',
-		type => 'party',
-    )->save;
-
+    foreach my $event (@events) {
+        GoC::Model::Event->new(
+            name => $event->[0],
+            date => $event_date->(),
+            queen => $event->[1],
+            type => $event->[2],
+            notes => $event->[3],
+        )->save;
+    }
+        
     GoC::Model::Event->new(
         name => 'old gig',
         date => '2019-01-01',
@@ -55,7 +68,7 @@ my $today = DateTime->now->ymd;
 
     GoC::Model::Event->new(
         name => 'deleted gig',
-        date => '2019-01-01',
+        date => $event_date->(),
         queen => 'alice',
 		type => 'gig',
 		deleted => 1,

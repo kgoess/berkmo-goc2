@@ -76,6 +76,11 @@ body {
   padding-left: 15px;
   padding-right: 15px;
 }
+
+.event-table-row:nth-child(even) {
+  background-color: #ffd0ff;
+}
+
 /*  Wrappers around cells and other wrappers: flex, row, wrap */
 .wrapper {
   display: flex;           display: -webkit-flex;
@@ -492,4 +497,16 @@ input[type=submit] {
     body {
         margin: 2px;
     }
+}
+
+.logtable th, .logtable td {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.logtable td {
+    border-collaps: collapse;
+}
+.logtable tr:nth-child(even) {
+  background-color: rgb(255, 229, 255);
 }
