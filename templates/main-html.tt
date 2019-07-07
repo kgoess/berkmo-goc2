@@ -22,40 +22,44 @@
 
 [% BLOCK eventtable %]
 
-    <table>
-        <thead>
-            <tr>
-                <td>&nbsp;</td>
-                <td class="td-center">Yes<br><span class="subcol">dance/muso</span></td>
-                <td class="td-center">No<br><span class="subcol">dance/muso</span></td>
-                <td class="td-center">?<br><span class="subcol">dance/muso</span></td>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="event-table">
+        <div class="event-table-head wrapper">
+            <div class="event-table-row wrapper">
+                <div class="wrapper">
+                    <div class="cell cell-text">&nbsp;</div>
+                    <div class="cell cell-text">&nbsp;</div>
+                </div>
+                <div class="wrapper">
+                    <div class="cell cell-stats" >Yes<br><span class="subcol">dance/muso</span></div>
+                    <div class="cell cell-stats" >No<br><span class="subcol">dance/muso</span></div>
+                    <div class="cell cell-stats" >?<br><span class="subcol">dance/muso</span></div>
+                </div>
+            </div>
+        </div>
+        <div>
             [% FOR event IN events %]
-                <tr class="event-row" data-event-id="[% event.id| html %]" >
-                    <td class="event-date">[% event.date_pretty | html %]</td>
-                </tr>
-                <tr class="event-row" data-event-id="[% event.id| html %]" bgcolor=#ffd0ff ENOUGHbgcolor = #99CC99>
-                    <td>[% event.name | html %]</td>
-                    <td class="td-center">
-                        [% event.get_persons('role', 'dancer', 'status', 'y').size || 0 | html %]
-                        /
-                        [% event.get_persons('role', 'muso', 'status', 'y').size || 0 | html %]
-                    </td>
-                    <td class="td-center">
-                        [% event.get_persons('role', 'dancer', 'status', 'n').size || 0 | html %]
-                        /
-                        [% event.get_persons('role', 'muso', 'status', 'n').size || 0 | html %]
-                    </td>
-                    <td class="td-center">
-                        [% event.get_persons('role', 'dancer', 'status', '?').size || 0 | html %]
-                        /
-                        [% event.get_persons('role', 'muso', 'status', '?').size || 0 | html %]
-                    </td>
-                </tr>
+                <div class="event-table-row wrapper an-event" data-event-id="[% event.id| html %]" bgcolor=#ffd0ff ENOUGHbgcolor = #99CC99>
+                    <div class="wrapper">
+                        <div class="cell cell-text event-date">[% event.date_pretty | html %]</div>
+                        <div class="cell cell-text">[% event.name | html %]</div>
+                    </div>
+                    <div class="wrapper">
+                        <div class="cell cell-stats"><span class="cell-yes-no">Yes:</span>
+                            [% event.get_persons('role', 'dancer', 'status', 'y').size || 0 | html %]/[% event.get_persons('role', 'muso', 'status', 'y').size || 0 | html %]
+                        </div>
+                        <div class="cell cell-stats"><span class="cell-yes-no">No:</span>
+                            [% event.get_persons('role', 'dancer', 'status', 'n').size || 0 | html %]/[% event.get_persons('role', 'muso', 'status', 'n').size || 0 | html %]
+                        </div>
+                        <div class="cell cell-stats"><span class="cell-yes-no">?:</span>
+                            [% event.get_persons('role', 'dancer', 'status', '?').size || 0 | html %]/[% event.get_persons('role', 'muso', 'status', '?').size || 0 | html %]
+                        </div>
+                    </div>
+                </div>
             [% END %]
-        </tbody>
-
-    </table>
+        </div>
+    </div>
+    <div class="event-table-notes">
+        <div class="abbr-expl">"9/3" means nine dancers, three musos</div>
+        <div>Click on the event to sign up or see details</div>
+    </div>
 [% END %]

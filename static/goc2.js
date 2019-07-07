@@ -1,7 +1,7 @@
 (function(){
 
 function bindEventRowsToActions() {
-    $(".event-row").bind('click', function(e) {
+    $(".event-table .an-event").bind('click', function(e) {
         e.preventDefault();
         var eventId = $(this).attr('data-event-id');
         document.location.href="/goc2/event?id="+eventId;

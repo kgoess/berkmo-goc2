@@ -1,6 +1,7 @@
 /* Berkeley Morris colours---reds and burgundies */
 
 
+
 body table.grid input.change {
     color: white;
 	background-color: white;
@@ -33,16 +34,26 @@ body {
     color: #C00000;
     font-family: Verdana,Arial,sans-serif;
     background: #ffd0ff;
+    margin: 80px;
     /*max-width: 30em; */
-    margin-left: 20px;
 }
 
 .subcol {
     font-size: 75%;
 }
 
-.td-center {
+.event-table .an-event {
+    cursor:pointer;
+}
+
+.event-table .cell {
     text-align: center;
+}
+.event-table .cell-yes-no {
+    display: none;
+}
+.event-table-notes .abbr-expl {
+    display: none;
 }
 
 .event-listing .event-date {
@@ -56,6 +67,72 @@ body {
 .event-detail tbody td {
     padding: 5px;
 }
+/* flexbox layout for main page */
+.event-table-row {
+  display: flex;           display: -webkit-flex;
+  flex-direction: row;     -webkit-flex-direction: row;
+  flex-grow: 0;            -webkit-flex-grow: 0;
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+/*  Wrappers around cells and other wrappers: flex, row, wrap */
+.wrapper {
+  display: flex;           display: -webkit-flex;
+  flex-direction: row;     -webkit-flex-direction: row;
+  flex-grow: 0;            -webkit-flex-grow: 0;
+  flex-wrap: wrap;         -webkit-flex-wrap: wrap;
+}
+
+/*  Text based cells and wrappers: grow equally when there is extra space. */
+.event-table-row .cell {
+  flex-grow: 1;           -webkit-flex-grow: 1;
+}
+
+/* 
+.event-table .cell {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 20px;
+}
+*/
+.event-table-row {
+
+  border: 1px solid green;
+  padding: 2px;
+  margin: 2px;
+}
+
+/*  Fix the minimum width of the leaf level cells */
+.event-table .cell-text {
+  width: 140px;
+}
+.event-table .cell-stats {
+  width: 60px;
+  white-space: nowrap;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.event-table-notes {
+    font-style: italic;
+    font-size: 70%;
+    color: grey;
+}
+
+/* borders for debugging */
+/*
+.wrapper {
+  border: 1px solid green;
+  padding: 2px;
+  margin: 2px;
+}
+.event-table .cell {
+  border: 1px solid red;
+  margin: 2px;
+}
+*/
 
 .grid-key {
     color: grey;
@@ -310,6 +387,7 @@ http://tobyho.com/2012/01/25/responsive-web-design/ */
         display: none;
     }
 }
+
 /* this was from the first newgrid attempt
 @media screen and (max-width: 400px) {
     .grid-table-wrapper {
@@ -388,4 +466,30 @@ input[type=submit] {
     cursor:pointer;
     -webkit-border-radius: 5px;
     border-radius: 5px; 
+}
+
+/* iphone5         320
+ * iphone 6/7/8    375
+ *    "     " plus 414
+ * pixel 2         411
+ */
+@media all and (max-width: 850px) { 
+    body {
+        margin: 20px;
+    }
+}
+
+@media all and (max-width: 450px) { 
+    .event-table-head {
+        display: none;
+    }
+    .event-table .cell-yes-no {
+        display: inline;
+    }
+    .event-table-notes .abbr-expl {
+        display: block;
+    }
+    body {
+        margin: 2px;
+    }
 }
