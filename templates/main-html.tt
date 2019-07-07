@@ -9,45 +9,19 @@
 
 <!-- gigs tab -->
 <div id="gigs-grids" class="event-listing">
-    <table>
-        <thead>
-            <tr>
-                <td>&nbsp;</td>
-                <td class="td-center">Yes<br><span class="subcol">dance/muso</span></td>
-                <td class="td-center">No<br><span class="subcol">dance/muso</span></td>
-                <td class="td-center">?<br><span class="subcol">dance/muso</span></td>
-            </tr>
-        </thead>
-        <tbody>
-            [% FOR gig IN gigs %]
-                <tr class="event-row" data-event-id="[% gig.id| html %]" >
-                    <td class="event-date">[% gig.date_pretty | html %]</td>
-                </tr>
-                <tr class="event-row" data-event-id="[% gig.id| html %]" bgcolor=#ffd0ff ENOUGHbgcolor = #99CC99>
-                    <td>[% gig.name | html %]</td>
-                    <td class="td-center">
-                        [% gig.get_persons('role', 'dancer', 'status', 'y').size || 0 | html %]
-                        /
-                        [% gig.get_persons('role', 'muso', 'status', 'y').size || 0 | html %]
-                    </td>
-                    <td class="td-center">
-                        [% gig.get_persons('role', 'dancer', 'status', 'n').size || 0 | html %]
-                        /
-                        [% gig.get_persons('role', 'muso', 'status', 'n').size || 0 | html %]
-                    </td>
-                    <td class="td-center">
-                        [% gig.get_persons('role', 'dancer', 'status', '?').size || 0 | html %]
-                        /
-                        [% gig.get_persons('role', 'muso', 'status', '?').size || 0 | html %]
-                    </td>
-                </tr>
-            [% END %]
-        </tbody>
-
-    </table>
-
+    [% PROCESS eventtable 
+        events = gigs
+    %]
 </div>
 <div id="parties-grids" class="event-listing">
+    [% PROCESS eventtable 
+        events = parties
+    %]
+
+</div>
+
+[% BLOCK eventtable %]
+
     <table>
         <thead>
             <tr>
@@ -58,31 +32,30 @@
             </tr>
         </thead>
         <tbody>
-            [% FOR party IN parties %]
-                <tr class="event-row"  data-event-id="[% party.id| html %]">
-                    <td class="event-date">[% party.date_pretty | html %]</td>
+            [% FOR event IN events %]
+                <tr class="event-row" data-event-id="[% event.id| html %]" >
+                    <td class="event-date">[% event.date_pretty | html %]</td>
                 </tr>
-                <tr class="event-row" data-event-id="[% party.id| html %]" bgcolor=#ffd0ff ENOUGHbgcolor = #99CC99>
-                    <td>[% party.name | html %]</td>
+                <tr class="event-row" data-event-id="[% event.id| html %]" bgcolor=#ffd0ff ENOUGHbgcolor = #99CC99>
+                    <td>[% event.name | html %]</td>
                     <td class="td-center">
-                        [% party.get_persons('role', 'dancer', 'status', 'y').size || 0 | html %]
+                        [% event.get_persons('role', 'dancer', 'status', 'y').size || 0 | html %]
                         /
-                        [% party.get_persons('role', 'muso', 'status', 'y').size || 0 | html %]
+                        [% event.get_persons('role', 'muso', 'status', 'y').size || 0 | html %]
                     </td>
                     <td class="td-center">
-                        [% party.get_persons('role', 'dancer', 'status', 'n').size || 0 | html %]
+                        [% event.get_persons('role', 'dancer', 'status', 'n').size || 0 | html %]
                         /
-                        [% gig.get_persons('role', 'muso', 'status', 'n').size || 0 | html %]
+                        [% event.get_persons('role', 'muso', 'status', 'n').size || 0 | html %]
                     </td>
                     <td class="td-center">
-                        [% gig.get_persons('role', 'dancer', 'status', '?').size || 0 | html %]
+                        [% event.get_persons('role', 'dancer', 'status', '?').size || 0 | html %]
                         /
-                        [% gig.get_persons('role', 'muso', 'status', '?').size || 0 | html %]
+                        [% event.get_persons('role', 'muso', 'status', '?').size || 0 | html %]
                     </td>
                 </tr>
             [% END %]
         </tbody>
 
     </table>
-
-</div>
+[% END %]

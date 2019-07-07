@@ -54,12 +54,12 @@
 </div> <!-- end tabs div -->
 
 [% BLOCK peopletable %]
-[% accept_status_message = {
-    "y" = "I will definitely come"
-    "n" = "Sorry, can't make it"
-    "?" = "Not sure yet"
-}
-%]
+    [% accept_status_message = {
+        "y" = "I will definitely come"
+        "n" = "Sorry, can't make it"
+        "?" = "Not sure yet"
+    }
+    %]
     <table>
         <thead>
             <tr>
