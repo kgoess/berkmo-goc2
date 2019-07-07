@@ -3,13 +3,14 @@
 <div class="login-card">
     <div>Who are you?</div>
     <form method="POST" action="/goc2/login">
-        <select name="login_id" size="5">
+        <select name="login_id"  class="login-selectbox" >
+            <option value="default" hidden="hidden">Choose here</option>
             [% FOR person IN people %]
                 <option value="[% person.id | html %]">[% person.name | html %]</option>
             [% END %]
         </select>
         <div>
-            <input type="submit">
+            <input type="submit" id="login-form-submit" disabled>
         </div>
     </form>
 </div>

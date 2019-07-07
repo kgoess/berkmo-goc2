@@ -16,6 +16,11 @@ function bindEventRowsToActions() {
 $(document).ready(function(){
     bindEventRowsToActions();
 
+    $('.login-selectbox').on('change', function() {
+        var val = $("#login-form-submit").prop("disabled", false);
+    });
+
 });
+
 })();
 
