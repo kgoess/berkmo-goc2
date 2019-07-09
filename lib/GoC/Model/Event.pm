@@ -15,11 +15,13 @@ use Class::Accessor::Lite(
     'id',
     'name',
     'date',
-    'queen',  # name, email, whatever, not a FK
+    'queen',  # name, whatever, not a FK
+    'notification_email', 
     'type', # gig, party
     'notes',
     'deleted',
     'date_created',
+    'date_updated',
 #        'email',
 #        'xx',
     ],
@@ -114,16 +116,21 @@ sub save {
         name,
         date,
         queen,
+        notification_email,
         type,
         notes,
         deleted,
-        date_created
+        date_created,
+        date_updated
     )
-    VALUES (?,?,?,?,?,?,?);
+    VALUES (?,?,?,?,?,?,?,?,?);
 EOL
 
     if (! $self->date_created) {
         $self->date_created(today_ymd());
+    }
+    if (! $self->date_updated) {
+        $self->date_updated(today_ymd());
     }
     if (! defined $self->deleted) {
         $self->deleted(0)
@@ -131,7 +138,10 @@ EOL
 
     my $dbh = get_dbh();
     my $sth = $dbh->prepare($sql);
-    $sth->execute(map { $self->$_ } qw/name date queen type notes deleted date_created/);
+    $sth->execute(
+        map { $self->$_ } 
+        qw/name date queen notification_email type notes deleted date_created date_updated/
+    );
 
     $self->id($dbh->sqlite_last_insert_rowid);
 }
@@ -172,16 +182,24 @@ sub update {
             name = ?,
             date = ?,
             queen = ?,
+            notification_email = ?,
             type = ?,
             notes = ?,
-            deleted = ?
+            deleted = ?,
+            date_updated = ?
             /* date_created not updatable */
         WHERE id = ?
 EOL
 
     my $dbh = get_dbh();
     my $sth = $dbh->prepare($sql);
-    $sth->execute(map { $self->$_ } qw/name date queen type notes deleted id/);
+    $self->date_updated(today_ymd());
+    $sth->execute(
+        map { $self->$_ } 
+        qw/name date queen notification_email type notes deleted date_updated
+           id
+        /
+    );
 }
 
 sub create_table {
@@ -193,10 +211,12 @@ CREATE TABLE event (
     name VARCHAR(255),
     date TEXT(20),
     queen VARCHAR(255),
+    notification_email VARCHAR(64),
     type VARCHAR(255),
     notes VARCHAR(1024), /* length is ignored */
     deleted BOOLEAN NOT NULL DEFAULT 0,
-    date_created TEXT(20)
+    date_created TEXT(20),
+    date_updated TEXT(20)
 );
 EOL
 

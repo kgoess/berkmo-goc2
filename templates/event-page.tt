@@ -5,7 +5,7 @@
         <div class="event-name">[% event.name %]</div>
         <div class="event-date-section">
             <span class="event-date">[% event.date_pretty %]</span><br>
-            <span class="event-date-created">created: [% event.date_created %]</span>
+            <span class="event-date-created">updated: [% event.date_created %]</span>
         </div>
     </div>
     <div class="event-queen">tour queen: [% event.queen %]</div>
