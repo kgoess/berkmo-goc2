@@ -21,9 +21,9 @@
 </div>
 <div id="admin">
     <ul>
-        <li><a href="/goc2/admin/logs">View activity logs</a>
         <li><a href="/goc2/create-event">Add a new event</a>
         <li><a href="/goc2/create-user">Add a new user</a>
+        <li><a href="/goc2/admin/logs">View activity logs</a>
     </ul>
 </div>
 

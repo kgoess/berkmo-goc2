@@ -1,4 +1,5 @@
 
+<h2>Activity Logs</h2>
 <table class="logtable">
 [% FOR line IN logs %]
     <tr>
