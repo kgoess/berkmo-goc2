@@ -28,12 +28,24 @@ sub handler {
     #   see also http://www.informit.com/articles/article.aspx?p=27110&seqNum=5
 
     $r->content_type('text/html');
-    my ($result) = $class->go(
-        headers => $headers_in,
-        method => $method,
-        path_info => $path_info,
-        request => Apache2::Request->new($r),
-    );
+    my $result;
+
+    eval {
+        ($result) = $class->go(
+            headers => $headers_in,
+            method => $method,
+            path_info => $path_info,
+            request => Apache2::Request->new($r),
+        );
+        1;
+    } or do {
+        my $err = $@;
+
+        $r->content_type('text/plain');
+        $r->print("Oops! The server encountered an error:\n\n$err");
+        return Apache2::Const::OK;
+
+    };
 
     if ($result->{action} eq 'redirect') {
         $r->err_headers_out->add('Set-Cookie' => $result->{cookie});
