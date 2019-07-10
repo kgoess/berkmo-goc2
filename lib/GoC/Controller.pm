@@ -22,6 +22,7 @@ my %handler_for_path = (
     '/login'         => sub { shift->login_page(@_) },
     '/change-status' => sub { shift->change_status(@_) },
     '/create-event'  => sub { shift->create_event(@_) },
+    '/create-person' => sub { shift->create_person(@_) },
 );
 
 sub go {
@@ -210,12 +211,17 @@ sub create_event {
     } elsif ($p{method} eq 'POST') {
 
         my @errors;
-         if ($p{request}->param('event-date')  !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
+        foreach my $f (qw/event-name event-date event-type/) {
+            if (! $p{request}->param($f)) {
+                push @errors, "missing data for $f";
+            }
+        }
+        if ($p{request}->param('event-date')  !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
                 push @errors, "wrong format for event-date, should be yyyy-mm-dd";
         }
         if (my $email = $p{request}->param('event-notification-email')) {
             if ($email !~ /^[^@]+@[^@]+$/) {
-                push @errors, "that doesn't look like an email";
+                push @errors, "that doesn't look like an email to me";
             }
         }
         if (@errors) {
@@ -241,6 +247,50 @@ sub create_event {
         $event->save;
 
         my $msg = uri_escape("Event successfully created");
+        return {
+            action => 'redirect', 
+            headers => {
+                Location  => "/goc2?message=$msg",
+            },
+        };
+    }
+}
+sub create_person {
+    my ($class, %p) = @_;
+    if ($p{method} eq 'GET') {
+        return {
+            action => 'display',
+            content => GoC::View->create_person_page(
+                current_user => $p{current_user},
+                request => EmptyRequest->new(),
+            ),
+        }
+
+    } elsif ($p{method} eq 'POST') {
+
+        my @errors;
+         if (! $p{request}->param('person-name')) {
+                push @errors, "I need a name for the person";
+        }
+        if (@errors) {
+            return {
+                action => 'display',
+                content => GoC::View->create_person_page(
+                    current_user => $p{current_user},
+                    errors       => \@errors,
+                    request      => $p{request},
+                ),
+            }
+        }
+
+        my $r = $p{request};
+        my $person = GoC::Model::Person->new(
+            name  => $r->param('person-name'),
+            status  => 'active',
+        );
+        $person->save;
+
+        my $msg = uri_escape("Person successfully created");
         return {
             action => 'redirect', 
             headers => {

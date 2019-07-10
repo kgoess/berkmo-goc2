@@ -1,0 +1,22 @@
+
+[% IF errors %]
+    <div class="errors">
+        <ul>
+        [% FOR error IN errors %]
+            <li>[% error | html %]
+        [% END %]
+        </ul>
+
+    </div>
+[% END %]
+
+<form method="POST">
+
+<div>
+    <label for="person-name">Person Name:</label>
+    <input type="text" size="40" id="person-name" name="person-name" value="[% request.param('person-name') | html %]">
+</div>
+
+<input type="submit">
+
+</form>

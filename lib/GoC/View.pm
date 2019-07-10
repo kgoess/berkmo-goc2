@@ -102,6 +102,26 @@ sub create_event_page {
     return $output;
 
 }
+sub create_person_page {
+    my ($class, %p) = @_;
+
+    my $tt = get_tt();
+
+    my $template = 'person-editor.tt';
+    my $vars = {
+        organization_name => 'Berkeley Morris',
+        current_user => $p{current_user},
+        errors => $p{errors},
+        request => $p{request},
+    };
+    my $output = '';
+
+    $tt->process($template, $vars, \$output)
+           || die $tt->error();
+
+    return $output;
+
+}
 
 sub login_page {
     my ($class) = @_;
