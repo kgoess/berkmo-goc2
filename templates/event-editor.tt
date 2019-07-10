@@ -1,0 +1,52 @@
+
+[% IF errors %]
+    <div class="errors">
+        <ul>
+        [% FOR error IN errors %]
+            <li>[% error | html %]
+        [% END %]
+        </ul>
+
+    </div>
+[% END %]
+
+<form method="POST">
+
+<div>
+    <label for="event-name">Event Name:</label>
+    <input type="text" size="40" id="event-name" name="event-name" value="[% request.param('event-name') | html %]">
+</div>
+<div>
+    <label for="event-date">Date:</label>
+    <input type="text" size="10" id="event-date" name="event-date" value="[% request.param('event-date') | html %]">
+ 
+    <script>
+    $( "#event-date" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    </script>
+</div>
+<div>
+    <label for="event-queen">Tour Queen:</label>
+    <input type="text" size="40" id="event-queen" name="event-queen" value="[% request.param('event-queen') | html %]">
+</div>
+<div>
+    <label for="event-notification-email">Notification Email (optional):</label>
+    <input type="text" size="40" id="event-notification-email" name="event-notification-email" value="[% request.param('event-notification-email') | html %]">
+</div>
+
+<div>
+    <label for="event-type">Gig or Party:</label>
+    <select name="event-type">
+        <option name="gig">gig
+        <option name="party">party
+    </select>
+</div>
+<div>
+    <label for="event-notes">Notes:</label><br>
+    <textarea rows="30" cols="60" id="event-notes" name="event-notes">
+        [% request.param('event-notes') | html %]
+    </textarea>
+</div>
+
+<input type="submit">
+
+</form>

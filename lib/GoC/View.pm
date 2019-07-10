@@ -22,6 +22,7 @@ sub main_page {
         gigs    => GoC::Model::Event->get_upcoming_events(type => 'gig'),
         parties => GoC::Model::Event->get_upcoming_events(type => 'party'),
         current_user => $p{current_user},
+        message => $p{message},
     };
     my $output = '';
 
@@ -79,6 +80,27 @@ sub event_page {
            || die $tt->error();
 
     return $output;
+}
+
+sub create_event_page {
+    my ($class, %p) = @_;
+
+    my $tt = get_tt();
+
+    my $template = 'event-editor.tt';
+    my $vars = {
+        organization_name => 'Berkeley Morris',
+        current_user => $p{current_user},
+        errors => $p{errors},
+        request => $p{request},
+    };
+    my $output = '';
+
+    $tt->process($template, $vars, \$output)
+           || die $tt->error();
+
+    return $output;
+
 }
 
 sub login_page {

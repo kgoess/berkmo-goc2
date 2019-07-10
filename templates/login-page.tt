@@ -12,5 +12,8 @@
         <div>
             <input type="submit" id="login-form-submit" disabled>
         </div>
+        <div>
+            <input type="checkbox"><span style="font-size: small">show inactive users</font>
+        </div>
     </form>
 </div>

@@ -75,7 +75,7 @@ sub test_change_status {
     is   $log_lines->[0]{level}, 'info';
     is   $log_lines->[0]{actor_id}, $person->id;
     is   $log_lines->[0]{actor_name}, $person->name;
-    like $log_lines->[0]{message}, qr/status change alice\(.\) for event fourth of july parade\(.\) for role dancer to status y/;
+    like $log_lines->[0]{message}, qr/status change alice\[.\] for event fourth of july parade\[.\] for role dancer to status y/;
 
 
 }

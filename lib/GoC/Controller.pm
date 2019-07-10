@@ -10,6 +10,7 @@ use GoC::Logger;
 use GoC::Model::Event;
 use GoC::Model::Person;
 use GoC::Model::PersonEventMap;
+use GoC::Utils qw/uri_escape/;
 use GoC::View;
 
 my %handler_for_path = (
@@ -20,6 +21,7 @@ my %handler_for_path = (
     '/logout'        => sub { shift->logout(@_) },
     '/login'         => sub { shift->login_page(@_) },
     '/change-status' => sub { shift->change_status(@_) },
+    '/create-event'  => sub { shift->create_event(@_) },
 );
 
 sub go {
@@ -126,8 +128,8 @@ sub change_status {
     GoC::Model::PersonEventMap->delete_person_from_event($person, $event);
     GoC::Model::PersonEventMap->add_person_to_event($person, $event, $for_role, $status);
 
-    my $person_log_str = join '', $person->name, '(', $person->id, ')';
-    my $event_log_str  = join '', $event->name,  '(', $event->id, ')';
+    my $person_log_str = join '', $person->name, '[', $person->id, ']';
+    my $event_log_str  = join '', $event->name,  '[', $event->id, ']';
     $p{logger}->info("status change $person_log_str for event $event_log_str for role $for_role to status $status");
 
     return {
@@ -163,6 +165,7 @@ sub main_page {
         action => "display",
         content => GoC::View->main_page(
             current_user => $p{current_user},
+            message => $p{request}->param('message'),
         ),
     }
 }
@@ -188,5 +191,63 @@ sub activity_logs {
     }
 }
 
+package EmptyRequest {
+    sub new { return bless {} };
+    sub param {};
+}
+
+sub create_event {
+    my ($class, %p) = @_;
+    if ($p{method} eq 'GET') {
+        return {
+            action => 'display',
+            content => GoC::View->create_event_page(
+                current_user => $p{current_user},
+                request => EmptyRequest->new(),
+            ),
+        }
+
+    } elsif ($p{method} eq 'POST') {
+
+        my @errors;
+         if ($p{request}->param('event-date')  !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
+                push @errors, "wrong format for event-date, should be yyyy-mm-dd";
+        }
+        if (my $email = $p{request}->param('event-notification-email')) {
+            if ($email !~ /^[^@]+@[^@]+$/) {
+                push @errors, "that doesn't look like an email";
+            }
+        }
+        if (@errors) {
+            return {
+                action => 'display',
+                content => GoC::View->create_event_page(
+                    current_user => $p{current_user},
+                    errors       => \@errors,
+                    request      => $p{request},
+                ),
+            }
+        }
+
+        my $r = $p{request};
+        my $event = GoC::Model::Event->new(
+           name => $r->param('event-name'),
+            date => $r->param('event-date'),
+            queen => $r->param('event-queen'),
+            notification_email => $r->param('event-notification-email'),
+            type => $r->param('event-type'),
+            notes => $r->param('event-notes'),
+        );
+        $event->save;
+
+        my $msg = uri_escape("Event successfully created");
+        return {
+            action => 'redirect', 
+            headers => {
+                Location  => "/goc2?message=$msg",
+            },
+        };
+    }
+}
 
 1;

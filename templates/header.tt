@@ -9,9 +9,12 @@
                                           <!-- FIXME basedir -->
 <link rel="stylesheet" type="text/css" href="/goc2-static/static/styles.css" />
 
+<!-- for the date picker -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+
 <script src="/goc2-static/static/goc2.js" type="text/javascript"></script>
 
 <link href='https://fonts.googleapis.com/css?family=UnifrakturCook:700' rel='stylesheet' type='text/css'>

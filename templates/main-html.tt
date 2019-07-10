@@ -1,4 +1,10 @@
 
+[% IF message %]
+    <div class="message">
+        [% message | html %]
+    </div>
+[% END %]
+
 <div id="tabs"><!-- this contains everything that's tabbable -->
 <!-- this ul is used for the tabs -->
 <ul>
@@ -6,6 +12,7 @@
     <li><a href="#parties-grids">Parties</a></li>
     <li><a href="#admin"   >Admin</a></li>
 </ul>
+
 
 <!-- gigs tab -->
 <div id="gigs-grids" class="event-listing">

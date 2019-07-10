@@ -47,7 +47,9 @@
 </div>
 
 <div id="notes-tab">
-    [% event.notes %]
+    <pre>
+    [% event.notes | html %]
+    </pre>
 </div>
 
 

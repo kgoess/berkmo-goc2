@@ -7,7 +7,7 @@ use warnings;
 use DBI;
 
 use Exporter 'import';
-our @EXPORT_OK = qw(get_dbh today_ymd today_ymdhms);
+our @EXPORT_OK = qw(get_dbh today_ymd today_ymdhms uri_escape);
 
 
 my $_dbh;
@@ -28,5 +28,27 @@ sub today_ymd {
 sub today_ymdhms {
 	return DateTime->now(time_zone => 'America/Los_Angeles')->datetime;
 }
+
+# borrowed from URI::Escape
+# Build a char->hex map
+my %Escapes;
+for (0..255) {
+    $Escapes{chr($_)} = sprintf("%%%02X", $_);
+}
+my %Unsafe = (
+    RFC3986 => qr/[^A-Za-z0-9\-\._~]/,
+);
+ 
+sub uri_escape {
+    my($text) = @_;
+    return undef unless defined $text;
+    $text =~ s/($Unsafe{RFC3986})/$Escapes{$1} || _fail_hi($1)/ge;
+    return $text;
+}
+sub _fail_hi {
+    my $chr = shift;
+    Carp::croak(sprintf "Can't escape \\x{%04X}, try uri_escape_utf8() instead", ord($chr));
+}
+
 
 1;
