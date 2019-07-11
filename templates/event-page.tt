@@ -56,10 +56,16 @@
 </div> <!-- end tabs div -->
 
 [% BLOCK peopletable %]
-    [% accept_status_message = {
+    [%
+    accept_status_message = {
         "y" = "I will definitely come"
         "n" = "Sorry, can't make it"
         "?" = "Not sure yet"
+    }
+    accept_status_message_small = {
+        "y" = "definitely"
+        "n" = "sorry"
+        "?" = "not sure"
     }
     %]
     <table>
@@ -85,8 +91,10 @@
                                 <input type="hidden" name="person_id" value="[% current_user.id %]">
                                 <input type="hidden" name="for_role" value="[% for_role | html %]">
                                 <input type="hidden" name="status" value="[% status | html %]">
-                                <input type="submit" class="set-status-button" value="[% accept_status_message.$status %]"></td>
+                                <input type="submit" class="set-status-button-wide" value="[% accept_status_message.$status %]">
+                                <input type="submit" class="set-status-button-small" value="[% accept_status_message_small.$status %]">
                             </form>
+                        </td>
                     [% END %]
                 [% END %]
             </tr>

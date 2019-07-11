@@ -75,6 +75,9 @@ body {
   width: 100%;
   padding-left: 15px;
   padding-right: 15px;
+  border: 1px solid green;
+  padding: 10px;
+  margin: 4px;
 }
 
 .event-table-row:nth-child(even) {
@@ -102,12 +105,6 @@ body {
   padding-right: 20px;
 }
 */
-.event-table-row {
-
-  border: 1px solid green;
-  padding: 2px;
-  margin: 2px;
-}
 
 /*  Fix the minimum width of the leaf level cells */
 .event-table .cell-text {
@@ -473,6 +470,13 @@ input[type=submit] {
     border-radius: 5px; 
 }
 
+.set-status-button-wide {
+    display: block;
+}
+.set-status-button-small {
+    display: none;
+}
+
 /* iphone5         320
  * iphone 6/7/8    375
  *    "     " plus 414
@@ -496,6 +500,12 @@ input[type=submit] {
     }
     body {
         margin: 2px;
+    }
+    .set-status-button-wide {
+        display: none;
+    }
+    .set-status-button-small {
+        display: block;
     }
 }
 
