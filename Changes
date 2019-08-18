@@ -1,0 +1,6 @@
+Revision history for Perl extension GoC.
+
+0.01  Mon Aug 12 18:16:35 2019
+	- original version; created by h2xs 1.23 with options
+		-X GoC
+
