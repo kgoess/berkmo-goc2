@@ -4,7 +4,8 @@ function bindEventRowsToActions() {
     $(".event-table .an-event").bind('click', function(e) {
         e.preventDefault();
         var eventId = $(this).attr('data-event-id');
-        document.location.href="/goc2/event?id="+eventId;
+        var eventUrl = GoC.eventUrl.replace('{{id}}', eventId);
+        document.location.href=eventUrl;
     });
 }
 

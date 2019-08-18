@@ -32,10 +32,10 @@ sub handler {
 
     eval {
         ($result) = $class->go(
-            headers => $headers_in,
-            method => $method,
+            headers   => $headers_in,
+            method    => $method,
             path_info => $path_info,
-            request => Apache2::Request->new($r),
+            request   => Apache2::Request->new($r),
         );
         1;
     } or do {
