@@ -2,7 +2,7 @@
 
 <div class="login-card">
     <div>Who are you?</div>
-    <form method="POST" action="/goc2/login">
+    <form method="POST" action="[% uri_for(path => "/login") %]">
         <select name="login_id"  class="login-selectbox" >
             <option value="default" hidden="hidden">Choose here</option>
             [% FOR person IN people %]

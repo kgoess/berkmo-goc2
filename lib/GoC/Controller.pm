@@ -10,7 +10,7 @@ use GoC::Logger;
 use GoC::Model::Event;
 use GoC::Model::Person;
 use GoC::Model::PersonEventMap;
-use GoC::Utils qw/uri_escape/;
+use GoC::Utils qw/uri_escape uri_for/;
 use GoC::View;
 
 my %handler_for_path = (
@@ -31,6 +31,7 @@ sub go {
     # this is wrong, but need a way to get past these if it's a login POST
     my $is_login_attempt = $p{method} eq 'POST' && $p{path_info} eq '/login';
 
+    print STDERR "is_login_attempt is $is_login_attempt $p{method} $p{path_info}\n";
     if (! $is_login_attempt) {
 
         if (! $p{headers}{Cookie}) {
@@ -73,7 +74,7 @@ sub login_page {
         }
 
     } elsif ($p{method} eq 'POST') {
-        my $id = $p{request}->param('login_id')
+        my $id = scalar($p{request}->param('login_id'))
             or die "missing login_id";
 
         my $person = GoC::Model::Person->load($id)
@@ -89,7 +90,7 @@ sub login_page {
         return {
             action => 'redirect', 
             headers => {
-                Location  => "/goc2",
+                Location  => uri_for(path => "/"),
             },
             cookie => $cookie,
         };
@@ -102,25 +103,25 @@ sub login_page {
 sub change_status {
     my ($class, %p) = @_;
 
-    my $person_id = $p{request}->param('person_id')
+    my $person_id = scalar($p{request}->param('person_id'))
         or die "missing person_id";
 
     my $person = GoC::Model::Person->load($person_id)
         or die "no user found for id $person_id";
 
-    my $event_id = $p{request}->param('event_id')
+    my $event_id = scalar($p{request}->param('event_id'))
         or die "missing event_id";
 
     my $event = GoC::Model::Event->load($event_id)
         or die "no event found for id $event_id";
 
-    my $for_role = $p{request}->param('for_role')
+    my $for_role = scalar($p{request}->param('for_role'))
         or die "missing for_role";
 
     $for_role =~ /^(?:muso|dancer)$/
         or die "wrong value for role: $for_role";
 
-    my $status = $p{request}->param('status')
+    my $status = scalar($p{request}->param('status'))
         or die "missing status";
 
     $status =~ /^[yn?]$/
@@ -136,7 +137,7 @@ sub change_status {
     return {
         action => 'redirect', 
         headers => {
-            Location  => "/goc2/event?id=$event_id",
+            Location  => uri_for(path => "/event", id => $event_id),
         },
     };
 
@@ -154,7 +155,7 @@ sub logout {
     return {
         action => 'redirect', 
         headers => {
-            Location  => "/goc2",
+            Location => uri_for(path => '/'),
         },
         cookie => $cookie,
     };
@@ -166,7 +167,7 @@ sub main_page {
         action => "display",
         content => GoC::View->main_page(
             current_user => $p{current_user},
-            message => $p{request}->param('message'),
+            message => scalar($p{request}->param('message')),
         ),
     }
 }
@@ -176,7 +177,7 @@ sub event_page {
     return {
         action => "display",
         content => GoC::View->event_page(
-            event_id => $p{request}->param('id'), # an Apache2::Request object
+            event_id => scalar($p{request}->param('id')), # an Apache2::Request object
             current_user => $p{current_user},
         ),
     }
@@ -212,14 +213,14 @@ sub create_event {
 
         my @errors;
         foreach my $f (qw/event-name event-date event-type/) {
-            if (! $p{request}->param($f)) {
+            if (! scalar($p{request}->param($f))) {
                 push @errors, "missing data for $f";
             }
         }
-        if ($p{request}->param('event-date')  !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
+        if (scalar($p{request}->param('event-date'))  !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
                 push @errors, "wrong format for event-date, should be yyyy-mm-dd";
         }
-        if (my $email = $p{request}->param('event-notification-email')) {
+        if (my $email = scalar($p{request}->param('event-notification-email'))) {
             if ($email !~ /^[^@]+@[^@]+$/) {
                 push @errors, "that doesn't look like an email to me";
             }
@@ -237,12 +238,12 @@ sub create_event {
 
         my $r = $p{request};
         my $event = GoC::Model::Event->new(
-           name => $r->param('event-name'),
-            date => $r->param('event-date'),
-            queen => $r->param('event-queen'),
-            notification_email => $r->param('event-notification-email'),
-            type => $r->param('event-type'),
-            notes => $r->param('event-notes'),
+           name => scalar($r->param('event-name')),
+            date => scalar($r->param('event-date')),
+            queen => scalar($r->param('event-queen')),
+            notification_email => scalar($r->param('event-notification-email')),
+            type => scalar($r->param('event-type')),
+            notes => scalar($r->param('event-notes')),
         );
         $event->save;
 
@@ -250,7 +251,7 @@ sub create_event {
         return {
             action => 'redirect', 
             headers => {
-                Location  => "/goc2?message=$msg",
+                Location => uri_for( path => '/', message => $msg),
             },
         };
     }
@@ -269,7 +270,7 @@ sub create_person {
     } elsif ($p{method} eq 'POST') {
 
         my @errors;
-         if (! $p{request}->param('person-name')) {
+         if (! scalar($p{request}->param('person-name'))) {
                 push @errors, "I need a name for the person";
         }
         if (@errors) {
@@ -285,7 +286,7 @@ sub create_person {
 
         my $r = $p{request};
         my $person = GoC::Model::Person->new(
-            name  => $r->param('person-name'),
+            name  => scalar($r->param('person-name')),
             status  => 'active',
         );
         $person->save;
@@ -294,7 +295,7 @@ sub create_person {
         return {
             action => 'redirect', 
             headers => {
-                Location  => "/goc2?message=$msg",
+                Location => uri_for(path => '/', message => $msg),
             },
         };
     }

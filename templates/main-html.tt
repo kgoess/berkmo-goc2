@@ -28,9 +28,9 @@
 </div>
 <div id="admin">
     <ul>
-        <li><a href="/goc2/create-event">Add a new event</a>
-        <li><a href="/goc2/create-person">Add a new user</a>
-        <li><a href="/goc2/admin/logs">View activity logs</a>
+        <li><a href="[% uri_for( path => "/create-event" ) %]">Add a new event</a>
+        <li><a href="[% uri_for( path => "/create-person" ) %]">Add a new user</a>
+        <li><a href="[% uri_for( path => "/admin/logs" ) %]">View activity logs</a>
     </ul>
 </div>
 
@@ -45,8 +45,8 @@
                 </div>
                 <div class="wrapper">
                     <div class="cell cell-stats" >Yes<br><span class="subcol">dance/muso</span></div>
-                    <div class="cell cell-stats" >No<br><span class="subcol">dance/muso</span></div>
-                    <div class="cell cell-stats" >?<br><span class="subcol">dance/muso</span></div>
+                    <div class="cell cell-stats" >No<br></div>
+                    <div class="cell cell-stats" >?<br></div>
                 </div>
             </div>
         </div>

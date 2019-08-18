@@ -83,10 +83,13 @@
             <tr>
                 [% FOR status IN statuses %]
                     [% IF current_user_status == status && current_user_role == for_role %]
-                        <td>this is you</td>
+                        <td class="users-current-status">
+                            <div class="set-status-button-wide">[% accept_status_message.$status %]</div>
+                            <div class="set-status-button-small">[% accept_status_message_small.$status %]"</div>
+                        </td>
                     [% ELSE %]
                         <td>
-                            <form id="change-status-form" method="POST" action="/goc2/change-status">
+                            <form id="change-status-form" method="POST" action="[% uri_for(path => '/change-status') %]">
                                 <input type="hidden" name="event_id" value="[% event.id %]">
                                 <input type="hidden" name="person_id" value="[% current_user.id %]">
                                 <input type="hidden" name="for_role" value="[% for_role | html %]">

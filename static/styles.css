@@ -97,7 +97,7 @@ body {
   flex-grow: 1;           -webkit-flex-grow: 1;
 }
 
-/* 
+/*
 .event-table .cell {
   overflow: hidden;
   white-space: nowrap;
@@ -220,7 +220,7 @@ body {
 .login-card form {
     margin: 30px;
 }
-    
+
 
 /* ----------------------------- */
 /*  stuff for the tabs           */
@@ -451,8 +451,8 @@ http://tobyho.com/2012/01/25/responsive-web-design/ */
  * https://stackoverflow.com/questions/17042201/how-to-style-input-and-submit-button-with-css
  * */
 input[type=text] {
-    padding:5px; 
-    border:2px solid #ccc; 
+    padding:5px;
+    border:2px solid #ccc;
     -webkit-border-radius: 5px;
     border-radius: 5px;
 }
@@ -461,20 +461,31 @@ input[type=text]:focus {
     border-color:#333;
 }
 
-input[type=submit] { 
-    padding:5px 15px; 
+input[type=submit] {
+    padding:5px 15px;
     background:lightgrey;
     border:10px black;
     cursor:pointer;
-    -webkit-border-radius: 5px;
-    border-radius: 5px; 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 3px 15px rgba(0,0,0,.2);
+    -moz-box-shadow:    0px 3px 15px rgba(0,0,0,.2);
+    box-shadow:         0px 3px 15px rgba(0,0,0,.2);
+
 }
 
 .set-status-button-wide {
     display: block;
+    margin: 5px 15px;
 }
 .set-status-button-small {
     display: none;
+    margin: 5px 15px;
+}
+
+.users-current-status {
+    background: #ffd0ff;
+    padding: 5px 15px;
 }
 
 /* iphone5         320
@@ -482,13 +493,13 @@ input[type=submit] {
  *    "     " plus 414
  * pixel 2         411
  */
-@media all and (max-width: 850px) { 
+@media all and (max-width: 850px) {
     body {
         margin: 20px;
     }
 }
 
-@media all and (max-width: 450px) { 
+@media all and (max-width: 450px) {
     .event-table-head {
         display: none;
     }
@@ -503,9 +514,11 @@ input[type=submit] {
     }
     .set-status-button-wide {
         display: none;
+        margin: 5px 15px;
     }
     .set-status-button-small {
         display: block;
+        margin: 5px 15px;
     }
 }
 
