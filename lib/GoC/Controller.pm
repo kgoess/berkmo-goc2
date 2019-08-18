@@ -3,6 +3,7 @@ package GoC::Controller;
 use strict;
 use warnings;
 
+use Carp qw/croak/;
 use CGI::Cookie;
 use Data::Dump qw/dump/;
 
@@ -22,6 +23,7 @@ my %handler_for_path = (
     '/login'         => sub { shift->login_page(@_) },
     '/change-status' => sub { shift->change_status(@_) },
     '/create-event'  => sub { shift->create_event(@_) },
+    '/edit-event'    => sub { shift->edit_event(@_) },
     '/create-person' => sub { shift->create_person(@_) },
 );
 
@@ -31,7 +33,6 @@ sub go {
     # this is wrong, but need a way to get past these if it's a login POST
     my $is_login_attempt = $p{method} eq 'POST' && $p{path_info} eq '/login';
 
-    print STDERR "is_login_attempt is $is_login_attempt $p{method} $p{path_info}\n";
     if (! $is_login_attempt) {
 
         if (! $p{headers}{Cookie}) {
@@ -238,7 +239,7 @@ sub create_event {
 
         my $r = $p{request};
         my $event = GoC::Model::Event->new(
-           name => scalar($r->param('event-name')),
+            name => scalar($r->param('event-name')),
             date => scalar($r->param('event-date')),
             queen => scalar($r->param('event-queen')),
             notification_email => scalar($r->param('event-notification-email')),
@@ -247,9 +248,79 @@ sub create_event {
         );
         $event->save;
 
+        my $person_log_str = join '', $p{current_user}->name, '[', $p{current_user}->id, ']';
+        my $event_log_str  = join '', $event->name,  '[', $event->id, ']';
+        $p{logger}->info($event->type." event created: $event_log_str (".$event->date.") by $person_log_str");
+
         my $msg = uri_escape("Event successfully created");
         return {
             action => 'redirect', 
+            headers => {
+                Location => uri_for( path => '/', message => $msg),
+            },
+        };
+    }
+}
+
+sub edit_event {
+    my ($class, %p) = @_;
+    if ($p{method} eq 'GET') {
+        return {
+            action => 'display',
+            content => GoC::View->edit_event_page(
+                current_user => $p{current_user},
+                event_id => scalar($p{request}->param('event-id')),
+                request => EmptyRequest->new(),
+            ),
+        }
+
+    } elsif ($p{method} eq 'POST') {
+
+        my @errors;
+        foreach my $f (qw/event-name event-date event-type/) {
+            if (! scalar($p{request}->param($f))) {
+                push @errors, "missing data for $f";
+            }
+        }
+        if (scalar($p{request}->param('event-date'))  !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
+                push @errors, "wrong format for event-date, should be yyyy-mm-dd";
+        }
+        if (my $email = scalar($p{request}->param('event-notification-email'))) {
+            if ($email !~ /^[^@]+@[^@]+$/) {
+                push @errors, "that doesn't look like an email to me";
+            }
+        }
+        if (@errors) {
+            return {
+                action => 'display',
+                content => GoC::View->edit_event_page(
+                    current_user => $p{current_user},
+                    event_id     => scalar($p{request}->param('event-id')),
+                    errors       => \@errors,
+                    request      => $p{request},
+                ),
+            }
+        }
+
+        my $r = $p{request};
+        my $event_id = scalar($p{request}->param('event-id'));
+        my $event = GoC::Model::Event->load($event_id)
+            or croak "no event found for id $event_id";
+        $event->name(scalar($r->param('event-name')));
+        $event->date(scalar($r->param('event-date')));
+        $event->queen(scalar($r->param('event-queen')));
+        $event->notification_email(scalar($r->param('event-notification-email')));
+        $event->type(scalar($r->param('event-type')));
+        $event->notes(scalar($r->param('event-notes')));
+        $event->save;
+
+        my $person_log_str = join '', $p{current_user}->name, '[', $p{current_user}->id, ']';
+        my $event_log_str  = join '', $event->name,  '[', $event->id, ']';
+        $p{logger}->info($event->type." event edited: $event_log_str (".$event->date.") by $person_log_str");
+
+        my $msg = uri_escape('Event "'.$event->name.'" successfully edited');
+        return {
+            action => 'redirect',
             headers => {
                 Location => uri_for( path => '/', message => $msg),
             },

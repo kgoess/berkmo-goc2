@@ -12,13 +12,17 @@
 
 <form method="POST">
 
+[% IF event_id %]
+    <input type="hidden" name="event-id" value="[% event_id | html %]">
+[% END %]
+
 <div>
     <label for="event-name">Event Name:</label>
-    <input type="text" size="40" id="event-name" name="event-name" value="[% request.param('event-name') | html %]">
+    <input type="text" size="40" id="event-name" name="event-name" value="[% event_name | html %]">
 </div>
 <div>
     <label for="event-date">Date:</label>
-    <input type="text" size="10" id="event-date" name="event-date" value="[% request.param('event-date') | html %]">
+    <input type="text" size="10" id="event-date" name="event-date" value="[% event_date | html %]">
  
     <script>
     $( "#event-date" ).datepicker({ dateFormat: 'yy-mm-dd' });
@@ -26,24 +30,24 @@
 </div>
 <div>
     <label for="event-queen">Tour Queen:</label>
-    <input type="text" size="40" id="event-queen" name="event-queen" value="[% request.param('event-queen') | html %]">
+    <input type="text" size="40" id="event-queen" name="event-queen" value="[% event_queen | html %]">
 </div>
 <div>
     <label for="event-notification-email">Notification Email (optional):</label>
-    <input type="text" size="40" id="event-notification-email" name="event-notification-email" value="[% request.param('event-notification-email') | html %]">
+    <input type="text" size="40" id="event-notification-email" name="event-notification-email" value="[% event_notification_email | html %]">
 </div>
 
 <div>
     <label for="event-type">Gig or Party:</label>
     <select name="event-type">
-        <option name="gig">gig
-        <option name="party">party
+        <option name="gig" [% IF event_type == "gig" %]selected="selected"[% END %]>gig
+        <option name="party" [% IF event_type == "party" %]selected="selected"[% END %]>party
     </select>
 </div>
 <div>
     <label for="event-notes">Notes:</label><br>
     <textarea rows="30" cols="60" id="event-notes" name="event-notes">
-        [% request.param('event-notes') | html %]
+        [% event_notes | html %]
     </textarea>
 </div>
 

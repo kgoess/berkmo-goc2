@@ -91,12 +91,62 @@ sub create_event_page {
 
     my $tt = get_tt();
 
+    my $param = sub { scalar($p{request}->param(shift)) };
+
     my $template = 'event-editor.tt';
     my $vars = get_vars(
         organization_name => 'Berkeley Morris',
-        current_user => $p{current_user},
-        errors => $p{errors},
-        request => $p{request},
+        current_user      => $p{current_user},
+        errors            => $p{errors},
+        #request           => $p{request},
+        event_name        => $param->('event-name'),
+        event_date        => $param->('event-date'),
+        event_queen       => $param->('event-queen'),
+        event_notification_email => $param->('event-notification-email'),
+        event_type        => $param->('event-type'),
+        event_notes       => $param->('event-notes'),
+    );
+    my $output = '';
+
+    $tt->process($template, $vars, \$output)
+           || die $tt->error();
+
+    return $output;
+}
+
+sub edit_event_page {
+    my ($class, %p) = @_;
+
+    my $tt = get_tt();
+
+    my $event = GoC::Model::Event->load($p{event_id})
+        or croak "no event found for id $p{event_id}";
+
+    my $param = sub { scalar($p{request}->param(shift)) };
+
+    my $param_or_field = sub {
+        my ($param_name, $obj_value) = @_;
+        if ($p{errors} && @{ $p{errors} }) {
+            return scalar($p{request}->param($param_name));
+        } else {
+            return $obj_value;
+        }
+    };
+
+
+    my $template = 'event-editor.tt';
+    my $vars = get_vars(
+        organization_name => 'Berkeley Morris',
+        current_user      => $p{current_user},
+        errors            => $p{errors},
+        #request => $p{request},
+        event_name        => $param_or_field->('event-name', $event->name),
+        event_id          => $param_or_field->('event-id', $event->id),
+        event_date        => $param_or_field->('event-date', $event->date),
+        event_queen       => $param_or_field->('event-queen', $event->queen),
+        event_notification_email => $param_or_field->('event-notification-email', $event->notification_email),
+        event_type        => $param_or_field->('event-type', $event->type),
+        event_notes       => $param_or_field->('event-notes', $event->notes),
     );
     my $output = '';
 

@@ -194,6 +194,10 @@ body {
     font-size: 80%;
     font-style: italic;
 }
+
+.edit-event-button {
+    margin-top: 10px;
+}
 #event-card .event-queen {
     clear: both;
 }
