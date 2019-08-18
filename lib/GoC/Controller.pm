@@ -23,6 +23,7 @@ my %handler_for_path = (
     '/change-status' => sub { shift->change_status(@_) },
     '/create-event'  => sub { shift->create_event(@_) },
     '/create-person' => sub { shift->create_person(@_) },
+    '/edit-person'   => sub { shift->edit_person(@_) },
 );
 
 sub go {
@@ -279,6 +280,67 @@ sub create_person {
                     current_user => $p{current_user},
                     errors       => \@errors,
                     request      => $p{request},
+                ),
+            }
+        }
+
+        my $r = $p{request};
+        my $person = GoC::Model::Person->new(
+            name  => $r->param('person-name'),
+            status  => 'active',
+        );
+        $person->save;
+
+        my $msg = uri_escape("Person successfully created");
+        return {
+            action => 'redirect', 
+            headers => {
+                Location  => "/goc2?message=$msg",
+            },
+        };
+    }
+}
+
+sub edit_person {
+    my ($class, %p) = @_;
+    if ($p{method} eq 'GET') {
+        if (my $person_id = $p{request}->param('person-id')) {
+            my $person = GoC::Model::Person->load($person_id)
+                or die "can't find person for id $person_id";
+            return {
+                action => 'display',
+                content => GoC::View->create_person_page(
+                    current_user => $p{current_user},
+                    person =>  $person,
+                ),
+            }
+        } else {
+            return {
+                action => 'display',
+                content => GoC::View->pick_person_to_edit_page (
+                    current_user => $p{current_user},
+                ),
+            }
+        }
+
+
+    } elsif ($p{method} eq 'POST') {
+        my $person_id = $p{request}->param('person-id')
+            or die "missing person_id in call to edit_person";
+        my $person = GoC::Model::Person->load($person_id)
+            or die "can't find person for id $person_id";
+
+        if (! $p{request}->param('person-name')) {
+            push @errors, "You can't change the person's name to a blank.";
+        }
+        if (@errors) {
+            return {
+                action => 'display',
+                content => GoC::View->create_person_page(
+                    current_user => $p{current_user},
+                    errors       => \@errors,
+                    request      => $p{request},
+                    person       => $person,
                 ),
             }
         }

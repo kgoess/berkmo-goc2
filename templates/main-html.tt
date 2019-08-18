@@ -30,6 +30,7 @@
     <ul>
         <li><a href="/goc2/create-event">Add a new event</a>
         <li><a href="/goc2/create-person">Add a new user</a>
+        <li><a href="/goc2/edit-person">Edit an existing user</a>
         <li><a href="/goc2/admin/logs">View activity logs</a>
     </ul>
 </div>

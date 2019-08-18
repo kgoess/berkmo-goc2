@@ -113,6 +113,7 @@ sub create_person_page {
         current_user => $p{current_user},
         errors => $p{errors},
         request => $p{request},
+        person => $p{person},
     };
     my $output = '';
 
@@ -120,7 +121,47 @@ sub create_person_page {
            || die $tt->error();
 
     return $output;
+}
 
+sub pick_person_to_edit_page {
+    my ($class, %p) = @_;
+
+    my $tt = get_tt();
+
+    my $template = 'person-editor-picker.tt';
+    my $vars = {
+        organization_name => 'Berkeley Morris',
+        current_user => $p{current_user},
+        errors => $p{errors},
+        #request => $p{request},
+        active_people => [ GoC::Model::Person->get_all(status => 'active') ],
+    };
+    my $output = '';
+
+    $tt->process($template, $vars, \$output)
+           || die $tt->error();
+
+    return $output;
+}
+
+sub edit_person_page {
+    my ($class, %p) = @_;
+
+    my $tt = get_tt();
+
+    my $template = 'person-editor.tt';
+    my $vars = {
+        organization_name => 'Berkeley Morris',
+        current_user => $p{current_user},
+        errors => $p{errors},
+        request => $p{request},
+    };
+    my $output = '';
+
+    $tt->process($template, $vars, \$output)
+           || die $tt->error();
+
+    return $output;
 }
 
 sub login_page {

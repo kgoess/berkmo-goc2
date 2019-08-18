@@ -14,7 +14,8 @@
 
 <div>
     <label for="person-name">Person Name:</label>
-    <input type="text" size="40" id="person-name" name="person-name" value="[% request.param('person-name') | html %]">
+    <input type="text" size="40" id="person-name" name="person-name" value="[% person.name | html %]">
+    <input type="hidden" name="person-id" value="[% person.id | html %]">
 </div>
 
 <input type="submit">
