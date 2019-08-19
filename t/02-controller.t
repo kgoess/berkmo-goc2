@@ -7,6 +7,7 @@ use Data::Dump qw/dump/;
 use Test::More tests => 6;
 
 use GoC::Controller;
+use GoC::Controller::CGI;
 use GoC::Model::Event;
 use GoC::Model::Person;
 use GoC::Model::PersonEventMap;
@@ -27,6 +28,7 @@ package MockRequest {
 
 
 $ENV{SQLITE_FILE} = 'goctest';
+$ENV{GOC_URI_BASE} = '/goc2';
 unlink $ENV{SQLITE_FILE};
 
 GoC::Model::Person->create_table;
@@ -61,7 +63,8 @@ sub test_change_status {
     );
     GoC::Controller->change_status(
         request => $request,
-        logger => GoC::Logger->new(current_user => $person)
+        logger => GoC::Logger->new(current_user => $person),
+        uri_for => \&GoC::Controller::CGI::uri_for,
     );
 
 

@@ -11,8 +11,7 @@ use GoC::Logger;
 use GoC::Model::Event;
 use GoC::Model::Person;
 use GoC::Model::PersonEventMap;
-use GoC::Utils qw/uri_escape uri_for/;
-use GoC::View;
+use GoC::Utils qw/uri_escape/;
 
 my %handler_for_path = (
     ''               => sub { shift->main_page(@_) },
@@ -65,6 +64,25 @@ sub go {
     }
 }
 
+# when either GoC::Controller::ModPerl or Goc::Controller::CGI loads
+# this module, Perl calls this import() function and we set the location
+# of the uri_for implementation
+sub import {
+    my ($class, $location) = @_;
+
+    return unless $location;
+
+    no warnings 'redefine';
+
+    my $uri_for_implementation = join '::', $location, 'uri_for';
+    *uri_for = \&{$uri_for_implementation};
+
+    my $static_uri_for_implementation = join '::', $location, 'static_uri_for';
+    *static_uri_for = \&{$static_uri_for_implementation};
+}
+
+sub uri_for { ... }
+sub static_uri_for { ... }
 
 sub login_page {
     my ($class, %p) = @_;
@@ -402,35 +420,36 @@ sub edit_person {
         my $person = GoC::Model::Person->load($person_id)
             or die "can't find person for id $person_id";
 
-        if (! $p{request}->param('person-name')) {
-            push @errors, "You can't change the person's name to a blank.";
-        }
-        if (@errors) {
-            return {
-                action => 'display',
-                content => GoC::View->create_person_page(
-                    current_user => $p{current_user},
-                    errors       => \@errors,
-                    request      => $p{request},
-                    person       => $person,
-                ),
-            }
-        }
-
-        my $r = $p{request};
-        my $person = GoC::Model::Person->new(
-            name  => $r->param('person-name'),
-            status  => 'active',
-        );
-        $person->save;
-
-        my $msg = uri_escape("Person successfully created");
-        return {
-            action => 'redirect', 
-            headers => {
-                Location  => "/goc2?message=$msg",
-            },
-        };
+die "need to finish this implementation (or correct the merge conflict resolution?)";
+#        if (! $p{request}->param('person-name')) {
+#            push @errors, "You can't change the person's name to a blank.";
+#        }
+#        if (@errors) {
+#            return {
+#                action => 'display',
+#                content => GoC::View->create_person_page(
+#                    current_user => $p{current_user},
+#                    errors       => \@errors,
+#                    request      => $p{request},
+#                    person       => ,
+#                ),
+#            }
+#        }
+#
+#        my $r = $p{request};
+#        my $person = GoC::Model::Person->new(
+#            name  => $r->param('person-name'),
+#            status  => 'active',
+#        );
+#        $person->save;
+#
+#        my $msg = uri_escape("Person successfully created");
+#        return {
+#            action => 'redirect', 
+#            headers => {
+#                Location  => "/goc2?message=$msg",
+#            },
+#        };
     }
 }
 

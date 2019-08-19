@@ -8,10 +8,11 @@ use Apache2::RequestIO ();  # for print
 use Apache2::Const -compile => ':common';
 use Apache2::Request;
 
-use GoC::Controller;
+use GoC::Controller __PACKAGE__;
+use GoC::View __PACKAGE__;
 
 sub handler {
-    my $class = 'GoC::Controller';
+    my $controller = 'GoC::Controller';
     my $r = shift;
 
     #$r->content_type('text/plain');
@@ -31,11 +32,13 @@ sub handler {
     my $result;
 
     eval {
-        ($result) = $class->go(
+        ($result) = $controller->go(
             headers   => $headers_in,
             method    => $method,
             path_info => $path_info,
             request   => Apache2::Request->new($r),
+            uri_for   => \&uri_for,
+            static_uri_for => \&static_uri_for,
         );
         1;
     } or do {
@@ -58,6 +61,36 @@ sub handler {
         $r->print($result->{content});
         return Apache2::Const::OK;
     }
+}
+
+# TODO need to worry about escaping here
+sub uri_for {
+    my %p;
+    if (ref $_[0] eq 'HASH') { # TT sends a hashref
+        %p = %{ $_[0] };
+    } else {
+        %p = @_;
+    }
+
+    my $path = delete $p{path} || '/';
+
+    my $base = $ENV{GOC_URI_BASE} or die "GOC_URI_BASE is unset in ENV";
+
+    my $url_params = '';
+    if (keys %p) {
+        $url_params = '?'; # will also be different for mod_perl
+        $url_params .= join '&', map { "$_=$p{$_}" } sort keys %p;
+    }
+
+    return "$base$path$url_params";
+}
+
+sub static_uri_for {
+    my ($path) = @_;
+
+    my $base = $ENV{GOC_STATIC_URI_BASE} or die "GOC_STATIC_URI_BASE is unset in ENV";
+
+    return "$ENV{GOC_STATIC_URI_BASE}/$path";
 }
 
 1;

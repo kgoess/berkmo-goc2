@@ -10,10 +10,24 @@ use Template;
 use GoC::Logger;
 use GoC::Model::Event;
 use GoC::Model::Person;
-use GoC::Utils qw/
-    static_uri_for
-    uri_for
-/;
+
+# when either GoC::Controller::ModPerl or Goc::Controller::CGI loads
+# this module, Perl calls this import() function and we set the location
+# of the uri_for implementation
+sub import {
+    my ($class, $location) = @_;
+
+    return unless $location;
+
+    no warnings 'redefine';
+    my $uri_for_implementation = join '::', $location, 'uri_for';
+    *uri_for = \&{$uri_for_implementation};
+
+    my $static_uri_for_implementation = join '::', $location, 'static_uri_for';
+    *static_uri_for = \&{$static_uri_for_implementation};
+}
+sub uri_for { ... }
+sub static_uri_for { ... }
 
 sub main_page {
     my ($class, %p) = @_;
@@ -22,6 +36,7 @@ sub main_page {
 
     my $template = 'main-html.tt';
     my $vars = get_vars(
+        \%p,
         organization_name => 'Berkeley Morris',
         gigs    => GoC::Model::Event->get_upcoming_events(type => 'gig'),
         parties => GoC::Model::Event->get_upcoming_events(type => 'party'),
@@ -67,6 +82,7 @@ sub event_page {
 
     my $template = 'event-page.tt';
     my $vars = get_vars(
+        \%p,
         organization_name => 'Berkeley Morris',
         statuses => \@statuses,
         event => $event,
@@ -95,6 +111,7 @@ sub create_event_page {
 
     my $template = 'event-editor.tt';
     my $vars = get_vars(
+        \%p,
         organization_name => 'Berkeley Morris',
         current_user      => $p{current_user},
         errors            => $p{errors},
@@ -136,6 +153,7 @@ sub edit_event_page {
 
     my $template = 'event-editor.tt';
     my $vars = get_vars(
+        \%p,
         organization_name => 'Berkeley Morris',
         current_user      => $p{current_user},
         errors            => $p{errors},
@@ -163,6 +181,7 @@ sub create_person_page {
 
     my $template = 'person-editor.tt';
     my $vars = get_vars(
+        \%p,
         organization_name => 'Berkeley Morris',
         current_user => $p{current_user},
         errors => $p{errors},
@@ -219,12 +238,13 @@ sub edit_person_page {
 }
 
 sub login_page {
-    my ($class) = @_;
+    my ($class, %p) = @_;
 
     my $tt = get_tt();
 
     my $template = 'login-page.tt';
     my $vars = get_vars(
+        \%p,
         people => [ GoC::Model::Person->get_all(status => 'active') ],
     );
 
@@ -237,12 +257,13 @@ sub login_page {
 }
 
 sub activity_logs {
-    my ($class) = @_;
+    my ($class, %p) = @_;
 
     my $tt = get_tt();
 
     my $template = 'activity-logs.tt';
     my $vars = get_vars(
+        \%p,
         logs => GoC::Logger->get_log_lines(),
     );
 
@@ -268,12 +289,13 @@ sub get_tt {
 }
 
 sub get_vars {
-    my %p = @_;
+    my $p = shift;
+    my %vars = @_;
 
     return {
-        uri_for => \&uri_for,
+        uri_for        => \&uri_for,
         static_uri_for => \&static_uri_for,
-        %p,
+        %vars,
     };
 }
 
