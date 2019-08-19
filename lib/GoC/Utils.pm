@@ -9,11 +9,9 @@ use DBI;
 use Exporter 'import';
 our @EXPORT_OK = qw(
     get_dbh
-    static_uri_for
     today_ymd
     today_ymdhms
     uri_escape
-    uri_for
 );
 
 
@@ -57,36 +55,5 @@ sub _fail_hi {
     Carp::croak(sprintf "Can't escape \\x{%04X}, try uri_escape_utf8() instead", ord($chr));
 }
 
-# TODO need to worry about escaping here
-sub uri_for {
-    my %p;
-    if (ref $_[0] eq 'HASH') { # TT sends a hashref
-        %p = %{ $_[0] };
-    } else {
-        %p = @_;
-    }
-
-    my $path = delete $p{path} || '/';
-
-    my $base = $ENV{GOC_URI_BASE} or die "GOC_URI_BASE is unset in ENV";
-
-    my $url_params = '';
-    if (keys %p) {
-        $url_params = '&'; # will also be different for mod_perl
-        $url_params .= join '&', map { "$_=$p{$_}" } sort keys %p;
-    }
-
-
-    #FIXME this will be different for mod_perl
-    return "$base?path=$path$url_params";
-}
-
-sub static_uri_for {
-    my ($path) = @_;
-
-    my $base = $ENV{GOC_STATIC_URI_BASE} or die "GOC_STATIC_URI_BASE is unset in ENV";
-
-    return "$ENV{GOC_STATIC_URI_BASE}/$path";
-}
 
 1;

@@ -5,8 +5,8 @@ use warnings;
 
 use CGI;
 
-
-use GoC::Controller;
+use GoC::Controller __PACKAGE__;
+use GoC::View __PACKAGE__;
 
 sub handler {
     my $class = 'GoC::Controller';
@@ -27,12 +27,14 @@ sub handler {
             method    => $method,
             path_info => $path_info,
             request   => $q, 
+            uri_for   => \&uri_for,
+            static_uri_for => \&static_uri_for,
         );
         1;
     } or do {
         my $err = $@;
 
-die $err;
+die $err; # FIXME
 #        $r->content_type('text/plain');
 #        $r->print("Oops! The server encountered an error:\n\n$err");
 #        return Apache2::Const::OK;
@@ -106,7 +108,37 @@ sub get_path_info {
     return $path // '';
 }
 
-
     
+# TODO need to worry about escaping here?
+sub uri_for {
+    my %p;
+    if (ref $_[0] eq 'HASH') { # TT sends a hashref
+        %p = %{ $_[0] };
+    } else {
+        %p = @_;
+    }
+
+    my $path = delete $p{path} || '/';
+
+    my $base = $ENV{GOC_URI_BASE} or die "GOC_URI_BASE is unset in ENV";
+
+    my $url_params = '';
+    if (keys %p) {
+        $url_params = '&'; # will also be different for mod_perl
+        $url_params .= join '&', map { "$_=$p{$_}" } sort keys %p;
+    }
+
+
+    #FIXME this will be different for mod_perl
+    return "$base?path=$path$url_params";
+}
+
+sub static_uri_for {
+    my ($path) = @_;
+
+    my $base = $ENV{GOC_STATIC_URI_BASE} or die "GOC_STATIC_URI_BASE is unset in ENV";
+
+    return "$ENV{GOC_STATIC_URI_BASE}/$path";
+}
 
 1;
