@@ -1,0 +1,31 @@
+
+
+[% IF errors %]
+    <div class="errors">
+        <ul>
+        [% FOR error IN errors %]
+            <li>[% error | html %]
+        [% END %]
+        </ul>
+
+    </div>
+[% END %]
+
+<form method="GET">
+
+<div>
+    <label for="person-picker">Whom to edit?</label>
+    <select name="person-id">
+        [% FOR person IN active_people %]
+            <option value="[% person.id | html %]">[% person.name | html %]</option>
+        [% END %]
+    </select>
+
+    <p>
+    <input type="checkbox"> show disabled?
+    </p>
+</div>
+
+<input type="submit">
+
+</form>
