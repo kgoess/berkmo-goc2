@@ -331,7 +331,7 @@ sub edit_event {
         $event->notification_email(scalar($r->param('event-notification-email')));
         $event->type(scalar($r->param('event-type')));
         $event->notes(scalar($r->param('event-notes')));
-        $event->save;
+        $event->update;
 
         my $person_log_str = join '', $p{current_user}->name, '[', $p{current_user}->id, ']';
         my $event_log_str  = join '', $event->name,  '[', $event->id, ']';
@@ -441,7 +441,7 @@ die "need to finish this implementation (or correct the merge conflict resolutio
 #            name  => $r->param('person-name'),
 #            status  => 'active',
 #        );
-#        $person->save;
+#        $person->save;  note change to update here!
 #
 #        my $msg = uri_escape("Person successfully created");
 #        return {
