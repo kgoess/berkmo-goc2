@@ -23,6 +23,7 @@ my %handler_for_path = (
     '/change-status' => sub { shift->change_status(@_) },
     '/create-event'  => sub { shift->create_event(@_) },
     '/edit-event'    => sub { shift->edit_event(@_) },
+    '/delete-event'  => sub { shift->delete_event(@_) },
     '/create-person' => sub { shift->create_person(@_) },
     '/edit-person'   => sub { shift->edit_person(@_) },
 );
@@ -36,14 +37,14 @@ sub go {
     if (! $is_login_attempt) {
 
         if (! $p{headers}{Cookie}) {
-            return { 
+            return {
                 action => 'display',
                 content => GoC::View->login_page(),
             };
         }
         my $cookies = CGI::Cookie->parse($p{headers}{Cookie});
         if (! $cookies->{'Berkmo-GoC'}) {
-            return { 
+            return {
                 action => 'display',
                 content => GoC::View->login_page(),
             };
@@ -108,7 +109,7 @@ sub login_page {
 
         GoC::Logger->new(current_user => $person)->debug("logged in");
         return {
-            action => 'redirect', 
+            action => 'redirect',
             headers => {
                 Location  => uri_for(path => "/"),
             },
@@ -155,7 +156,7 @@ sub change_status {
     $p{logger}->info("status change $person_log_str for event $event_log_str for role $for_role to status $status");
 
     return {
-        action => 'redirect', 
+        action => 'redirect',
         headers => {
             Location  => uri_for(path => "/event", id => $event_id),
         },
@@ -173,7 +174,7 @@ sub logout {
      );
     $p{logger}->debug("logged out") ;
     return {
-        action => 'redirect', 
+        action => 'redirect',
         headers => {
             Location => uri_for(path => '/'),
         },
@@ -273,7 +274,7 @@ sub create_event {
 
         my $msg = uri_escape("Event successfully created");
         return {
-            action => 'redirect', 
+            action => 'redirect',
             headers => {
                 Location => uri_for( path => '/', message => $msg),
             },
@@ -346,6 +347,45 @@ sub edit_event {
         };
     }
 }
+sub delete_event {
+    my ($class, %p) = @_;
+    if ($p{method} eq 'GET') {
+        return {
+            action => 'redirect',
+            headers => {
+                Location => uri_for(
+                    path => '/',
+                    message => 'GET not supported for /delete-event',
+                ),
+            },
+        };
+
+    } elsif ($p{method} eq 'POST') {
+
+        my @errors;
+
+        my $event_id = scalar($p{request}->url_param('event-id'))
+            or croak "missing event-id param for /delete-event";
+
+        my $r = $p{request};
+        my $event = GoC::Model::Event->load($event_id)
+            or croak "no event found for id $event_id";
+        $event->deleted(1);
+        $event->update;
+
+        my $person_log_str = join '', $p{current_user}->name, '[', $p{current_user}->id, ']';
+        my $event_log_str  = join '', $event->name,  '[', $event->id, ']';
+        $p{logger}->info($event->type." event edited: $event_log_str (".$event->date.") by $person_log_str");
+
+        my $msg = uri_escape('Event "'.$event->name.'" has been marked as deleted');
+        return {
+            action => 'redirect',
+            headers => {
+                Location => uri_for( path => '/', message => $msg),
+            },
+        };
+    }
+}
 sub create_person {
     my ($class, %p) = @_;
     if ($p{method} eq 'GET') {
@@ -383,7 +423,7 @@ sub create_person {
 
         my $msg = uri_escape("Person successfully created");
         return {
-            action => 'redirect', 
+            action => 'redirect',
             headers => {
                 Location => uri_for(path => '/', message => $msg),
             },
@@ -445,7 +485,7 @@ die "need to finish this implementation (or correct the merge conflict resolutio
 #
 #        my $msg = uri_escape("Person successfully created");
 #        return {
-#            action => 'redirect', 
+#            action => 'redirect',
 #            headers => {
 #                Location  => "/goc2?message=$msg",
 #            },
