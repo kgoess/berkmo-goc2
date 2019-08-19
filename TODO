@@ -1,0 +1,8 @@
+
+ - if we hide the logo for small screens, we need a back button to the main page?
+DONE add notification email to events
+DONE change event.created to event.updated and change display to say "updated"
+ - add a fatal error handler
+ - finish person editor
+
+- make sure params are list context or whatever
