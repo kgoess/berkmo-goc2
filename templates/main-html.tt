@@ -60,7 +60,7 @@
                     </div>
                     <div class="wrapper">
                         <div class="cell cell-stats"><span class="cell-yes-no">Yes:</span>
-                            [% event.get_persons('role', 'dancer', 'status', 'y').size || 0 | html %]/[% event.get_persons('role', 'muso', 'status', 'y').size || 0 | html %]
+                            [% event.get_num_persons('role', 'dancer', 'status', 'y') | html %]/[% event.get_persons('role', 'muso', 'status', 'y').size || 0 | html %]
                         </div>
                         <div class="cell cell-stats"><span class="cell-yes-no">No:</span>
                             [% event.get_persons('role', 'dancer', 'status', 'n').size || 0 | html %]/[% event.get_persons('role', 'muso', 'status', 'n').size || 0 | html %]

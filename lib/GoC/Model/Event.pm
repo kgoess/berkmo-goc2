@@ -73,6 +73,36 @@ EOL
     }
 }
     
+sub get_num_persons {
+    my ($self, %p) = @_;
+
+    # TODO: move this into PersonEventMap.pm?
+    my $sql = <<EOL;
+    SELECT count(*)
+    FROM person_to_event_map
+    WHERE event_id = ?
+EOL
+
+    my @sql_args = ($self->id);
+
+    if ($p{role}) {
+        $sql .= 'AND role = ? ';
+        push @sql_args, $p{role};
+    }
+    if ($p{status}) {
+        $sql .= 'AND status = ? ';
+        push @sql_args, $p{status};
+    }
+
+    my $dbh = get_dbh();
+    my $sth = $dbh->prepare($sql);
+    $sth->execute(@sql_args);
+
+    my @rc;
+
+    my $row = $sth->fetchrow_arrayref;
+    return $row->[0];
+}
 
 
 sub get_persons {
