@@ -310,7 +310,7 @@ sub test_edit_person {
         current_user => $user,
     );
     is $result->{action}, 'redirect' or diag $result->{content};
-    is $result->{headers}{Location}, '/goc2?message=Person%20%22Faithe%20the%20Healer%22%20successfully%20created';
+    is $result->{headers}{Location}, '/goc2?path=/&message=Person%20%22Faithe%20the%20Healer%22%20has%20been%20updated';
 
     $person = GoC::Model::Person->load($person->id, include_everybody => 1);
     is $person->name, 'Faithe the Healer';
