@@ -160,7 +160,11 @@ sub change_status {
     return {
         action => 'redirect',
         headers => {
-            Location  => uri_for(path => "/event", id => $event_id),
+            Location  => uri_for(
+                path => "/event", 
+                id => $event_id, 
+                message => qq{Your status for this event has been updated to "$for_role: $status"},
+            ),
         },
     };
 
@@ -202,6 +206,7 @@ sub event_page {
         content => GoC::View->event_page(
             event_id => scalar($p{request}->param('id')), # an Apache2::Request object
             current_user => $p{current_user},
+            message => scalar($p{request}->param('message')),
         ),
     }
 }
@@ -371,7 +376,7 @@ sub delete_event {
 
         my @errors;
 
-        my $event_id = scalar($p{request}->url_param('event-id'))
+        my $event_id = scalar($p{request}->param('event-id'))
             or croak "missing event-id param for /delete-event";
 
         my $r = $p{request};

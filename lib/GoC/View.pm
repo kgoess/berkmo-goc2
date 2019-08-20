@@ -93,6 +93,7 @@ sub event_page {
         current_user => $p{current_user},
         current_user_status => $status,
         current_user_role => $role,
+        message => $p{message},
     );
     my $output = '';
 

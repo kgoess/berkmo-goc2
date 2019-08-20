@@ -1,4 +1,9 @@
 
+[% IF message %]
+    <div class="message">
+        [% message | html %]
+    </div>
+[% END %]
 
 <div id="event-card">
     <div>
@@ -8,8 +13,9 @@
             <span class="event-date-created">updated: [% event.date_created %]</span>
             <div class="edit-event-button"><a href="[% uri_for( path => "/edit-event", "event-id" => event.id ) %]"><button>edit event</button></a></div>
             <div class="edit-event-button">
-                <form method="POST" action="[% uri_for( path => "/delete-event", "event-id" => event.id ) %]">
-                <button type="submit">delete event</button>
+                <form method="POST" action="[% uri_for( path => "/delete-event" ) %]">
+                    <input type="hidden" name="event-id" value="[% event.id %]">
+                    <button type="submit">delete event</button>
                 </form>
             </div>
         </div>
