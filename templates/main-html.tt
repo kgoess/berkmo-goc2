@@ -60,13 +60,13 @@
                     </div>
                     <div class="wrapper">
                         <div class="cell cell-stats"><span class="cell-yes-no">Yes:</span>
-                            [% event.get_num_persons('role', 'dancer', 'status', 'y') | html %]/[% event.get_persons('role', 'muso', 'status', 'y').size || 0 | html %]
+                            [% event.get_num_persons('role', 'dancer', 'status', 'y') || 0 | html %]/[% event.get_num_persons('role', 'muso', 'status', 'y') || 0 | html %]
                         </div>
                         <div class="cell cell-stats"><span class="cell-yes-no">No:</span>
-                            [% event.get_persons('role', 'dancer', 'status', 'n').size || 0 | html %]/[% event.get_persons('role', 'muso', 'status', 'n').size || 0 | html %]
+                            [% event.get_num_persons('role', 'dancer', 'status', 'n') || 0 | html %]/[% event.get_num_persons('role', 'muso', 'status', 'n') || 0 | html %]
                         </div>
                         <div class="cell cell-stats"><span class="cell-yes-no">?:</span>
-                            [% event.get_persons('role', 'dancer', 'status', '?').size || 0 | html %]/[% event.get_persons('role', 'muso', 'status', '?').size || 0 | html %]
+                            [% event.get_num_persons('role', 'dancer', 'status', '?') || 0 | html %]/[% event.get_num_persons('role', 'muso', 'status', '?') || 0 | html %]
                         </div>
                     </div>
                 </div>
