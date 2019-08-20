@@ -491,11 +491,11 @@ sub edit_person {
         my $user_log_str = join '', $p{current_user}->name, '[', $p{current_user}->id, ']';
         $p{logger}->info("User $person_log_str edited by $user_log_str");
 
-        my $msg = uri_escape('Person "'.$person->name.'" successfully created');
+        my $msg = uri_escape('Person "'.$person->name.'" has been updated');
         return {
             action => 'redirect',
             headers => {
-                Location  => "/goc2?message=$msg",
+                Location  => uri_for(path => "/", message => $msg),
             },
         };
     }

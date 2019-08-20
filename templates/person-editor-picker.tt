@@ -11,8 +11,9 @@
     </div>
 [% END %]
 
-<form method="GET">
+<form method="GET" action="[% uri_for( path => "/" ) %]">
 
+<input type="hidden" name="path" value="/edit-person">
 <div>
     <label for="person-picker">Whom to edit?</label>
     <select name="person-id">

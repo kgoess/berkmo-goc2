@@ -10,8 +10,9 @@
     </div>
 [% END %]
 
-<form method="POST">
+<form method="POST" action="[% uri_for( path => "/edit-person" ) %]">
     <input type="hidden" name="person-id" value="[% person.id | html %]">
+    <input type="hidden" name="path" value="/edit-person">
 
     <div>
         <label for="person-name">Person Name:</label>

@@ -224,12 +224,13 @@ sub edit_person_page {
     my $tt = get_tt();
 
     my $template = 'person-editor.tt';
-    my $vars = {
+    my $vars = get_vars(
+        \%p,
         organization_name => 'Berkeley Morris',
         current_user => $p{current_user},
         errors => $p{errors},
         request => $p{request},
-    };
+    );
     my $output = '';
 
     $tt->process($template, $vars, \$output)
