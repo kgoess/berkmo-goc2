@@ -11,13 +11,17 @@
 [% END %]
 
 <form method="POST">
-
-<div>
-    <label for="person-name">Person Name:</label>
-    <input type="text" size="40" id="person-name" name="person-name" value="[% person.name | html %]">
     <input type="hidden" name="person-id" value="[% person.id | html %]">
-</div>
 
-<input type="submit">
+    <div>
+        <label for="person-name">Person Name:</label>
+        <input type="text" size="40" id="person-name" name="person-name" value="[% person.name | html %]">
+        <select name="person-status">
+            <option name="active"   [% IF person_status == "active"   %]selected="selected"[% END %]>active
+            <option name="inactive" [% IF person_status == "inactive" %]selected="selected"[% END %]>inactive
+        </select>
+    </div>
+
+    <input type="submit">
 
 </form>

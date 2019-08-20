@@ -238,8 +238,9 @@ sub create_event {
                 push @errors, "missing data for $f";
             }
         }
-        if (scalar($p{request}->param('event-date'))  !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
-                push @errors, "wrong format for event-date, should be yyyy-mm-dd";
+        my $event_date = scalar($p{request}->param('event-date')) // '';
+        if ($event_date !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
+                push @errors, "wrong format for event-date, should be yyyy-mm-dd, not '$event_date'";
         }
         if (my $email = scalar($p{request}->param('event-notification-email'))) {
             if ($email !~ /^[^@]+@[^@]+$/) {
@@ -268,9 +269,10 @@ sub create_event {
         );
         $event->save;
 
-        my $person_log_str = join '', $p{current_user}->name, '[', $p{current_user}->id, ']';
+        my $user = $p{current_user};
+        my $person_log_str = join '', $user->name, '[', $user->id, ']';
         my $event_log_str  = join '', $event->name,  '[', $event->id, ']';
-        $p{logger}->info($event->type." event created: $event_log_str (".$event->date.") by $person_log_str");
+        $p{logger}->info("created event $event_log_str by $person_log_str");
 
         my $msg = uri_escape("Event successfully created");
         return {
@@ -295,6 +297,9 @@ sub edit_event {
         }
 
     } elsif ($p{method} eq 'POST') {
+
+        croak "missing event-id in POST to edit_event"
+            unless scalar($p{request}->param('event-id'));
 
         my @errors;
         foreach my $f (qw/event-name event-date event-type/) {
@@ -336,7 +341,7 @@ sub edit_event {
 
         my $person_log_str = join '', $p{current_user}->name, '[', $p{current_user}->id, ']';
         my $event_log_str  = join '', $event->name,  '[', $event->id, ']';
-        $p{logger}->info($event->type." event edited: $event_log_str (".$event->date.") by $person_log_str");
+        $p{logger}->info($event->type." event edited: $event_log_str by $person_log_str");
 
         my $msg = uri_escape('Event "'.$event->name.'" successfully edited');
         return {
@@ -375,7 +380,7 @@ sub delete_event {
 
         my $person_log_str = join '', $p{current_user}->name, '[', $p{current_user}->id, ']';
         my $event_log_str  = join '', $event->name,  '[', $event->id, ']';
-        $p{logger}->info($event->type." event edited: $event_log_str (".$event->date.") by $person_log_str");
+        $p{logger}->info($event->type." event marked deleted: $event_log_str by $person_log_str");
 
         my $msg = uri_escape('Event "'.$event->name.'" has been marked as deleted');
         return {
@@ -420,6 +425,9 @@ sub create_person {
             status  => 'active',
         );
         $person->save;
+        my $person_log_str = join '', $person->name, '[', $person->id, ']';
+        my $user_log_str = join '', $p{current_user}->name, '[', $p{current_user}->id, ']';
+        $p{logger}->info("New user $person_log_str created by $user_log_str");
 
         my $msg = uri_escape("Person successfully created");
         return {
@@ -453,43 +461,43 @@ sub edit_person {
             }
         }
 
-
     } elsif ($p{method} eq 'POST') {
         my $person_id = $p{request}->param('person-id')
-            or die "missing person_id in call to edit_person";
+            or die "missing person_id in POST to edit_person";
         my $person = GoC::Model::Person->load($person_id)
             or die "can't find person for id $person_id";
 
-die "need to finish this implementation (or correct the merge conflict resolution?)";
-#        if (! $p{request}->param('person-name')) {
-#            push @errors, "You can't change the person's name to a blank.";
-#        }
-#        if (@errors) {
-#            return {
-#                action => 'display',
-#                content => GoC::View->create_person_page(
-#                    current_user => $p{current_user},
-#                    errors       => \@errors,
-#                    request      => $p{request},
-#                    person       => ,
-#                ),
-#            }
-#        }
-#
-#        my $r = $p{request};
-#        my $person = GoC::Model::Person->new(
-#            name  => $r->param('person-name'),
-#            status  => 'active',
-#        );
-#        $person->save;  note change to update here!
-#
-#        my $msg = uri_escape("Person successfully created");
-#        return {
-#            action => 'redirect',
-#            headers => {
-#                Location  => "/goc2?message=$msg",
-#            },
-#        };
+        my @errors;
+        if (! $p{request}->param('person-name')) {
+            push @errors, "You can't change the person's name to a blank.";
+        }
+        if (@errors) {
+            return {
+                action => 'display',
+                content => GoC::View->create_person_page(
+                    current_user => $p{current_user},
+                    errors       => \@errors,
+                    request      => $p{request},
+                    person       => $person,
+                ),
+            }
+        }
+
+        $person->name(scalar($p{request}->param('person-name')));
+        $person->status(scalar($p{request}->param('person-status')));
+        $person->update;
+
+        my $person_log_str = join '', $person->name, '[', $person->id, ']';
+        my $user_log_str = join '', $p{current_user}->name, '[', $p{current_user}->id, ']';
+        $p{logger}->info("User $person_log_str edited by $user_log_str");
+
+        my $msg = uri_escape('Person "'.$person->name.'" successfully created');
+        return {
+            action => 'redirect',
+            headers => {
+                Location  => "/goc2?message=$msg",
+            },
+        };
     }
 }
 

@@ -40,7 +40,7 @@
 <div>
     <label for="event-type">Gig or Party:</label>
     <select name="event-type">
-        <option name="gig" [% IF event_type == "gig" %]selected="selected"[% END %]>gig
+        <option name="gig"   [% IF event_type == "gig"   %]selected="selected"[% END %]>gig
         <option name="party" [% IF event_type == "party" %]selected="selected"[% END %]>party
     </select>
 </div>

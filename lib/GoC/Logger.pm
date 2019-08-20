@@ -90,4 +90,12 @@ EOL
     $sth->execute;
 }
 
+# for unit tests
+sub clear_logs {
+    my $sql = 'DELETE FROM log';
+    my $dbh = get_dbh();
+    my $sth = $dbh->prepare($sql);
+    $sth->execute;
+}
+
 1;

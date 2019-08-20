@@ -111,6 +111,10 @@ EOL
 sub save {
     my ($self) = @_;
 
+    if ($self->id) {
+        return $self->update;
+    }
+
     my $sql = <<EOL;
     INSERT INTO event (
         name,
@@ -160,18 +164,26 @@ sub date_pretty {
 
 
 sub load {
-    my ($class, $id) = @_;
+    my ($class, $id, %p) = @_;
 
     croak "missing id in call to $class->load" unless $id;
 
-    my $sql = <<EOL;
-        SELECT * FROM event WHERE id = ?;
-EOL
+    my $sql = 'SELECT * FROM event WHERE id = ?';
+
+    if ($p{include_deleted}) {
+        $sql .= ' AND deleted = 1 ';
+    } else {
+        $sql .= ' AND deleted = 0 ';
+    }
 
     my $dbh = get_dbh();
     my $sth = $dbh->prepare($sql);
     $sth->execute($id);
-    return bless $sth->fetchrow_hashref, $class;
+    if (my $row = $sth->fetchrow_hashref) {
+        return bless $row, $class;
+    } else {
+        return;
+    }
 }
 
 sub update {

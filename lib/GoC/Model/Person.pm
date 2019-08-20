@@ -23,6 +23,10 @@ use Class::Accessor::Lite(
 sub save {
     my ($self) = @_;
 
+    if ($self->id) {
+        return $self->update;
+    }
+
     my $sql = <<EOL;
     INSERT INTO person (
         name,
@@ -39,13 +43,14 @@ EOL
 }
 
 sub load {
-    my ($class, $id) = @_;
+    my ($class, $id, %p) = @_;
 
     croak "missing id in call to $class->load" unless $id;
 
-    my $sql = <<EOL;
-        SELECT * FROM person WHERE id = ?;
-EOL
+    my $sql = 'SELECT * FROM person WHERE id = ?';
+
+    $sql .= " AND status='active'"
+        unless ($p{include_everybody});
 
     my $dbh = get_dbh();
     my $sth = $dbh->prepare($sql);

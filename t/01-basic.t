@@ -4,7 +4,7 @@ use warnings;
 
 use Data::Dump qw/dump/;
 use DateTime;
-use Test::More tests => 26;
+use Test::More tests => 28;
 
 use GoC::Model::Person;
 use GoC::Model::Event;
@@ -40,9 +40,11 @@ sub test_person_CRUD {
     $person->update();
 
 
-    $person = GoC::Model::Person->load($person->id);
+    $person = GoC::Model::Person->load($person->id, include_everybody => 1);
     is $person->name, 'alice';
     is $person->status, 'retired';
+
+    ok ! GoC::Model::Person->load(123123123);
 }
 
 sub test_event_CRUD {
@@ -66,6 +68,8 @@ sub test_event_CRUD {
 
     $event = GoC::Model::Event->load($event->id);
     is $event->queen, 'bob';
+
+    ok ! GoC::Model::Event->load(1232123);
 }
 
 sub test_person_event_map_CRUD {

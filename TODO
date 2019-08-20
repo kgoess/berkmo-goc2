@@ -4,5 +4,6 @@ DONE add notification email to events
 DONE change event.created to event.updated and change display to say "updated"
  - add a fatal error handler
  - finish person editor
+ - implement all the "show disabled" buttons (change to "inactive"?)
 
 - make sure params are list context or whatever
