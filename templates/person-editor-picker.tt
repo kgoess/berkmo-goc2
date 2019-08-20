@@ -11,22 +11,25 @@
     </div>
 [% END %]
 
-<form method="GET" action="[% uri_for( path => "/" ) %]">
-
-<input type="hidden" name="path" value="/edit-person">
 <div>
-    <label for="person-picker">Whom to edit?</label>
-    <select name="person-id">
-        [% FOR person IN active_people %]
-            <option value="[% person.id | html %]">[% person.name | html %]</option>
-        [% END %]
-    </select>
+    <form method="GET" action="[% uri_for( path => "/edit-person" ) %]">
 
-    <p>
-    <input type="checkbox"> show disabled?
-    </p>
+        <input type="hidden" name="path" value="/edit-person">
+        <div>
+            <label for="person-picker">Whom to edit?</label>
+            <select name="person-id">
+                [% FOR person IN active_people %]
+                    <option value="[% person.id | html %]">[% person.name | html %][% IF person.status != "active" %] ([% person.status %])[% END %]</option>
+                [% END %]
+            </select>
+        </div>
+        <input type="submit">
+    </form>
 </div>
 
-<input type="submit">
-
-</form>
+<div>
+    <form method="GET" action="[% uri_for (path => '/edit-person' ) %]">
+        <input type="hidden" name="path" value="/edit-person">
+        <input type="checkbox" class="show-inactive" name="show-inactive" [% IF show_inactive %]checked="checked"[% END %]> show inactive users?
+    </form>
+</div>

@@ -2,18 +2,23 @@
 
 <div class="login-card">
     <div>Who are you?</div>
-    <form method="POST" action="[% uri_for(path => "/login") %]">
-        <select name="login_id"  class="login-selectbox" >
-            <option value="default" hidden="hidden">Choose here</option>
-            [% FOR person IN people %]
-                <option value="[% person.id | html %]">[% person.name | html %]</option>
-            [% END %]
-        </select>
-        <div>
-            <input type="submit" id="login-form-submit" disabled>
-        </div>
-        <div>
-            <input type="checkbox"><span style="font-size: small">show inactive users</font>
-        </div>
-    </form>
+    <div>
+        <form method="POST" action="[% uri_for(path => "/login") %]">
+            <select name="login_id"  class="login-selectbox" >
+                <option value="default" hidden="hidden">Choose here</option>
+                [% FOR person IN people %]
+                    <option value="[% person.id | html %]">[% person.name | html %][% IF person.status != "active" %] ([% person.status %])[% END %]</option>
+                [% END %]
+            </select>
+            <div>
+                <input type="submit" id="login-form-submit" disabled>
+            </div>
+        </form>
+    </div>
+    <div>
+        <form method="GET" action="[% uri_for( path => '/login' ) %]">
+            <input type="hidden" name="path" value="/login">
+            <input type="checkbox" class="show-inactive" name="show-inactive" [% IF show_inactive %]checked="checked"[% END %]><span style="font-size: small">show inactive users?</font>
+        </form>
+    </div>
 </div>

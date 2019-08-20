@@ -201,6 +201,8 @@ sub pick_person_to_edit_page {
 
     my $tt = get_tt();
 
+    my $show_inactive = scalar($p{request}->param('show-inactive'));
+
     my $template = 'person-editor-picker.tt';
     my $vars = get_vars(
         \%p,
@@ -208,7 +210,8 @@ sub pick_person_to_edit_page {
         current_user => $p{current_user},
         errors => $p{errors},
         #request => $p{request},
-        active_people => [ GoC::Model::Person->get_all(status => 'active') ],
+        active_people => [ GoC::Model::Person->get_all($show_inactive ? () : (status => 'active')) ],
+        show_inactive => $show_inactive,
     );
     my $output = '';
 
@@ -242,12 +245,17 @@ sub edit_person_page {
 sub login_page {
     my ($class, %p) = @_;
 
+    my $show_inactive = scalar($p{request}->param('show-inactive'));
+
     my $tt = get_tt();
 
     my $template = 'login-page.tt';
     my $vars = get_vars(
         \%p,
-        people => [ GoC::Model::Person->get_all(status => 'active') ],
+        people => [
+            GoC::Model::Person->get_all($show_inactive ? () : (status => 'active'))
+        ],
+        show_inactive => $show_inactive,
     );
 
     my $output = '';

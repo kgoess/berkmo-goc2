@@ -39,20 +39,20 @@ sub go {
         if (! $p{headers}{Cookie}) {
             return {
                 action => 'display',
-                content => GoC::View->login_page(),
+                content => GoC::View->login_page( request => $p{request} ),
             };
         }
         my $cookies = CGI::Cookie->parse($p{headers}{Cookie});
         if (! $cookies->{'Berkmo-GoC'}) {
             return {
                 action => 'display',
-                content => GoC::View->login_page(),
+                content => GoC::View->login_page( request => $p{request} ),
             };
         }
         my ($id) = $cookies->{'Berkmo-GoC'}->value =~ /user_id:([0-9]+)/
             or die "can't parse cookie: $cookies->{'Berkmo-GoC'}";
 
-        my $current_user = GoC::Model::Person->load($id)
+        my $current_user = GoC::Model::Person->load($id, include_everybody => 1)
             or die "no user found for id $id";;
 
         $p{current_user} = $current_user;
@@ -91,14 +91,16 @@ sub login_page {
     if ($p{method} eq 'GET') {
         return {
             action => 'display',
-            content => GoC::View->login_page(),
+            content => GoC::View->login_page(
+                request      => $p{request},
+            ),
         }
 
     } elsif ($p{method} eq 'POST') {
         my $id = scalar($p{request}->param('login_id'))
             or die "missing login_id";
 
-        my $person = GoC::Model::Person->load($id)
+        my $person = GoC::Model::Person->load($id, include_everybody => 1)
             or die "no user found for id $id";;
 
          my $cookie = CGI::Cookie->new(
@@ -457,6 +459,7 @@ sub edit_person {
                 action => 'display',
                 content => GoC::View->pick_person_to_edit_page (
                     current_user => $p{current_user},
+                    request => $p{request},
                 ),
             }
         }

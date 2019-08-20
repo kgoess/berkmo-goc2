@@ -21,6 +21,10 @@ $(document).ready(function(){
         var val = $("#login-form-submit").prop("disabled", false);
     });
 
+    // any place there's a "show inactive" checkbox
+    $('.show-inactive').on('change', function () {
+        $(this).parents("form").submit()
+    });
 });
 
 })();
