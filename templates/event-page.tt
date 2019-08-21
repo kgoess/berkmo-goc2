@@ -5,9 +5,40 @@
     </div>
 [% END %]
 
+<style>
+/* https://www.w3schools.com/howto/howto_css_next_prev.asp */
+a {
+  text-decoration: none;
+  display: inline-block;
+  padding: 4px 8px;
+}
+
+a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+
+.previous {
+  background-color: #ffd0ff;
+  color: #C00000;
+}
+
+.next {
+  background-color: #ffd0ff;
+  color: #C00000;
+}
+
+.round {
+  border-radius: 50%;
+}
+</style>
+</head>
+<body>
+
 <div id="event-card">
     <div>
-        <div class="event-name">[% event.name %]</div>
+        <div class="event-name"><a href="#" class="previous round">&#8249;</a> [% event.name %] <a href="#" class="next round">&#8250;</a></div>
         <div class="event-date-section">
             <span class="event-date">[% event.date_pretty %]</span><br>
             <span class="event-date-created">updated: [% event.date_created %]</span>
@@ -23,6 +54,9 @@
         </div>
     </div>
     <div class="event-queen">tour queen: [% event.queen %]</div>
+    [%  status_and_role = event.get_status_for_person(current_user)
+    %]
+    <div class="event-your-status">your status: [% status_and_role.0 %]/[% status_and_role.1 %]</div>
 </div>
 
 <div id="tabs"><!-- this contains everything that's tabbable -->
