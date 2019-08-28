@@ -7,7 +7,7 @@
 
 <div id="tabs"><!-- this contains everything that's tabbable -->
 <!-- this ul is used for the tabs -->
-<ul>
+<ul class="the-tabs">
     <li><a href="#gigs-grids"   >Gigs</a></li>
     <li><a href="#parties-grids">Parties</a></li>
     <li><a href="#admin"   >Admin</a></li>
@@ -41,7 +41,7 @@
         <div class="event-table-head wrapper">
             <div class="event-table-row wrapper">
                 <div class="wrapper">
-                    <div class="cell cell-text">&nbsp;</div>
+                    <div class="cell cell-text">&nbsp;</div> <!-- fixme broken on wide incl. web -->
                     <div class="cell cell-text">&nbsp;</div>
                 </div>
                 <div class="wrapper">
@@ -56,7 +56,7 @@
                 <div class="event-table-row wrapper an-event" data-event-id="[% event.id| html %]" regularbgcolor=#ffd0ff ENOUGHbgcolor = #99CC99>
                     <div class="wrapper">
                         <div class="cell cell-text event-date">[% event.date_pretty | html %]</div>
-                        <div class="cell cell-text">[% event.name | html %]</div>
+                        <div class="cell cell-text-eventname">[% event.name | html %]</div>
                     </div>
                     <div class="wrapper">
                         <div class="cell cell-stats"><span class="cell-yes-no">Yes:</span>
@@ -67,6 +67,13 @@
                         </div>
                         <div class="cell cell-stats"><span class="cell-yes-no">?:</span>
                             [% event.get_num_persons('role', 'dancer', 'status', '?') || 0 | html %]/[% event.get_num_persons('role', 'muso', 'status', '?') || 0 | html %]
+                        </div>
+                    </div>
+                    <div class="wrapper">
+                            [%  status_and_role = event.get_status_for_person(current_user)
+                            %]
+                        <div class="cell cell-user-status" style="width: 230px">
+                            <span class="your-status-label">your status: </span><span class="your-status-value">[% IF status_and_role %][% status_and_role.0 %] ([% status_and_role.1 %])[% ELSE %]unknown[% END %]</span>
                         </div>
                     </div>
                 </div>

@@ -110,11 +110,33 @@ body {
 .event-table .cell-text {
   width: 140px;
 }
+
+.event-table .cell-text-eventname {
+    width: 280px;
+    font-size: 90%;
+    font-weight: bold;
+}
 .event-table .cell-stats {
   width: 60px;
   white-space: nowrap;
   margin-right: 10px;
   margin-left: 10px;
+}
+
+.event-table .cell-user-status {
+    text-align: center;
+    width: 100%;
+    font-size: 90%;
+}
+
+.event-table .your-status {
+    font-size: 80%;
+}
+.event-table .your-status-label {
+    font-size: 80%;
+}
+.event-table .your-status-value {
+    font-weight: bold;
 }
 
 .event-table-notes {
@@ -231,10 +253,12 @@ body {
 /* ----------------------------- */
 
 
+/* this is a wrapper for everything that's tabbable */
 #tabs {
     background: #ffd0ff;
     padding: 10px;
 }
+
 
 .ui-tabs .ui-tabs-hide {
     display: none;
@@ -275,7 +299,7 @@ body {
 
 #tabs .ui-tabs-nav a {
     text-decoration: none;
-    font-size: 1.2em;
+    font-size: 80%;
 }
 #tabs .ui-tabs-panel {
     /* background: #e3e3e3; */

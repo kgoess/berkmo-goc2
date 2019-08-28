@@ -1,9 +1,61 @@
 
- - if we hide the logo for small screens, we need a back button to the main page?
+DONE if we hide the logo for small screens, we need a back button to the main page?
 DONE add notification email to events
 DONE change event.created to event.updated and change display to say "updated"
  - add a fatal error handler
- DONE finish person editor
- DONE implement all the "show disabled" buttons (change to "inactive"?)
+DONE finish person editor
+DONE implement all the "show disabled" buttons (change to "inactive"?)
+ - fix formatting of notes for small screens, or do something smarter
+ - on event screen, after submit stay on the same tab. or use ajax
+ - on main screen, headers aren't aligned any more
 
 - make sure params are list context or whatever
+
+My email:
+    http://www.goess.org/goc2/
+
+    The user names are made-up, just pick one. Click on the "Alameda parade" gig--that's the only one that has some data.
+
+    Attempting to address issues including:
+     - shows only active users by default, so users can be marked "inactive" and don't ever have to be deleted
+     - you are the user you are, so no fat-fingering somebody else 
+     - no individual passwords, it's still behind the team password
+     - lets you sign up to dance one week and muso the next week, you don't have to commit to one or the other for all time
+     - tracks a tour queen for each gig, and will allow emailing them when people accept or decline for the gig
+     - allows notes on each gig
+     - keeps a log of all activity (see "Admin / view activity logs")
+     - look good on a mobile screen
+
+Julia's feedback:
+    only played with your site for a minute or so, and realize it may not be all up
+    and running, but I did notice that when I said Ivan would attend, it did not
+    update the total number when I clicked back to the master page with all the
+    dates of the pretend gigs on it. 
+
+    I tried to see if I could make Ivan both a dancer and a musician, but it seemed
+    like he didn’t register as either one on the master page.
+
+    The big drawback for me with the bespoke site is how it flips to a new page
+    when you go to enter information for an individual, which prevents you from
+    being able to see the whole picture as you enter in data.
+
+    At the end of the day, if people are not using the grid it now, I don’t see
+    what is going to make them use a Google dock.  Thinking this through a little,
+    well I know how to use and like Google docs, some people are resistant to
+    things like that. Because of the man, or whatever. Or even just a new app to
+    have to juggle. Google is so good at pulling together a elements from here and
+    there and slapping them together as if they belong in the same realm but it is
+    patently obvious that each thing has been designed completely independent of
+    the other.  Google drive and Google docs seem to have nothing to do with one
+    another and yet you have to have apps for both, don’t get me started. This all
+    said, I use Google docs and Google spreadsheets all the time and they work just
+    fine despite their quirks.
+
+     Come to think of it, I am writing this through Google mail right now so Google
+    I’d love to know your thoughts since I know you are reading this. 
+
+    I do like how your format has strike has strives for more flexibility in that
+    people can flip it back-and-forth on whether they are dancing or playing at a
+    given gig, and there is a built in section for notes per gig.
+
+     What are your own thoughts on the matter? 
