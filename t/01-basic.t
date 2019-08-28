@@ -4,7 +4,7 @@ use warnings;
 
 use Data::Dump qw/dump/;
 use DateTime;
-use Test::More tests => 28;
+use Test::More tests => 30;
 
 use GoC::Model::Person;
 use GoC::Model::Event;
@@ -20,6 +20,7 @@ GoC::Model::PersonEventMap->create_table;
 
 test_person_CRUD();
 test_event_CRUD();
+test_event_prev_next();
 test_person_event_map_CRUD();
 test_upcoming_events();
 test_person_get_all();
@@ -70,6 +71,44 @@ sub test_event_CRUD {
     is $event->queen, 'bob';
 
     ok ! GoC::Model::Event->load(1232123);
+}
+sub test_event_prev_next {
+    my $event = GoC::Model::Event->new(
+        name => 'armistice day',
+        date => '2020-11-11',
+        type => 'gig',
+    );
+    $event->save;
+    my $event_prev = GoC::Model::Event->new(
+        name => 'armistice eve',
+        date => '2020-11-10',
+        type => 'gig',
+    );
+    $event_prev->save;
+    my $event_next = GoC::Model::Event->new(
+        name => 'day after armistice',
+        date => '2020-11-12',
+        type => 'gig',
+    );
+    $event_next->save;
+    my $event_not_next = GoC::Model::Event->new(
+        name => 'zzz alphabetically after',
+        date => '2020-11-12',
+        type => 'gig',
+    );
+    $event_not_next->save;
+    my $party = GoC::Model::Event->new(
+        # first alphabetically, but not a gig
+        name => 'armistice party',
+        date => '2020-11-12',
+        type => 'party',
+    );
+    $party->save;
+
+    my ($prev, $next) = $event->get_prev_next_ids;
+
+    is $prev, $event_prev->id, "$prev is the previous event";
+    is $next, $event_next->id, "$next is the next event";
 }
 
 sub test_person_event_map_CRUD {

@@ -138,6 +138,53 @@ EOL
     @rc = sort { $a->name cmp $b->name } @rc;
     return @rc;
 }
+
+sub get_prev_next_ids {
+    my ($self) = @_;
+
+    my $yesterday = DateTime
+        ->now
+        ->subtract( days => 1 )
+        ->ymd;
+
+    my $sql_prev = <<EOL;
+        SELECT id, date, name
+        FROM event
+        WHERE date <= ?
+        AND date >= '$yesterday'
+        AND id != ?
+        AND type = ?
+        AND deleted != 1
+        ORDER BY date DESC, name ASC
+        LIMIT 1
+EOL
+
+    my $dbh = get_dbh();
+    my $sth = $dbh->prepare($sql_prev);
+    $sth->execute($self->date, $self->id, $self->type);
+    my $prev_id;
+    if (my $row = $sth->fetchrow_hashref) {
+        $prev_id = $row->{id};
+    }
+    my $sql_next = <<EOL;
+        SELECT id, date, name
+        FROM event
+        WHERE date >= ?
+        AND date >= '$yesterday'
+        AND id != ?
+        AND type = ?
+        AND deleted != 1
+        ORDER BY date ASC, name ASC
+        LIMIT 1
+EOL
+    $sth = $dbh->prepare($sql_next);
+    $sth->execute($self->date, $self->id, $self->type);
+    my $next_id;
+    if (my $row = $sth->fetchrow_hashref) {
+        $next_id = $row->{id};
+    }
+    return $prev_id, $next_id;
+}
 sub save {
     my ($self) = @_;
 

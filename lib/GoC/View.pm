@@ -80,20 +80,24 @@ sub event_page {
     }
     my ($status, $role) = $event->get_status_for_person($p{current_user});
 
+    my ($prev_id, $next_id) = $event->get_prev_next_ids;
+
     my $template = 'event-page.tt';
     my $vars = get_vars(
         \%p,
-        organization_name => 'Berkeley Morris',
-        statuses => \@statuses,
-        event => $event,
-        dancers_for_status => \%dancers_for_status,
-        num_dancers => $num_dancers,
-        musos_for_status => \%musos_for_status,
-        num_musos => $num_musos,
-        current_user => $p{current_user},
+        organization_name   => 'Berkeley Morris',
+        statuses            => \@statuses,
+        event               => $event,
+        dancers_for_status  => \%dancers_for_status,
+        num_dancers         => $num_dancers,
+        musos_for_status    => \%musos_for_status,
+        num_musos           => $num_musos,
+        current_user        => $p{current_user},
         current_user_status => $status,
-        current_user_role => $role,
-        message => $p{message},
+        current_user_role   => $role,
+        message             => $p{message},
+        prev_id             => $prev_id,
+        next_id             => $next_id,
     );
     my $output = '';
 
@@ -208,11 +212,11 @@ sub pick_person_to_edit_page {
     my $vars = get_vars(
         \%p,
         organization_name => 'Berkeley Morris',
-        current_user => $p{current_user},
-        errors => $p{errors},
-        #request => $p{request},
-        active_people => [ GoC::Model::Person->get_all($show_inactive ? () : (status => 'active')) ],
-        show_inactive => $show_inactive,
+        current_user      => $p{current_user},
+        errors            => $p{errors},
+        #request          => $p{request},
+        active_people     => [ GoC::Model::Person->get_all($show_inactive ? () : (status => 'active')) ],
+        show_inactive     => $show_inactive,
     );
     my $output = '';
 
@@ -231,9 +235,9 @@ sub edit_person_page {
     my $vars = get_vars(
         \%p,
         organization_name => 'Berkeley Morris',
-        current_user => $p{current_user},
-        errors => $p{errors},
-        request => $p{request},
+        current_user      => $p{current_user},
+        errors            => $p{errors},
+        request           => $p{request},
     );
     my $output = '';
 

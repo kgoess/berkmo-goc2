@@ -38,7 +38,11 @@ a:hover {
 
 <div id="event-card">
     <div>
-        <div class="event-name"><a href="#" class="previous round">&#8249;</a> [% event.name %] <a href="#" class="next round">&#8250;</a></div>
+        <div class="event-name">
+            [% IF prev_id %]<a href="[% uri_for( path => '/event', id => prev_id ) %]" class="previous round">&#8249;</a>[% ELSE %]<a href="#" class="previous round">&nbsp;</a>[% END %]
+            [% event.name %]
+            [% IF next_id %]<a href="[% uri_for( path => '/event', id => next_id ) %]" class="next round">&#8250;</a>[% ELSE %]<a href="#" class="next round">&nbsp;</a>[% END %]
+        </div>
         <div class="event-date-section">
             <span class="event-date">[% event.date_pretty %]</span><br>
             <span class="event-date-created">updated: [% event.date_created %]</span>
