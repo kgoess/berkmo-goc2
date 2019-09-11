@@ -7,6 +7,8 @@ DONE finish person editor
 DONE implement all the "show disabled" buttons (change to "inactive"?)
  - fix formatting of notes for small screens, or do something smarter
  - on event screen, after submit stay on the same tab. or use ajax
+ - on event screen, "edit event" and "delete event" aren't buttons in chrome responsive?
+ - on event screen, disable prev/next buttons in favor of touch?
  - on main screen, headers aren't aligned any more
 
 - make sure params are list context or whatever

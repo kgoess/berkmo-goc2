@@ -32,16 +32,56 @@ a:hover {
 .round {
   border-radius: 50%;
 }
+
+/* for the touchmoves, there's no feedback that something's happening,
+   and it takes a bit for the page to, so do *something*. Not sure why
+   the !important is needed here, but otherwise the background-color wins.
+*/
+.busy-spinner {
+    background-image:  url("[% static_uri_for('spinner.gif') %]") !important;
+}
+
 </style>
+<script>
+
+var xDown = null;
+function handleTouchStart(e) {
+    // e.preventDefault();
+    xDown = e.originalEvent.touches[0].pageX;
+}
+function handleTouchMove(e) {
+    var newX = e.originalEvent.touches[0].pageX;
+    if (xDown < newX) {
+        //$('#previous-event-link').click(); no workee
+        [% IF prev_id %]
+            $('#event-card').addClass('busy-spinner');
+            window.location.href="[% uri_for( path => '/event', id => prev_id ) %]";
+        [% END %]
+    } else if (xDown > newX) {
+        //$('#next-event-link').click(); nope
+        [% IF next_id %]
+            $('#event-card').addClass('busy-spinner');
+            window.location.href="[% uri_for( path => '/event', id => next_id ) %]";
+        [% END %]
+    }
+}
+/* touch events only on devices with touchscreens, otherwise
+   use mousedown, mouseup */
+$( document ).ready(function() {
+    $('#event-card').on('touchstart', handleTouchStart);
+    $('#event-card').on('touchmove', handleTouchMove);
+});
+
+</script>
 </head>
 <body>
 
 <div id="event-card">
     <div>
         <div class="event-name">
-            [% IF prev_id %]<a href="[% uri_for( path => '/event', id => prev_id ) %]" class="previous round">&#8249;</a>[% ELSE %]<a href="#" class="previous round">&nbsp;</a>[% END %]
+            [% IF prev_id %]<a href="[% uri_for( path => '/event', id => prev_id ) %]" id="previous-event-link" class="previous round">&#8249;</a>[% ELSE %]<a href="#" class="previous round">&nbsp;</a>[% END %]
             [% event.name %]
-            [% IF next_id %]<a href="[% uri_for( path => '/event', id => next_id ) %]" class="next round">&#8250;</a>[% ELSE %]<a href="#" class="next round">&nbsp;</a>[% END %]
+            [% IF next_id %]<a href="[% uri_for( path => '/event', id => next_id ) %]" id="next-event-link" class="next round">&#8250;</a>[% ELSE %]<a href="#" class="next round">&nbsp;</a>[% END %]
         </div>
         <div class="event-date-section">
             <span class="event-date">[% event.date_pretty %]</span><br>

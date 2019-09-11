@@ -73,6 +73,8 @@ GoC::Model::Event->new(
     type => 'gig',
     deleted => 1,
 )->save;
+
+
 my $alice = GoC::Model::Person->new(
     name => 'alice',
     status => 'active',

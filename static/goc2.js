@@ -17,6 +17,7 @@ function bindEventRowsToActions() {
 $(document).ready(function(){
     bindEventRowsToActions();
 
+    // the login page
     $('.login-selectbox').on('change', function() {
         var val = $("#login-form-submit").prop("disabled", false);
     });
@@ -25,6 +26,8 @@ $(document).ready(function(){
     $('.show-inactive').on('change', function () {
         $(this).parents("form").submit()
     });
+
+    // the individual event page
 });
 
 })();
