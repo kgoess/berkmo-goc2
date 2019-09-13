@@ -41,8 +41,8 @@
         <div class="event-table-head wrapper">
             <div class="event-table-row wrapper">
                 <div class="wrapper">
-                    <div class="cell cell-text">&nbsp;</div> <!-- fixme broken on wide incl. web -->
-                    <div class="cell cell-text">&nbsp;</div>
+                    <div class="cell cell-text event-date">&nbsp;</div> <!-- fixme broken on wide incl. web -->
+                    <div class="cell cell-text-eventname">&nbsp;</div>
                 </div>
                 <div class="wrapper">
                     <div class="cell cell-stats" >Yes<br><span class="subcol">dance/muso</span></div>
