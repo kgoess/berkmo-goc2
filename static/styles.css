@@ -220,6 +220,12 @@ body {
 .edit-event-button {
     margin-top: 10px;
 }
+.edit-event-button button {
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 5px;
+}
 #event-card .event-queen {
     clear: both;
 }

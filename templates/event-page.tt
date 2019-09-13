@@ -87,7 +87,7 @@ $( document ).ready(function() {
             <span class="event-date">[% event.date_pretty %]</span><br>
             <span class="event-date-created">updated: [% event.date_created %]</span>
             <div>
-                <span class="edit-event-button"><a href="[% uri_for( path => "/edit-event", "event-id" => event.id ) %]"><button>edit event</button></a></span>
+                <span class="edit-event-button"><a href="[% uri_for( path => "/edit-event", "event-id" => event.id ) %]"><button id="blahblah">edit event</button></a></span>
                 <span class="edit-event-button">
                     <form method="POST" action="[% uri_for( path => "/delete-event" ) %]" style="display: inline;">
                         <input type="hidden" name="event-id" value="[% event.id %]">
