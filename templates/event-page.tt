@@ -100,7 +100,7 @@ $( document ).ready(function() {
     <div class="event-queen">tour queen: [% event.queen %]</div>
     [%  status_and_role = event.get_status_for_person(current_user)
     %]
-    <div class="event-your-status">your status: [% status_and_role.0 %] ([% status_and_role.1 %])</div>
+    <div class="event-your-status">your status: [% IF status_and_role %][% status_and_role.0 %] ([% status_and_role.1 %])[% ELSE %]unknown[% END %]</div>
 </div>
 
 <div id="tabs"><!-- this contains everything that's tabbable -->
