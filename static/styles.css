@@ -521,6 +521,7 @@ input[type=submit] {
     box-shadow:         0px 3px 15px rgba(0,0,0,.2);
     display: block;
     margin: 5px 15px;
+    background-color: lightgrey;
 }
 .set-status-button-small {
     display: none;
@@ -563,6 +564,12 @@ input[type=submit] {
     .set-status-button-small {
         display: block;
         margin: 5px 15px;
+        -webkit-appearance: none;
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+        -webkit-box-shadow: 0px 3px 15px rgba(0,0,0,.2);
+        -moz-box-shadow:    0px 3px 15px rgba(0,0,0,.2);
+        box-shadow:         0px 3px 15px rgba(0,0,0,.2);
     }
 }
 
