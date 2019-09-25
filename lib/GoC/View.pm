@@ -98,6 +98,7 @@ sub event_page {
         message             => $p{message},
         prev_id             => $prev_id,
         next_id             => $next_id,
+        current_tab         => $p{current_tab},
     );
     my $output = '';
 

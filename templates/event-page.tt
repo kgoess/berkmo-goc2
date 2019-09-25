@@ -71,10 +71,15 @@ $( document ).ready(function() {
     $('#event-card').on('touchstart', handleTouchStart);
     $('#event-card').on('touchmove', handleTouchMove);
 });
+[% IF current_tab.defined %]
+    $( document ).ready(function() {
+alert("about to set tab to [% current_tab %]");
+        $("#tabs").tabs("option", "active", "[% current_tab | html %]");
+alert("done setting tab to [% current_tab %]");
+    });
+[% END %]
 
 </script>
-</head>
-<body>
 
 <div id="event-card">
     <div>
@@ -122,6 +127,7 @@ $( document ).ready(function() {
         current_user_status = current_user_status
         current_user_role = current_user_role
         event = event
+        current_tab = "0"
     %]
 </div>
 
@@ -135,6 +141,7 @@ $( document ).ready(function() {
         current_user_status = current_user_status
         current_user_role = current_user_role
         event = event
+        current_tab = "1"
      %]
 </div>
 
@@ -186,6 +193,7 @@ $( document ).ready(function() {
                                 <input type="hidden" name="person_id" value="[% current_user.id %]">
                                 <input type="hidden" name="for_role" value="[% for_role | html %]">
                                 <input type="hidden" name="status" value="[% status | html %]">
+                                <input type="hidden" name="current_tab" value="[% current_tab | html %]">
                                 <button type="submit" class="set-status-button-wide">[% accept_status_message.$status %]</button>
                                 <button type="submit" class="set-status-button-small">[% accept_status_message_small.$status %]</button>
                             </form>

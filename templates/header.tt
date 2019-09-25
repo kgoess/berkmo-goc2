@@ -22,7 +22,9 @@
 
 <script>
   $(function() {
-    $( "#tabs" ).tabs();
+    $( "#tabs" ).tabs({
+        active: 1
+    });
   });
   var GoC = {
       eventUrl: '[% uri_for( path => '/event', id => '{{id}}' ) %]'

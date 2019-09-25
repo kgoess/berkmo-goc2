@@ -150,6 +150,9 @@ sub change_status {
     $status =~ /^[yn?]$/
         or die "wrong value for status: $status";
 
+    my $current_tab = scalar($p{request}->param('current_tab'));
+    $current_tab =~ s/[^a-z0-9-]//g;
+
     GoC::Model::PersonEventMap->delete_person_from_event($person, $event);
     GoC::Model::PersonEventMap->add_person_to_event($person, $event, $for_role, $status);
 
@@ -161,9 +164,10 @@ sub change_status {
         action => 'redirect',
         headers => {
             Location  => uri_for(
-                path => "/event", 
-                id => $event_id, 
-                message => qq{Your status for this event has been updated to "$for_role: $status"},
+                path        => "/event",
+                id          => $event_id,
+                current_tab => $current_tab,
+                message     => qq{Your status for this event has been updated to "$for_role: $status"},
             ),
         },
     };
@@ -207,6 +211,7 @@ sub event_page {
             event_id => scalar($p{request}->param('id')), # an Apache2::Request object
             current_user => $p{current_user},
             message => scalar($p{request}->param('message')),
+            current_tab => scalar($p{request}->param('current_tab')),
         ),
     }
 }
