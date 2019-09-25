@@ -73,9 +73,7 @@ $( document ).ready(function() {
 });
 [% IF current_tab.defined %]
     $( document ).ready(function() {
-alert("about to set tab to [% current_tab %]");
         $("#tabs").tabs("option", "active", "[% current_tab | html %]");
-alert("done setting tab to [% current_tab %]");
     });
 [% END %]
 
