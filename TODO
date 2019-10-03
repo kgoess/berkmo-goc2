@@ -11,6 +11,8 @@ DONE on event screen, "edit event" and "delete event" aren't buttons in chrome r
  - on event screen, disable prev/next buttons in favor of touch?
 DONE on main screen, headers aren't aligned any more
  - paginate event log
+ - Randall's suggestion to show a list of uncommitted people
+ - Rocky's suggestion for a single page showing all the statuses
 
 - make sure params are list context or whatever
 
