@@ -65,10 +65,12 @@ sub event_page {
 
     my %dancers_for_status;
     my $num_dancers = 0;
+    my @ids_seen;
     foreach my $status (@statuses) {
         my @dancers = $event->get_persons(role => 'dancer', status => $status);
         $dancers_for_status{$status} = \@dancers;
         $num_dancers += @dancers;
+        push @ids_seen, $_->id for @dancers;
     }
 
     my %musos_for_status;
@@ -77,8 +79,12 @@ sub event_page {
         my @musos = $event->get_persons(role => 'muso', status => $status);
         $musos_for_status{$status} = \@musos;
         $num_musos += @musos;
+        push @ids_seen, $_->id for @musos;
+
     }
     my ($status, $role) = $event->get_status_for_person($p{current_user});
+
+    my @missing = @ids_seen ? GoC::Model::Person->get_all(status => 'active', except_ids => \@ids_seen) : ();
 
     my ($prev_id, $next_id) = $event->get_prev_next_ids;
 
@@ -92,6 +98,7 @@ sub event_page {
         num_dancers         => $num_dancers,
         musos_for_status    => \%musos_for_status,
         num_musos           => $num_musos,
+        missing             => \@missing,
         current_user        => $p{current_user},
         current_user_status => $status,
         current_user_role   => $role,

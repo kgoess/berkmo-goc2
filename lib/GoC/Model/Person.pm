@@ -69,9 +69,18 @@ sub get_all {
 
     my @sql_args;
 
+
+    my @where_clauses;
+
     if ($p{status}) {
-        $sql .= " WHERE status = ? ";
+        push @where_clauses, "status = ?";
         push @sql_args, $p{status};
+    }
+    if ($p{except_ids}) {
+        push @where_clauses, "id NOT IN (".join(',', @{$p{except_ids}}).")";
+    }
+    if (@where_clauses) {
+        $sql .= ' WHERE '. join(' AND ', @where_clauses);
     }
     $sql .= ' ORDER BY name ASC ';
 

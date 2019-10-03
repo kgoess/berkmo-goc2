@@ -4,7 +4,7 @@ use warnings;
 
 use Data::Dump qw/dump/;
 use DateTime;
-use Test::More tests => 30;
+use Test::More tests => 32;
 
 use GoC::Model::Person;
 use GoC::Model::Event;
@@ -240,6 +240,11 @@ sub test_person_get_all {
     is $people[0]->name, 'alice';
     is $people[1]->name, 'bob';
     is $people[2]->name, 'chuck';
+
+    my @except = ($people[0]->id, $people[2]->id);
+    @people = GoC::Model::Person->get_all(except_ids => \@except);
+    is scalar @people, 1;
+    is $people[0]->name, 'bob';
 
 }
 

@@ -111,6 +111,7 @@ $( document ).ready(function() {
 <ul>
     <li><a href="#dancers-tab"  >Dancers</a></li>
     <li><a href="#musos-tab"    >Musos</a></li>
+    <li><a href="#missing-tab"  >No Response</a></li>
     <li><a href="#notes-tab"    >Notes</a></li>
 </ul>
 
@@ -141,6 +142,23 @@ $( document ).ready(function() {
         event = event
         current_tab = "1"
      %]
+</div>
+
+<div id="missing-tab" class="event-detail">
+    <table>
+        <thead>
+            <tr>
+                <td style="padding: 10px">not yet responded</td>
+            </tr>
+        </thead>
+        <tbody>
+            [% FOR person IN missing %]
+                <tr bgcolor=#ffd0ff>
+                    <td>[% person.name | html %]</td>
+                </tr>
+            [% END %]
+        </tbody>
+    </table>
 </div>
 
 <div id="notes-tab">
@@ -209,7 +227,7 @@ $( document ).ready(function() {
                         [% num_people = num_people - 1 %]
                     [% END %]
                     <td>
-                        [% person.name %]
+                        [% person.name | html %]
                     </td>
                 [% END %]
                 </tr>
