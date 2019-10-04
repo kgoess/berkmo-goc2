@@ -298,6 +298,39 @@ sub activity_logs {
     return $output;
 }
 
+# shows a giant table like the old goc
+sub old_grid {
+    my ($class, %p) = @_;
+
+
+    my $tt = get_tt();
+
+    my @people = GoC::Model::Person->get_all(status => 'active');
+
+    my $gigs = GoC::Model::Event->get_upcoming_events(type => 'gig');
+    my $parties = GoC::Model::Event->get_upcoming_events(type => 'party');
+
+
+    my $grid = GoC::Model::PersonEventMap->get_oldgrid_data();
+
+    my $template = 'old-grid.tt';
+    my $vars = get_vars(
+        \%p,
+        gigs    => $gigs,
+        parties => $parties,
+        people => \@people,
+        grid => $grid,
+        dump => \&Data::Dump::dump,
+    );
+
+    my $output = '';
+
+    $tt->process($template, $vars, \$output)
+           || die $tt->error();
+
+    return $output;
+}
+
 my $_tt;
 sub get_tt {
 

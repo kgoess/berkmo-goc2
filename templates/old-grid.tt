@@ -1,0 +1,72 @@
+<style>
+/* so that the rows look clickable */
+tr {
+    cursor: pointer;
+}
+</style>
+<h2>Gigs</h2>
+<h3>Mainly Dancing</h3>
+[% PROCESS eventtable
+    events = gigs
+    role = "dancer"
+    people = people
+%]
+
+&nbsp;
+<hr>
+
+<h3>Mainly Playing</h3>
+[% PROCESS eventtable
+    events = gigs
+    role = "muso"
+    people = people
+%]
+
+&nbsp;
+<hr>
+
+<h2>Parties</h2>
+<h3>Mainly Dancing</h3>
+[% PROCESS eventtable
+    events = parties
+    role = "muso"
+    people = people
+%]
+
+&nbsp;
+<hr>
+
+<h3>Mainly Playing</h3>
+[% PROCESS eventtable
+    events = parties
+    role = "dancer"
+    people = people
+%]
+
+&nbsp;
+<hr>
+
+[% BLOCK eventtable %]
+    <table class="logtable">
+        <thead>
+            <tr>
+                <td>&nbsp;</td>
+                [% FOR person IN people %]
+                    <td>[% person.name %]</td>
+                [% END %]
+            </tr>
+        </thead>
+        <tbody>
+            [% FOR event IN events %]
+                <tr onClick="document.location='[% uri_for( path => '/event', id => event.id ) %]'">
+                    <td style="min-width: 200px">[% event.name %]<br>[% event.date %]</td>
+                    [% FOR person IN people %]
+                        [% event_id = event.id %]
+                        [% person_id = person.id %]
+                        <td style="text-align: center">[% grid.$event_id.$role.$person_id %]</td>
+                    [% END %]
+                </tr>
+            [% END %]
+        </tbody>
+    </table>
+[% END %]

@@ -26,6 +26,7 @@ my %handler_for_path = (
     '/delete-event'  => sub { shift->delete_event(@_) },
     '/create-person' => sub { shift->create_person(@_) },
     '/edit-person'   => sub { shift->edit_person(@_) },
+    '/old-grid'      => sub { shift->old_grid(@_) },
 );
 
 sub go {
@@ -511,6 +512,15 @@ sub edit_person {
                 Location  => uri_for(path => "/", message => $msg),
             },
         };
+    }
+}
+sub old_grid {
+    my ($class, %p) = @_;
+    return {
+        action => 'display',
+        content => GoC::View->old_grid(
+            current_user => $p{current_user},
+        ),
     }
 }
 
