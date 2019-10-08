@@ -117,6 +117,38 @@ sub event_page {
     return $output;
 }
 
+sub default_notes {
+    return <<EOL;
+Sample notes
+============
+
+You can format this page with markdown, see https://daringfireball.net/projects/markdown/basics
+
+Lists
+-----
+
+You can make a list like this:
+
+-   Candy.
+-   Gum.
+-   Booze.
+
+Text
+---
+
+Options include *italic* and **bold**
+
+Pre-formatted text is indented four spaces:
+
+   I do not think
+   I will ever see
+   A poem as lovely
+   As a tree
+
+EOL
+
+}
+
 sub create_event_page {
     my ($class, %p) = @_;
 
@@ -136,7 +168,7 @@ sub create_event_page {
         event_queen       => $param->('event-queen'),
         event_notification_email => $param->('event-notification-email'),
         event_type        => $param->('event-type'),
-        event_notes       => $param->('event-notes'),
+        event_notes       => ($param->('event-notes') // default_notes()),
     );
     my $output = '';
 
