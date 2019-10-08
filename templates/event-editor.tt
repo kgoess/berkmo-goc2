@@ -44,8 +44,8 @@
         <option name="party" [% IF event_type == "party" %]selected="selected"[% END %]>party
     </select>
 </div>
-<div>
-    <label for="event-notes">Notes:</label><br>
+<div style="margin-top: 10px">
+    <label for="event-notes">Notes:</label> <span style="font-size: 75%; font-style: italic;"><a href="https://daringfireball.net/projects/markdown/basics">markdown help</a></span><br>
     <textarea rows="30" cols="60" id="event-notes" name="event-notes">[% event_notes | html %]</textarea>
 </div>
 
