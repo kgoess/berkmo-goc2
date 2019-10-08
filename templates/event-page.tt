@@ -89,6 +89,11 @@ $( document ).ready(function() {
             [% IF show_prev_next %]
                 [% IF next_id %]<a href="[% uri_for( path => '/event', id => next_id ) %]" id="next-event-link" class="next round">&#8250;</a>[% ELSE %]<a href="#" class="next round">&nbsp;</a>[% END %]
             [% END %]
+            [% IF event.type == 'gig' %]
+                &#127925; &#127926; &#127925;
+            [% ELSE %]
+                &#127880; &#127880; &#127880;
+            [% END %]
         </div>
         <div class="event-date-section">
             <span class="event-date">[% event.date_pretty %]</span><br>
