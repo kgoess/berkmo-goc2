@@ -296,7 +296,7 @@ sub create_event {
         return {
             action => 'redirect',
             headers => {
-                Location => uri_for( path => '/', message => $msg),
+                Location => uri_for( path => '/event', id => $event->id, message => $msg),
             },
         };
     }
