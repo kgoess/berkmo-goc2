@@ -6,7 +6,7 @@ use warnings;
 
 use Carp qw/croak/;
 use Template;
-use JSON;
+use JSON();
 
 use GoC::Logger;
 use GoC::Model::Event;
@@ -370,7 +370,7 @@ sub get_tt {
 
 sub to_json {
     my $s = shift;
-    print STDERR JSON->new->allow_nonref->encode($s);
+    return "''" unless $s;
     return JSON->new->allow_nonref->encode($s);
 }
 
