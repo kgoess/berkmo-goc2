@@ -54,6 +54,35 @@ EOL
     return \@rc;
 }
 
+sub get_past_events {
+    my ($class, %p) = @_;
+
+    #my $type = $p{type} || croak "missing event type in call to $class->get_past_events";
+
+    my $tomorrow = DateTime
+        ->now
+        ->add( days => 1 )
+        ->ymd;
+
+    my $sql = <<EOL;
+    SELECT * FROM event
+    WHERE date <= '$tomorrow'
+    --AND type = ?
+    AND deleted != 1
+    ORDER BY date DESC, name ASC
+    LIMIT ?
+EOL
+    my $limit = $p{limit} || 50;
+    my $dbh = get_dbh();
+    my $sth = $dbh->prepare($sql);
+    $sth->execute($limit);
+    my @rc;
+    while (my $row = $sth->fetchrow_hashref) {
+        push @rc, GoC::Model::Event->new($row);
+    }
+    return \@rc;
+}
+
 sub get_status_for_person {
     my ($self, $person) = @_;
 

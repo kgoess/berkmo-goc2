@@ -86,7 +86,7 @@ sub event_page {
 
     my @missing = @ids_seen ? GoC::Model::Person->get_all(status => 'active', except_ids => \@ids_seen) : ();
 
-    my ($prev_id, $next_id) = $event->get_prev_next_ids;
+    my ($prev_id, $next_id) = $p{show_prev_next} ? $event->get_prev_next_ids : ();
 
     my $template = 'event-page.tt';
     my $vars = get_vars(
@@ -106,6 +106,7 @@ sub event_page {
         prev_id             => $prev_id,
         next_id             => $next_id,
         current_tab         => $p{current_tab},
+        show_prev_next      => $p{show_prev_next},
     );
     my $output = '';
 
@@ -321,6 +322,28 @@ sub old_grid {
         people => \@people,
         grid => $grid,
         dump => \&Data::Dump::dump,
+    );
+
+    my $output = '';
+
+    $tt->process($template, $vars, \$output)
+           || die $tt->error();
+
+    return $output;
+}
+
+sub past_events {
+    my ($class, %p) = @_;
+
+
+    my $tt = get_tt();
+
+    my $events = GoC::Model::Event->get_past_events(limit => 50);
+
+    my $template = 'past-events.tt';
+    my $vars = get_vars(
+        \%p,
+        events    => $events,
     );
 
     my $output = '';

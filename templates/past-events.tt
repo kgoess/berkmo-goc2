@@ -1,0 +1,17 @@
+<style>
+/* so that the rows look clickable */
+tr {
+    cursor: pointer;
+}
+</style>
+<h2>Past Events</h2>
+<table class="logtable">
+    <tbody>
+        [% FOR event IN events %]
+            <tr onClick="document.location='[% uri_for( path => '/event', id => event.id, show_prev_next => 0 ) %]'">
+                <td>[% event.date %]</td>
+                <td>[% event.name %]</td>
+            </tr>
+        [% END %]
+    </tbody>
+</table>

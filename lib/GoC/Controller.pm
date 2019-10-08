@@ -27,6 +27,7 @@ my %handler_for_path = (
     '/create-person' => sub { shift->create_person(@_) },
     '/edit-person'   => sub { shift->edit_person(@_) },
     '/old-grid'      => sub { shift->old_grid(@_) },
+    '/past-events'   => sub { shift->past_events(@_) },
 );
 
 sub go {
@@ -206,6 +207,9 @@ sub main_page {
 
 sub event_page {
     my ($class, %p) = @_;
+
+    my $show_prev_next = scalar($p{request}->param('show_prev_next')) // 1;
+
     return {
         action => "display",
         content => GoC::View->event_page(
@@ -213,6 +217,7 @@ sub event_page {
             current_user => $p{current_user},
             message => scalar($p{request}->param('message')),
             current_tab => scalar($p{request}->param('current_tab')),
+            show_prev_next => $show_prev_next,
         ),
     }
 }
@@ -519,6 +524,16 @@ sub old_grid {
     return {
         action => 'display',
         content => GoC::View->old_grid(
+            current_user => $p{current_user},
+        ),
+    }
+}
+
+sub past_events {
+    my ($class, %p) = @_;
+    return {
+        action => 'display',
+        content => GoC::View->past_events(
             current_user => $p{current_user},
         ),
     }

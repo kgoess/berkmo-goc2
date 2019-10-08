@@ -32,6 +32,7 @@
         <li><a href="[% uri_for( path => "/create-person" ) %]">Add a new user</a>
         <li><a href="[% uri_for( path => "/edit-person" ) %]">Edit an existing user</a>
         <li><a href="[% uri_for( path => "/old-grid" ) %]">Old-style grid overview</a>
+        <li><a href="[% uri_for( path => "/past-events" ) %]">Past events</a>
         <li><a href="[% uri_for( path => "/admin/logs" ) %]">View activity logs</a>
     </ul>
 </div>
