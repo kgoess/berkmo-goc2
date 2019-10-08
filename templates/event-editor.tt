@@ -46,9 +46,7 @@
 </div>
 <div>
     <label for="event-notes">Notes:</label><br>
-    <textarea rows="30" cols="60" id="event-notes" name="event-notes">
-        [% event_notes | html %]
-    </textarea>
+    <textarea rows="30" cols="60" id="event-notes" name="event-notes">[% event_notes | html %]</textarea>
 </div>
 
 <input type="submit" value="save">

@@ -6,6 +6,7 @@ use warnings;
 
 use Carp qw/croak/;
 use Template;
+use JSON;
 
 use GoC::Logger;
 use GoC::Model::Event;
@@ -367,6 +368,12 @@ sub get_tt {
     return $_tt;
 }
 
+sub to_json {
+    my $s = shift;
+    print STDERR JSON->new->allow_nonref->encode($s);
+    return JSON->new->allow_nonref->encode($s);
+}
+
 sub get_vars {
     my $p = shift;
     my %vars = @_;
@@ -374,6 +381,7 @@ sub get_vars {
     return {
         uri_for        => \&uri_for,
         static_uri_for => \&static_uri_for,
+        to_json => \&to_json,
         %vars,
     };
 }

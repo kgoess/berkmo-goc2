@@ -166,9 +166,18 @@ $( document ).ready(function() {
 </div>
 
 <div id="notes-tab">
-    <pre>
-    [% event.notes | html %]
-    </pre>
+    <div id="notes-content">
+    [%# event.notes | html %]
+    </div>
+    <script>
+    var converter = new showdown.Converter({
+        simplifiedAutoLink: true,
+        excludeTrailingPunctuationFromURLs: true,
+    });
+    var text      = [% to_json(event.notes) %];
+    var html      = converter.makeHtml(text);
+    $('#notes-content').html(html);
+    </script>
 </div>
 
 
