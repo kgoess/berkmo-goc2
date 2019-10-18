@@ -16,9 +16,11 @@ use Class::Accessor::Lite(
     'name',
     'date',
     'queen',  # name, whatever, not a FK
-    'notification_email', 
+    'notification_email',
     'type', # gig, party
     'notes',
+    'num_dancers_required',
+    'num_musos_required',
     'deleted',
     'date_created',
     'date_updated',
@@ -101,7 +103,7 @@ EOL
         return @$row;
     }
 }
-    
+
 sub get_num_persons {
     my ($self, %p) = @_;
 
@@ -131,6 +133,34 @@ EOL
 
     my $row = $sth->fetchrow_arrayref;
     return $row->[0];
+}
+
+sub count_is_ok {
+    my ($self) = @_;
+
+    my $sql = <<EOL;
+    SELECT role, count(*) as count
+    FROM person_to_event_map
+    WHERE event_id = ?
+    AND status = 'y'
+    GROUP BY role
+EOL
+
+    my @sql_args = ($self->id);
+
+    my $dbh = get_dbh();
+    my $sth = $dbh->prepare($sql);
+    $sth->execute(@sql_args);
+
+    my %count;
+    while (my $row = $sth->fetchrow_hashref) {
+        my ($role, $count) = @{$row}{qw/role count/};
+        $count{$role} = $count;
+    }
+
+    my $rc = ($count{dancer}//0) >= $self->num_dancers_required
+            && ($count{muso}//0) >= $self->num_musos_required;
+    return $rc;
 }
 
 
@@ -229,11 +259,13 @@ sub save {
         notification_email,
         type,
         notes,
+        num_dancers_required,
+        num_musos_required,
         deleted,
         date_created,
         date_updated
     )
-    VALUES (?,?,?,?,?,?,?,?,?);
+    VALUES (?,?,?,?,?,?,?,?,?,?,?);
 EOL
 
     if (! $self->date_created) {
@@ -249,8 +281,19 @@ EOL
     my $dbh = get_dbh();
     my $sth = $dbh->prepare($sql);
     $sth->execute(
-        map { $self->$_ } 
-        qw/name date queen notification_email type notes deleted date_created date_updated/
+        map { $self->$_ }
+        qw/ name
+            date
+            queen
+            notification_email
+            type
+            notes
+            num_dancers_required
+            num_musos_required
+            deleted
+            date_created
+            date_updated
+        /
     );
 
     $self->id($dbh->sqlite_last_insert_rowid);
@@ -304,6 +347,8 @@ sub update {
             type = ?,
             notes = ?,
             deleted = ?,
+            num_dancers_required = ?,
+            num_musos_required = ?,
             date_updated = ?
             /* date_created not updatable */
         WHERE id = ?
@@ -313,8 +358,18 @@ EOL
     my $sth = $dbh->prepare($sql);
     $self->date_updated(today_ymd());
     $sth->execute(
-        map { $self->$_ } 
-        qw/name date queen notification_email type notes deleted date_updated
+        map { $self->$_ }
+        qw/
+            name
+            date
+            queen
+            notification_email
+            type
+            notes
+            deleted
+            num_dancers_required
+            num_musos_required
+            date_updated
            id
         /
     );
@@ -332,6 +387,8 @@ CREATE TABLE event (
     notification_email VARCHAR(64),
     type VARCHAR(255),
     notes VARCHAR(1024), /* length is ignored */
+    num_dancers_required INT default 10,
+    num_musos_required INT default 1,
     deleted BOOLEAN NOT NULL DEFAULT 0,
     date_created TEXT(20),
     date_updated TEXT(20)

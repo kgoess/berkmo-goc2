@@ -55,7 +55,7 @@
         </div>
         <div>
             [% FOR event IN events %]
-                <div class="event-table-row wrapper an-event" data-event-id="[% event.id| html %]" regularbgcolor=#ffd0ff ENOUGHbgcolor = #99CC99>
+                <div class="event-table-row wrapper an-event [% IF event.count_is_ok %]ok-count[% END %]" data-event-id="[% event.id| html %]">
                     <div class="wrapper">
                         <div class="cell cell-text event-date">[% event.date_pretty | html %]</div>
                         <div class="cell cell-text-eventname">[% event.name | html %]</div>

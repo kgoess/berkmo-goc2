@@ -256,6 +256,14 @@ sub create_event {
                 push @errors, "missing data for $f";
             }
         }
+        foreach my $f (qw/num-dancers-required num-musos-required/) {
+            my $val = scalar($p{request}->param($f));
+            if ($val =~ /\D/) {
+                push @errors, "invalid data for $f";
+            } elsif ($val < 0 || $val > 99) {
+                push @errors, "value for $f out of range";
+            }
+        }
         my $event_date = scalar($p{request}->param('event-date')) // '';
         if ($event_date !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
                 push @errors, "wrong format for event-date, should be yyyy-mm-dd, not '$event_date'";
@@ -284,6 +292,8 @@ sub create_event {
             notification_email => scalar($r->param('event-notification-email')),
             type => scalar($r->param('event-type')),
             notes => scalar($r->param('event-notes')),
+            num_dancers_required => scalar($r->param('num-dancers-required')),
+            num_musos_required => scalar($r->param('num-musos-required')),
         );
         $event->save;
 
@@ -325,6 +335,14 @@ sub edit_event {
                 push @errors, "missing data for $f";
             }
         }
+        foreach my $f (qw/num-dancers-required num-musos-required/) {
+            my $val = scalar($p{request}->param($f));
+            if ($val =~ /\D/) {
+                push @errors, "invalid data for $f";
+            } elsif ($val < 0 || $val > 99) {
+                push @errors, "value for $f out of range";
+            }
+        }
         if (scalar($p{request}->param('event-date'))  !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
                 push @errors, "wrong format for event-date, should be yyyy-mm-dd";
         }
@@ -355,6 +373,8 @@ sub edit_event {
         $event->notification_email(scalar($r->param('event-notification-email')));
         $event->type(scalar($r->param('event-type')));
         $event->notes(scalar($r->param('event-notes')));
+        $event->num_dancers_required(scalar($r->param('num-dancers-required')));
+        $event->num_musos_required(scalar($r->param('num-musos-required')));
         $event->update;
 
         my $person_log_str = join '', $p{current_user}->name, '[', $p{current_user}->id, ']';

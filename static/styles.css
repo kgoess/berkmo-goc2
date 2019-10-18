@@ -80,8 +80,13 @@ body {
   margin: 4px;
 }
 
+
 .event-table-row:nth-child(even) {
   background-color: #ffd0ff;
+}
+
+.event-table-row.ok-count {
+    background-color: #99CC99
 }
 
 /*  Wrappers around cells and other wrappers: flex, row, wrap */
@@ -196,6 +201,9 @@ body {
     border-top-right-radius: 0.7em;
     border-bottom-left-radius: 0.7em;
     border-bottom-right-radius: 0.7em;
+}
+#event-card.ok-count {
+    background-color: #99CC99
 }
 
 #event-card .event-name {

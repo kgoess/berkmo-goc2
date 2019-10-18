@@ -67,21 +67,28 @@ sub event_page {
     my %dancers_for_status;
     my $num_dancers = 0;
     my @ids_seen;
+    my $num_confirmed_dancers = 0;
     foreach my $status (@statuses) {
         my @dancers = $event->get_persons(role => 'dancer', status => $status);
         $dancers_for_status{$status} = \@dancers;
         $num_dancers += @dancers;
         push @ids_seen, $_->id for @dancers;
+        if ($status eq 'y') {
+            $num_confirmed_dancers = @dancers;
+        }
     }
 
     my %musos_for_status;
     my $num_musos = 0;
+    my $num_confirmed_musos = 0;
     foreach my $status (@statuses) {
         my @musos = $event->get_persons(role => 'muso', status => $status);
         $musos_for_status{$status} = \@musos;
         $num_musos += @musos;
         push @ids_seen, $_->id for @musos;
-
+        if ($status eq 'y') {
+            $num_confirmed_musos = @musos;
+        }
     }
     my ($status, $role) = $event->get_status_for_person($p{current_user});
 
@@ -92,22 +99,24 @@ sub event_page {
     my $template = 'event-page.tt';
     my $vars = get_vars(
         \%p,
-        organization_name   => 'Berkeley Morris',
-        statuses            => \@statuses,
-        event               => $event,
-        dancers_for_status  => \%dancers_for_status,
-        num_dancers         => $num_dancers,
-        musos_for_status    => \%musos_for_status,
-        num_musos           => $num_musos,
-        missing             => \@missing,
-        current_user        => $p{current_user},
-        current_user_status => $status,
-        current_user_role   => $role,
-        message             => $p{message},
-        prev_id             => $prev_id,
-        next_id             => $next_id,
-        current_tab         => $p{current_tab},
-        show_prev_next      => $p{show_prev_next},
+        organization_name     => 'Berkeley Morris',
+        statuses              => \@statuses,
+        event                 => $event,
+        dancers_for_status    => \%dancers_for_status,
+        num_dancers           => $num_dancers,
+        num_confirmed_dancers => $num_confirmed_dancers,
+        musos_for_status      => \%musos_for_status,
+        num_confirmed_musos   => $num_confirmed_musos,
+        num_musos             => $num_musos,
+        missing               => \@missing,
+        current_user          => $p{current_user},
+        current_user_status   => $status,
+        current_user_role     => $role,
+        message               => $p{message},
+        prev_id               => $prev_id,
+        next_id               => $next_id,
+        current_tab           => $p{current_tab},
+        show_prev_next        => $p{show_prev_next},
     );
     my $output = '';
 
@@ -159,16 +168,18 @@ sub create_event_page {
     my $template = 'event-editor.tt';
     my $vars = get_vars(
         \%p,
-        organization_name => 'Berkeley Morris',
-        current_user      => $p{current_user},
-        errors            => $p{errors},
-        #request           => $p{request},
-        event_name        => $param->('event-name'),
-        event_date        => $param->('event-date'),
-        event_queen       => $param->('event-queen'),
+        organization_name        => 'Berkeley Morris',
+        current_user             => $p{current_user},
+        errors                   => $p{errors},
+        #request                 => $p{request},
+        event_name               => $param->('event-name'),
+        event_date               => $param->('event-date'),
+        event_queen              => $param->('event-queen'),
         event_notification_email => $param->('event-notification-email'),
-        event_type        => $param->('event-type'),
-        event_notes       => ($param->('event-notes') // default_notes()),
+        event_type               => $param->('event-type'),
+        event_notes              => ($param->('event-notes') // default_notes()),
+        num_dancers_required     => ($param->('num-dancers-required') // 10),
+        num_musos_required       => ($param->('num-musos-required') // 1),
     );
     my $output = '';
 
@@ -212,6 +223,8 @@ sub edit_event_page {
         event_notification_email => $param_or_field->('event-notification-email', $event->notification_email),
         event_type        => $param_or_field->('event-type', $event->type),
         event_notes       => $param_or_field->('event-notes', $event->notes),
+        num_dancers_required => $param_or_field->('num-dancers-required', $event->num_dancers_required),
+        num_musos_required   => $param_or_field->('num-musos-required', $event->num_musos_required),
     );
     my $output = '';
 

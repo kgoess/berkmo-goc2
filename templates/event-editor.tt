@@ -44,6 +44,13 @@
         <option name="party" [% IF event_type == "party" %]selected="selected"[% END %]>party
     </select>
 </div>
+<div>
+    <label for="num-dancers-required">Num Dancers Required</label>
+    <input type="text" size="3" id="num-dancers-required" name="num-dancers-required" value="[% num_dancers_required | html %]">
+    <br>
+    <label for="num-musos-required">Num Musos Required</label>
+    <input type="text" size="3" id="num-musos-required" name="num-musos-required" value="[% num_musos_required | html %]">
+</div>
 <div style="margin-top: 10px">
     <label for="event-notes">Notes:</label> <span style="font-size: 75%; font-style: italic;"><a href="https://daringfireball.net/projects/markdown/basics">markdown help</a></span><br>
     <textarea rows="30" cols="60" id="event-notes" name="event-notes">[% event_notes | html %]</textarea>

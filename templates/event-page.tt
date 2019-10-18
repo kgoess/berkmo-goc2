@@ -79,7 +79,7 @@ $( document ).ready(function() {
 
 </script>
 
-<div id="event-card">
+<div id="event-card" class="[% IF event.count_is_ok %]ok-count[% END %]">
     <div>
         <div class="event-name">
             [% IF show_prev_next %]
@@ -113,6 +113,7 @@ $( document ).ready(function() {
     [%  status_and_role = event.get_status_for_person(current_user)
     %]
     <div class="event-your-status">your status: [% IF status_and_role %][% status_and_role.0 %] ([% status_and_role.1 %])[% ELSE %]unknown[% END %]</div>
+    <div class="">confirmed: [% num_confirmed_dancers %] dancers, [% num_confirmed_musos %] musos</div>
 </div>
 
 <div id="tabs"><!-- this contains everything that's tabbable -->

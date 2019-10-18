@@ -91,7 +91,7 @@ my @y_n_q = (qw/y y y y n ?/);
 foreach my $p (@person_objs) {
     foreach my $e (@event_objs) {
         next if $p->status eq 'inactive';
-        next if (int rand(3) >= 1);
+        next if (int rand(5) >= 4);
         my $what = int rand 2 ? 'dancer' : 'muso';
         my $y_n =  $y_n_q[int rand 6];
         $map->add_person_to_event($p, $e, $what, $y_n);
