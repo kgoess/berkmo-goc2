@@ -232,7 +232,8 @@ sub activity_logs {
     }
 }
 
-package EmptyRequest {
+{
+package EmptyRequest;
     sub new { return bless {} };
     sub param {};
 }
