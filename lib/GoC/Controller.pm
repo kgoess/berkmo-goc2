@@ -84,8 +84,8 @@ sub import {
     *static_uri_for = \&{$static_uri_for_implementation};
 }
 
-sub uri_for { ... }
-sub static_uri_for { ... }
+#sub uri_for { ... }
+#sub static_uri_for { ... }
 
 sub login_page {
     my ($class, %p) = @_;

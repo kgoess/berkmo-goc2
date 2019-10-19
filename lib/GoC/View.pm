@@ -27,8 +27,8 @@ sub import {
     my $static_uri_for_implementation = join '::', $location, 'static_uri_for';
     *static_uri_for = \&{$static_uri_for_implementation};
 }
-sub uri_for { ... }
-sub static_uri_for { ... }
+#sub uri_for { ... }
+#sub static_uri_for { ... }
 
 sub main_page {
     my ($class, %p) = @_;
