@@ -13,7 +13,8 @@ use GoC::Model::Person;
 use GoC::Model::PersonEventMap;
 use GoC::Logger;
 
-package MockRequest {
+{
+package MockRequest;
     sub new {
         my ($class, %p) = @_;
 
