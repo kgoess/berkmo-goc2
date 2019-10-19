@@ -11,7 +11,10 @@ our @EXPORT_OK = qw(
     clone
     get_dbh
     today_ymd
+    tomorrow_ymd
+    yesterday_ymd
     today_ymdhms
+    date_format_pretty
     uri_escape
 );
 
@@ -28,11 +31,55 @@ sub get_dbh {
     return $_dbh;
 }
 
+$ENV{TZ} = 'America/Los_Angeles';
+
 sub today_ymd {
-	return DateTime->now(time_zone => 'America/Los_Angeles')->ymd;
+    my $s = `date -j '+%Y-%m-%d'`;
+    chomp $s;
+    return $s;
+    #return DateTime->now(time_zone => 'America/Los_Angeles')->ymd;
 }
 sub today_ymdhms {
-	return DateTime->now(time_zone => 'America/Los_Angeles')->datetime;
+    my $s = `date -j '+%Y-%m-%dT%H:%M:%S'`;
+    chomp $s;
+    return $s;
+    #return DateTime->now(time_zone => 'America/Los_Angeles')->datetime;
+}
+sub yesterday_ymd {
+    my $s = `date -j -v -1d '+%Y-%m-%d'`;
+    chomp $s;
+    return $s;
+    #my $yesterday = DateTime
+    #    ->now
+    #    ->subtract( days => 1 )
+    #    ->ymd;
+
+}
+sub tomorrow_ymd {
+    my $s = `date -j -v +1d '+%Y-%m-%d'`;
+    chomp $s;
+    return $s;
+    #my $tomorrow = DateTime
+    #    ->now
+    #    ->add( days => 1 )
+    #    ->ymd;
+}
+
+sub date_format_pretty {
+    my ($y, $m, $d) = @_;
+
+    my $date = sprintf("%04d%02d%02d", $y, $m, $d);
+
+    my $s = `date -j -v -f '%Y%m%d' $date '+%a, %b %e'`;
+    chomp $s;
+    return $s;
+#    my $datetime = DateTime->new(
+#        year => $year,
+#        month => $month,
+#        day => $day,
+#    );
+#
+#    return $datetime->strftime("%a, %b %e");
 }
 
 # borrowed from URI::Escape

@@ -3,13 +3,12 @@ use strict;
 use warnings;
 
 use Data::Dump qw/dump/;
-use DateTime;
 use Test::More tests => 35;
 
 use GoC::Model::Person;
 use GoC::Model::Event;
 use GoC::Model::PersonEventMap;
-use GoC::Utils qw/get_dbh/;
+use GoC::Utils qw/get_dbh today_ymd/;
 
 $ENV{SQLITE_FILE} = 'goctest';
 unlink $ENV{SQLITE_FILE};
@@ -163,7 +162,7 @@ sub test_upcoming_events {
     my $dbh = get_dbh();
     $dbh->do('DELETE FROM event');
 
-    my $today = DateTime->now->ymd;
+    my $today = today_ymd();
 
     GoC::Model::Event->new(
         name => 'fourth of july parade',
@@ -216,7 +215,7 @@ sub test_attendee_list_notifications {
     my $dbh = get_dbh();
     $dbh->do('DELETE FROM event');
 
-    my $today = DateTime->now->ymd;
+    my $today = today_ymd();
 
     my $event = GoC::Model::Event->new(
         name => 'fourth of july parade',

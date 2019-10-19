@@ -4,11 +4,10 @@ use strict;
 use warnings;
 
 use Carp qw/croak/;
-use DateTime;
 use File::Temp qw/tempfile tempdir/;
 
 use GoC::Model::Person;
-use GoC::Utils qw/get_dbh today_ymd clone/;
+use GoC::Utils qw/get_dbh today_ymd yesterday_ymd tomorrow_ymd date_format_pretty clone/;
 
 use Class::Accessor::Lite(
     new => 1,
@@ -36,10 +35,7 @@ sub get_upcoming_events {
 
     my $type = $p{type} || croak "missing event type in call to $class->get_upcoming_events";
 
-    my $yesterday = DateTime
-        ->now
-        ->subtract( days => 1 )
-        ->ymd;
+    my $yesterday = yesterday_ymd();
 
     my $sql = <<EOL;
     SELECT * FROM event
@@ -63,10 +59,7 @@ sub get_past_events {
 
     #my $type = $p{type} || croak "missing event type in call to $class->get_past_events";
 
-    my $tomorrow = DateTime
-        ->now
-        ->add( days => 1 )
-        ->ymd;
+    my $tomorrow = tomorrow_ymd();
 
     my $sql = <<EOL;
     SELECT * FROM event
@@ -203,10 +196,7 @@ EOL
 sub get_prev_next_ids {
     my ($self) = @_;
 
-    my $yesterday = DateTime
-        ->now
-        ->subtract( days => 1 )
-        ->ymd;
+    my $yesterday = yesterday_ymd();
 
     my $sql_prev = <<EOL;
         SELECT id, date, name
@@ -304,13 +294,8 @@ EOL
 sub date_pretty {
     my ($self) = @_;
     my ($year, $month, $day) = $self->date =~ /(\d\d\d\d)-(\d\d)-(\d\d)/;
-    my $datetime = DateTime->new(
-        year => $year,
-        month => $month,
-        day => $day,
-    );
 
-    return $datetime->strftime("%a, %b %e");
+    return date_format_pretty($year, $month, $day);
 }
 
 
