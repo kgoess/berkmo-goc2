@@ -7,7 +7,7 @@ use Carp qw/croak/;
 use DateTime;
 
 use GoC::Model::Person;
-use GoC::Utils qw/get_dbh today_ymd/;
+use GoC::Utils qw/get_dbh today_ymd clone/;
 
 use Class::Accessor::Lite(
     new => 1,

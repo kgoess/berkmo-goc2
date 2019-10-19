@@ -5,7 +5,7 @@ use warnings;
 
 use Carp qw/croak/;
 
-use GoC::Utils qw/get_dbh/;
+use GoC::Utils qw/get_dbh clone/;
 
 use Class::Accessor::Lite(
     new => 1,

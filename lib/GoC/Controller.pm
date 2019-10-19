@@ -367,6 +367,7 @@ sub edit_event {
         my $event_id = scalar($p{request}->param('event-id'));
         my $event = GoC::Model::Event->load($event_id)
             or croak "no event found for id $event_id";
+        my $orig = $event->clone();
         $event->name(scalar($r->param('event-name')));
         $event->date(scalar($r->param('event-date')));
         $event->queen(scalar($r->param('event-queen')));
@@ -377,9 +378,23 @@ sub edit_event {
         $event->num_musos_required(scalar($r->param('num-musos-required')));
         $event->update;
 
+        my @delta_log_str;
+        foreach my $f (qw/name date queen notification_email type num_dancers_required num_musos_required/) {
+            no warnings 'uninitialized';
+            if ($orig->$f ne $event->$f) {
+                push @delta_log_str, "$f to '".$event->$f."'";
+            }
+        }
+        if ($orig->notes ne $event->notes) {
+             push @delta_log_str, "made edits to the notes";
+        }
+        my $delta_log_str = join ', ', @delta_log_str;
+        $delta_log_str ||= 'nothing';
+
+
         my $person_log_str = join '', $p{current_user}->name, '[', $p{current_user}->id, ']';
         my $event_log_str  = join '', $event->name,  '[', $event->id, ']';
-        $p{logger}->info($event->type." event edited: $event_log_str by $person_log_str");
+        $p{logger}->info($event->type." event edited: $event_log_str by $person_log_str changing $delta_log_str");
 
         my $msg = uri_escape('Event "'.$event->name.'" successfully edited');
         return {
@@ -506,6 +521,8 @@ sub edit_person {
         my $person = GoC::Model::Person->load($person_id)
             or die "can't find person for id $person_id";
 
+        my $orig = $person->clone;
+
         my @errors;
         if (! $p{request}->param('person-name')) {
             push @errors, "You can't change the person's name to a blank.";
@@ -526,9 +543,19 @@ sub edit_person {
         $person->status(scalar($p{request}->param('person-status')));
         $person->update;
 
+        my @delta_log_str;
+        foreach my $f (qw/name status/) {
+            no warnings 'uninitialized';
+            if ($orig->$f ne $person->$f) {
+                push @delta_log_str, "$f to '".$person->$f."'";
+            }
+        }
+        my $delta_log_str = join ', ', @delta_log_str;
+        $delta_log_str ||= 'nothing';
+
         my $person_log_str = join '', $person->name, '[', $person->id, ']';
         my $user_log_str = join '', $p{current_user}->name, '[', $p{current_user}->id, ']';
-        $p{logger}->info("User $person_log_str edited by $user_log_str");
+        $p{logger}->info("User $person_log_str edited by $user_log_str, changing $delta_log_str");
 
         my $msg = uri_escape('Person "'.$person->name.'" has been updated');
         return {

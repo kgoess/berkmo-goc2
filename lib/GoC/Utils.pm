@@ -8,6 +8,7 @@ use DBI;
 
 use Exporter 'import';
 our @EXPORT_OK = qw(
+    clone
     get_dbh
     today_ymd
     today_ymdhms
@@ -54,6 +55,14 @@ sub _fail_hi {
     my $chr = shift;
     Carp::croak(sprintf "Can't escape \\x{%04X}, try uri_escape_utf8() instead", ord($chr));
 }
+
+
+sub clone {
+    my ($self) = @_;
+    my %clone = %$self;
+    return bless \%clone, ref $self;
+}
+
 
 
 1;
