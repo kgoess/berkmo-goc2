@@ -127,6 +127,7 @@ sub event_page {
 }
 
 sub default_notes {
+    my $haiku = random_haiku();
     return <<EOL;
 Sample notes
 ============
@@ -149,13 +150,52 @@ Options include *italic* and **bold**
 
 Pre-formatted text is indented four spaces:
 
-    I do not think
-    I will ever see
-    A poem as lovely
-    As a tree
+$haiku
 
 EOL
 
+}
+
+sub random_haiku {
+my $h1 = <<EOL;
+       An old silent pond...
+    A frog jumps into the pond,
+      splash! Silence again.
+EOL
+
+my $h2 = <<EOL;
+     Autumn moonlight-
+    a worm digs silently
+     into the chestnut.
+EOL
+
+my $h3 = <<EOL;
+        In the twilight rain
+    these brilliant-hued hibiscus -
+          A lovely sunset.
+EOL
+
+my $h4 = <<EOL;
+    A summer river being crossed
+           how pleasing
+       with sandals in my hands!
+EOL
+
+my $h5 = <<EOL;
+        Light of the moon
+    Moves west, flowers' shadows
+         Creep eastward.
+EOL
+
+my $h6 = <<EOL;
+            In the moonlight,
+    The color and scent of the wisteria
+             Seems far away.
+EOL
+
+    my @h = ($h1, $h2, $h3, $h4, $h5, $h6);
+    my $i = int rand @h;
+    return $h[$i];
 }
 
 sub create_event_page {
