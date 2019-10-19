@@ -24,5 +24,8 @@ foreach my $gig (@$gigs) {
         or die "can't pipe to mail $!";
 
     print $fh $target_address;
+
+    close $fh or die "can't write to mail $!";
+    # bvh doesn't have /usr/bin/mail, see /usr/local/bin/check-dyn-ip.pl for alternative
 }
 
