@@ -54,6 +54,8 @@ foreach my $event (@events) {
             queen => $event->[1],
             type => $event->[2],
             notes => $event->[3],
+            num_dancers_required => 10,
+            num_musos_required => 1,
         );
     $e->save;
     push @event_objs, $e;
