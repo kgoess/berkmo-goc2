@@ -45,12 +45,24 @@ a:hover {
 <script>
 
 var xDown = null;
+var yDown = null;
 function handleTouchStart(e) {
     // e.preventDefault();
     xDown = e.originalEvent.touches[0].pageX;
+    yDown = e.originalEvent.touches[0].pageY;
 }
 function handleTouchMove(e) {
     var newX = e.originalEvent.touches[0].pageX;
+    var newY = e.originalEvent.touches[0].pageY;
+
+    const dX = Math.abs(newX - xDown);
+    const dY = Math.abs(newY - yDown);
+    const swipeAngle = Math.atan(dY/dX)*180/Math.PI;
+
+    if (swipeAngle > 25) {
+        return;
+    }
+
     if (xDown < newX) {
         //$('#previous-event-link').click(); no workee
         [% IF prev_id %]
