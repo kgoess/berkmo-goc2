@@ -5,8 +5,8 @@ use warnings;
 
 use CGI;
 
-use GoC::Controller __PACKAGE__;
-use GoC::View __PACKAGE__;
+use GoC::Controller 'GoC::Controller::CGI';
+use GoC::View 'GoC::Controller::CGI';
 
 sub handler {
     my $class = 'GoC::Controller';
