@@ -4,7 +4,7 @@ use warnings;
 
 use Data::Dump qw/dump/;
 use DateTime;
-use Test::More tests => 32;
+use Test::More tests => 35;
 
 use GoC::Model::Person;
 use GoC::Model::Event;
@@ -23,6 +23,7 @@ test_event_CRUD();
 test_event_prev_next();
 test_person_event_map_CRUD();
 test_upcoming_events();
+test_attendee_list_notifications();
 test_person_get_all();
 
 
@@ -63,7 +64,7 @@ sub test_event_CRUD {
     is $event->date, '2019-07-01';
     is $event->queen, 'alice';
     is $event->type, 'gig';
-    
+
     $event->queen('bob');
     $event->update;
 
@@ -116,7 +117,6 @@ sub test_person_event_map_CRUD {
     my $event = GoC::Model::Event->new(
         name => 'fourth of july parade',
         date => '2019-07-01',
-        
         queen => 'alice',
         notes => 'blah',
     );
@@ -153,7 +153,7 @@ sub test_person_event_map_CRUD {
     ok ! $event->get_persons(role => 'muso', status => 'y');
     ok ! $event->get_status_for_person($person);
 
-    #GoC::Model::PersonEventMap->update_person_for_event($person, $event, 'muso', 
+    #GoC::Model::PersonEventMap->update_person_for_event($person, $event, 'muso',
     # pk?
 
 }
@@ -164,7 +164,7 @@ sub test_upcoming_events {
     $dbh->do('DELETE FROM event');
 
     my $today = DateTime->now->ymd;
-    
+
     GoC::Model::Event->new(
         name => 'fourth of july parade',
         date => $today,
@@ -208,6 +208,51 @@ sub test_upcoming_events {
     is @$gigs, 2;
     is $gigs->[0]->name, 'fourth of july parade';
     is $gigs->[1]->name, 'some other gig';
+
+}
+
+sub test_attendee_list_notifications {
+
+    my $dbh = get_dbh();
+    $dbh->do('DELETE FROM event');
+
+    my $today = DateTime->now->ymd;
+
+    my $event = GoC::Model::Event->new(
+        name => 'fourth of july parade',
+        date => $today,
+        queen => 'alice',
+        notification_email => 'alice@example.com',
+        type => 'gig',
+        notes => 'blah',
+    );
+    $event->save;
+
+    my $alice = GoC::Model::Person->new(
+        name => 'alice',
+        status => 'active',
+    );
+    $alice->save();
+    GoC::Model::PersonEventMap->add_person_to_event($alice, $event, 'dancer', 'y');
+
+    my $bob = GoC::Model::Person->new(
+        name => 'bob',
+        status => 'active',
+    );
+    $bob->save();
+    GoC::Model::PersonEventMap->add_person_to_event($bob, $event, 'dancer', 'y');
+
+    ok ! $event->prev_attendees;
+
+    my $changed = $event->update_prev_attendees();
+    like $changed, qr/\+alice: y dancer\n\+bob: y dancer\n/;
+
+    GoC::Model::PersonEventMap->delete_person_from_event($bob, $event);
+    GoC::Model::PersonEventMap->add_person_to_event($bob, $event, 'dancer', 'n');
+
+    $changed = $event->update_prev_attendees();
+    like $changed, qr/alice: y dancer\n\-bob: y dancer\n\+bob: n dancer\n/;
+
 
 }
 

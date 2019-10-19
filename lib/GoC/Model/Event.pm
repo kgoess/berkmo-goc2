@@ -5,6 +5,7 @@ use warnings;
 
 use Carp qw/croak/;
 use DateTime;
+use File::Temp qw/tempfile tempdir/;
 
 use GoC::Model::Person;
 use GoC::Utils qw/get_dbh today_ymd clone/;
@@ -19,6 +20,7 @@ use Class::Accessor::Lite(
     'notification_email',
     'type', # gig, party
     'notes',
+    'prev_attendees',
     'num_dancers_required',
     'num_musos_required',
     'deleted',
@@ -346,6 +348,7 @@ sub update {
             notification_email = ?,
             type = ?,
             notes = ?,
+            prev_attendees = ?,
             deleted = ?,
             num_dancers_required = ?,
             num_musos_required = ?,
@@ -366,6 +369,7 @@ EOL
             notification_email
             type
             notes
+            prev_attendees
             deleted
             num_dancers_required
             num_musos_required
@@ -373,6 +377,40 @@ EOL
            id
         /
     );
+}
+
+sub update_prev_attendees {
+    my ($self) = @_;
+
+    my @persons = $self->get_persons;
+    my $statuses = '';
+    foreach my $person (sort { $a->name cmp $b->name } @persons) {
+        $statuses .= $person->name.': '.join(' ', $self->get_status_for_person($person))."\n";
+    }
+    if (($self->prev_attendees//'') eq ($statuses//'')) {
+        return;
+    }
+
+    my $orig = $self->prev_attendees || '';
+    my $prev_updated = $self->date_updated;
+
+    $self->prev_attendees($statuses);
+    $self->save;
+
+    my $dir = tempdir( CLEANUP => 1 );
+
+    my ($orig_fh, $orig_filename) =
+        tempfile(DIR => $dir, TEMPLATE => "list-from-$prev_updated-XXXXX" );
+    print $orig_fh $orig;
+    close $orig_fh;
+    my $today = today_ymd();
+    my ($new_fh, $new_filename) =
+        tempfile(DIR => $dir, TEMPLATE => "current-attendee-list-$today-XXXXX");
+    print $new_fh $statuses;
+    close $new_fh;
+
+    my $diff = `cd $dir && diff -u \$(basename $orig_filename) \$(basename $new_filename)`;
+    return $diff;
 }
 
 sub create_table {
@@ -387,6 +425,7 @@ CREATE TABLE event (
     notification_email VARCHAR(64),
     type VARCHAR(255),
     notes VARCHAR(1024), /* length is ignored */
+    prev_attendees VARCHAR(1024),
     num_dancers_required INT default 10,
     num_musos_required INT default 1,
     deleted BOOLEAN NOT NULL DEFAULT 0,
