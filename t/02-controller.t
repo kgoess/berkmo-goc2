@@ -129,7 +129,7 @@ sub test_create_event {
         current_user => $user,
     );
     is $result->{action}, 'redirect';
-    is $result->{headers}{Location}, '/goc2?path=/&message=Event%20successfully%20created';
+    is $result->{headers}{Location}, '/goc2?path=/event&id=2&message=Event%20successfully%20created';
 
     my $log_lines = GoC::Logger->get_log_lines;
     is   $log_lines->[0]{level}, 'info';
@@ -182,7 +182,7 @@ sub test_edit_event {
         current_user => $user,
     );
     is $result->{action}, 'redirect';
-    is $result->{headers}{Location}, '/goc2?path=/&message=Event%20%22christmas%20in%20july%20%28edited%29%22%20successfully%20edited';
+    is $result->{headers}{Location}, '/goc2?path=/event&id=3&message=Event%20%22christmas%20in%20july%20%28edited%29%22%20successfully%20edited';
 
     $event = GoC::Model::Event->load($event->id);
     is $event->name, 'christmas in july (edited)';
