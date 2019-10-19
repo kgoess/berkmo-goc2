@@ -152,7 +152,7 @@ sub change_status {
     $status =~ /^[yn?]$/
         or die "wrong value for status: $status";
 
-    my $current_tab = scalar($p{request}->param('current_tab'));
+    my $current_tab = scalar($p{request}->param('current_tab')) // '';
     $current_tab =~ s/[^a-z0-9-]//g;
 
     GoC::Model::PersonEventMap->delete_person_from_event($person, $event);
@@ -257,7 +257,7 @@ sub create_event {
             }
         }
         foreach my $f (qw/num-dancers-required num-musos-required/) {
-            my $val = scalar($p{request}->param($f));
+            my $val = scalar($p{request}->param($f)) // next;
             if ($val =~ /\D/) {
                 push @errors, "invalid data for $f";
             } elsif ($val < 0 || $val > 99) {
@@ -269,7 +269,7 @@ sub create_event {
                 push @errors, "wrong format for event-date, should be yyyy-mm-dd, not '$event_date'";
         }
         if (my $email = scalar($p{request}->param('event-notification-email'))) {
-            if ($email !~ /^[^@]+@[^@]+$/) {
+            if ($email !~ /^[^@]+@[^@]+\.[a-zA-Z]+$/) {
                 push @errors, "that doesn't look like an email to me";
             }
         }
@@ -336,7 +336,7 @@ sub edit_event {
             }
         }
         foreach my $f (qw/num-dancers-required num-musos-required/) {
-            my $val = scalar($p{request}->param($f));
+            my $val = scalar($p{request}->param($f)) // next;
             if ($val =~ /\D/) {
                 push @errors, "invalid data for $f";
             } elsif ($val < 0 || $val > 99) {
