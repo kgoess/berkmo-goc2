@@ -149,10 +149,10 @@ Options include *italic* and **bold**
 
 Pre-formatted text is indented four spaces:
 
-   I do not think
-   I will ever see
-   A poem as lovely
-   As a tree
+    I do not think
+    I will ever see
+    A poem as lovely
+    As a tree
 
 EOL
 
