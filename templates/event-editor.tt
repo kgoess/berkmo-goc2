@@ -35,6 +35,7 @@
 <div>
     <label for="event-notification-email">Notification Email (optional):</label>
     <input type="text" size="40" id="event-notification-email" name="event-notification-email" value="[% event_notification_email | html %]">
+    (updates sent at 5:05 am, check your spam folder)
 </div>
 
 <div>
