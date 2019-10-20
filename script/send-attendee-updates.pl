@@ -23,7 +23,7 @@ foreach my $gig (@$gigs) {
     open my $fh, '|-', "/usr/bin/mail -s 'attendee list has changed for $clean_event_name' $target_address" 
         or die "can't pipe to mail $!";
 
-    print $fh $target_address;
+    print $fh $updates;
 
     close $fh or die "can't write to mail $!";
     # bvh doesn't have /usr/bin/mail, see /usr/local/bin/check-dyn-ip.pl for alternative
