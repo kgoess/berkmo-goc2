@@ -75,7 +75,7 @@ body {
   padding-left: 5px;
   padding-right: 4px;
   padding-top: 10px;
-  padding-botton: 10px;
+  padding-bottom: 5px;
   border: 1px solid green;
   margin: 4px;
 }
@@ -89,12 +89,25 @@ body {
     background-color: #99CC99
 }
 
+/* on web only, stretch the head out to 100% */
+.event-table-head-lowest-wrapper {
+    width: 100%;
+}
+
 /*  Wrappers around cells and other wrappers: flex, row, wrap */
 .wrapper {
   display: flex;           display: -webkit-flex;
   flex-direction: row;     -webkit-flex-direction: row;
   flex-grow: 0;            -webkit-flex-grow: 0;
   flex-wrap: wrap;         -webkit-flex-wrap: wrap;
+}
+
+
+@media screen and (max-width: 760px) {
+  /* this lets everything be centered on phones*/
+  .wrapper { 
+      flex-grow: 1;            -webkit-flex-grow: 1; 
+  }
 }
 
 /*  Text based cells and wrappers: grow equally when there is extra space. */
@@ -123,8 +136,12 @@ body {
 }
 .event-table .cell-stats {
   white-space: nowrap;
-  margin-left: 10px;
+  margin-left: 10px;w  margin-right: 10px;
   margin-right: 10px;
+/* make them all 4ems wide will line up the headers with the
+ * individual event rows */
+  width: 4em;
+
 }
 
 /* keep from wrapping on smallest phones */
@@ -140,7 +157,7 @@ body {
 
 .event-table .cell-user-status {
     text-align: center;
-    width: 100%;
+    width: 230px;
     font-size: 90%;
 }
 
@@ -202,8 +219,8 @@ body {
     border: 1px #f21e1e solid;
     -webkit-border-top-left-radius: 0.7em;
     -webkit-border-top-right-radius: 0.7em;
-    -webkit-border-botton-left-radius: 0.7em;
-    -webkit-border-botton-right-radius: 0.7em;
+    -webkit-border-bottom-left-radius: 0.7em;
+    -webkit-border-bottom-right-radius: 0.7em;
     -moz-border-radius-topleft: 0.7em;
     -moz-border-radius-topright: 0.7em;
     -moz-border-radius-bottomleft: 0.7em;
@@ -254,8 +271,8 @@ body {
     border: 1px #f21e1e solid;
     -webkit-border-top-left-radius: 0.7em;
     -webkit-border-top-right-radius: 0.7em;
-    -webkit-border-botton-left-radius: 0.7em;
-    -webkit-border-botton-right-radius: 0.7em;
+    -webkit-border-bottom-left-radius: 0.7em;
+    -webkit-border-bottom-right-radius: 0.7em;
     -moz-border-radius-topleft: 0.7em;
     -moz-border-radius-topright: 0.7em;
     -moz-border-radius-bottomleft: 0.7em;
@@ -280,7 +297,7 @@ body {
 /* this is a wrapper for everything that's tabbable */
 #tabs {
     background: #ffd0ff;
-    padding: 10px;
+    padding-top: 10px;
 }
 
 

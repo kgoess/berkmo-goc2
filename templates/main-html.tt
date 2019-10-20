@@ -41,7 +41,7 @@
 
     <div class="event-table">
         <div class="event-table-head wrapper">
-            <div class="event-table-row wrapper">
+            <div class="event-table-row wrapper event-table-head-lowest-wrapper">
                 <div class="wrapper">
                     <div class="cell cell-text event-date">&nbsp;</div> <!-- fixme broken on wide incl. web -->
                     <div class="cell cell-text-eventname">&nbsp;</div>
@@ -50,6 +50,9 @@
                     <div class="cell cell-stats" >Yes<br><span class="subcol">dance/muso</span></div>
                     <div class="cell cell-stats" >No<br></div>
                     <div class="cell cell-stats" >?<br></div>
+                </div>
+                <div class="wrapper">
+                    <div class="cell cell-user-status">&nbsp;</div>
                 </div>
             </div>
         </div>
@@ -74,7 +77,7 @@
                     <div class="wrapper">
                             [%  status_and_role = event.get_status_for_person(current_user)
                             %]
-                        <div class="cell cell-user-status" style="width: 230px">
+                        <div class="cell cell-user-status">
                             <span class="your-status-label">your status: </span><span class="your-status-value">[% IF status_and_role %][% status_and_role.0 %] ([% status_and_role.1 %])[% ELSE %]unknown[% END %]</span>
                         </div>
                     </div>
