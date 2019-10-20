@@ -70,7 +70,7 @@ sub date_format_pretty {
 
     my $date = sprintf("%04d%02d%02d", $y, $m, $d);
 
-    my $s = `date -j -v -f '%Y%m%d' $date '+%a, %b %e'`;
+    my $s = `date -j -f '%Y%m%d' $date '+%a, %b %e'`;
     chomp $s;
     return $s;
 #    my $datetime = DateTime->new(
