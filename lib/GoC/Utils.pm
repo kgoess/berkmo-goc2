@@ -5,6 +5,9 @@ use strict;
 use warnings;
 
 use DBI;
+if (!$ENV{GOC_DATE}) {
+    require DateTime;
+}
 
 use Exporter 'import';
 our @EXPORT_OK = qw(
@@ -34,35 +37,53 @@ sub get_dbh {
 $ENV{TZ} = 'America/Los_Angeles';
 
 sub today_ymd {
-    my $s = `date -j '+%Y-%m-%d'`;
-    chomp $s;
+    my $s;
+    if (use_bsd_date()) {
+        $s = `date -j '+%Y-%m-%d'`;
+        chomp $s;
+    } else {
+        $s = DateTime->now(time_zone => 'America/Los_Angeles')->ymd;
+    }
     return $s;
-    #return DateTime->now(time_zone => 'America/Los_Angeles')->ymd;
 }
 sub today_ymdhms {
-    my $s = `date -j '+%Y-%m-%dT%H:%M:%S'`;
-    chomp $s;
+    my $s;
+    if (use_bsd_date()) {
+        $s = `date -j '+%Y-%m-%dT%H:%M:%S'`;
+        chomp $s;
+    } else {
+        $s = DateTime->now(time_zone => 'America/Los_Angeles')->datetime;
+    }
     return $s;
-    #return DateTime->now(time_zone => 'America/Los_Angeles')->datetime;
 }
 sub yesterday_ymd {
-    my $s = `date -j -v -1d '+%Y-%m-%d'`;
-    chomp $s;
+    my $s;
+
+    if (use_bsd_date()) {
+        $s = `date -j -v -1d '+%Y-%m-%d'`;
+        chomp $s;
+    } else {
+        $s = DateTime
+            ->now
+            ->subtract( days => 1 )
+            ->ymd;
+    }
     return $s;
-    #my $yesterday = DateTime
-    #    ->now
-    #    ->subtract( days => 1 )
-    #    ->ymd;
 
 }
 sub tomorrow_ymd {
-    my $s = `date -j -v +1d '+%Y-%m-%d'`;
-    chomp $s;
+    my $s;
+
+    if (use_bsd_date()) {
+        $s = `date -j -v +1d '+%Y-%m-%d'`;
+        chomp $s;
+    } else {
+        $s = DateTime
+            ->now
+            ->add( days => 1 )
+            ->ymd;
+    }
     return $s;
-    #my $tomorrow = DateTime
-    #    ->now
-    #    ->add( days => 1 )
-    #    ->ymd;
 }
 
 sub date_format_pretty {
@@ -70,17 +91,26 @@ sub date_format_pretty {
 
     my $date = sprintf("%04d%02d%02d", $y, $m, $d);
 
-    my $s = `date -j -f '%Y%m%d' $date '+%a, %b %e'`;
-    chomp $s;
+    my $s;
+    if (use_bsd_date()) {
+        $s = `date -j -f '%Y%m%d' $date '+%a, %b %e'`;
+        chomp $s;
+    } else {
+        my $datetime = DateTime->new(
+            year  => $y,
+            month => $m,
+            day   => $d,
+        );
+        $s = $datetime->strftime("%a, %b %e");
+    }
+
     return $s;
-#    my $datetime = DateTime->new(
-#        year => $year,
-#        month => $month,
-#        day => $day,
-#    );
-#
-#    return $datetime->strftime("%a, %b %e");
 }
+
+sub use_bsd_date {
+    return ($ENV{GOC_DATE}//'') eq 'FreeBSD';
+}
+
 
 # borrowed from URI::Escape
 # Build a char->hex map
