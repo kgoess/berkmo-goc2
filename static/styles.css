@@ -35,7 +35,7 @@ body {
     font-family: Verdana,Arial,sans-serif;
     background: #ffd0ff;
     margin: 80px;
-    /*max-width: 30em; */
+    max-width: 70em;
 }
 
 .subcol {
@@ -93,7 +93,7 @@ body {
 .wrapper {
   display: flex;           display: -webkit-flex;
   flex-direction: row;     -webkit-flex-direction: row;
-  flex-grow: 1;            -webkit-flex-grow: 1;
+  flex-grow: 0;            -webkit-flex-grow: 0;
   flex-wrap: wrap;         -webkit-flex-wrap: wrap;
 }
 
