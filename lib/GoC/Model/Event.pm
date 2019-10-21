@@ -394,7 +394,7 @@ sub update_prev_attendees {
     print $new_fh $statuses;
     close $new_fh;
 
-    my $diff = `cd $dir && diff -u \$(basename $orig_filename) \$(basename $new_filename)`;
+    my $diff = `cd $dir && diff -U1000 \$(basename $orig_filename) \$(basename $new_filename)`;
     return $diff;
 }
 
