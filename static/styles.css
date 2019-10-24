@@ -261,6 +261,14 @@ body {
   display: inline-block;
   border-radius: 5px;
 }
+/* https://stackoverflow.com/questions/39068128/how-can-i-make-a-textarea-that-fits-within-the-width-of-the-current-viewport */
+#event-notes {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 500px;
+}
 #event-card .event-queen {
     clear: both;
 }
@@ -589,6 +597,7 @@ input[type=submit] {
     .event-table-notes .abbr-expl {
         display: block;
     }
+
     body {
         margin: 2px;
     }
