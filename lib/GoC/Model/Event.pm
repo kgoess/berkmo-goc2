@@ -99,6 +99,7 @@ EOL
     }
 }
 
+# e.g. event.get_num_persons(role => 'dancer', status => 'y')
 sub get_num_persons {
     my ($self, %p) = @_;
 
@@ -395,7 +396,21 @@ sub update_prev_attendees {
     close $new_fh;
 
     my $diff = `cd $dir && diff -U1000 \$(basename $orig_filename) \$(basename $new_filename)`;
-    return $diff;
+
+    my $num_dancers = $self->get_num_persons(role => 'dancer', status => 'y') // 0;
+    my $num_musos   = $self->get_num_persons(role => 'muso', status => 'y') // 0;
+
+    my $text = <<EOL;
+There are $num_dancers dancers and $num_musos musos confirmed.
+
+Below is a diff showing the recent changes in attendance.
+Lines marked with "-" show the previous status, lines marked
+with "+" show the current status.
+
+EOL
+
+    print STDERR "$text$diff";
+    return $text . $diff;
 }
 
 sub create_table {
