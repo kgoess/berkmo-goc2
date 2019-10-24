@@ -52,6 +52,7 @@ function handleTouchStart(e) {
     yDown = e.originalEvent.touches[0].pageY;
 }
 function handleTouchMove(e) {
+    e.stopPropagation(); // noop? still fires twice
     var newX = e.originalEvent.touches[0].pageX;
     var newY = e.originalEvent.touches[0].pageY;
 
@@ -60,6 +61,9 @@ function handleTouchMove(e) {
     const swipeAngle = Math.atan(dY/dX)*180/Math.PI;
 
     if (swipeAngle > 25) {
+        return;
+    }
+    if (dX < 50) {
         return;
     }
 
