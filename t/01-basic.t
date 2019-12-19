@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use Data::Dump qw/dump/;
-use Test::More tests => 35;
+use Test::More tests => 37;
 
 use GoC::Model::Person;
 use GoC::Model::Event;
@@ -23,6 +23,7 @@ test_event_prev_next();
 test_person_event_map_CRUD();
 test_upcoming_events();
 test_attendee_list_notifications();
+test_new_event_notifications();
 test_person_get_all();
 
 
@@ -251,8 +252,41 @@ sub test_attendee_list_notifications {
 
     $changed = $event->update_prev_attendees();
     like $changed, qr/alice: y dancer\n\-bob: y dancer\n\+bob: n dancer\n/;
+}
 
+sub test_new_event_notifications {
 
+    my $dbh = get_dbh();
+    $dbh->do('DELETE FROM event');
+
+    my $today = today_ymd();
+
+    my $gig = GoC::Model::Event->new(
+        name => 'fourth of july parade',
+        date => $today,
+        queen => 'alice',
+        notification_email => 'alice@example.com',
+        type => 'gig',
+        notes => 'blah',
+    );
+    $gig->save;
+    my $party = GoC::Model::Event->new(
+        name => 'fourth of july parade',
+        date => $today,
+        queen => 'alice',
+        notification_email => 'alice@example.com',
+        type => 'party',
+        notes => 'blah',
+    );
+    $party->save;
+
+    my @events = GoC::Model::Event->get_pending_new_event_notifications;
+    is @events, 2;
+
+    map { $_->group_notified_date($today); $_->update } @events;
+
+    my @nothing = GoC::Model::Event->get_pending_new_event_notifications;
+    is @nothing, 0;
 }
 
 sub test_person_get_all {

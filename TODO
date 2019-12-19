@@ -1,18 +1,27 @@
 
+- Calendar is too big on Anne's
+- attendee list: add the numbers
+- julia's request for a "back to the private page" link at the top of the grid
+
+DONE notes box is too big for mobile
+DONE Swipe is still problematic
+DONE swipe on phone is doing up/down, no good
+DONE fix layout on actual phone
 DONE if we hide the logo for small screens, we need a back button to the main page?
 DONE add notification email to events
 DONE change event.created to event.updated and change display to say "updated"
  - add a fatal error handler
 DONE finish person editor
 DONE implement all the "show disabled" buttons (change to "inactive"?)
- - fix formatting of notes for small screens, or do something smarter
+DONE add markdown for notes
 DONE on event screen, after submit stay on the same tab. or use ajax
 DONE on event screen, "edit event" and "delete event" aren't buttons in chrome responsive?
- - on event screen, disable prev/next buttons in favor of touch?
+DONE on event screen, disable prev/next buttons in favor of touch?
 DONE on main screen, headers aren't aligned any more
- - paginate event log
- - Randall's suggestion to show a list of uncommitted people
- - Rocky's suggestion for a single page showing all the statuses
+NAH, limit is 1000 - paginate event log
+DONE Randall's suggestion to show a list of uncommitted people
+DONE Rocky's suggestion for a single page showing all the statuses
+
 
 - make sure params are list context or whatever
 

@@ -23,6 +23,7 @@ use Class::Accessor::Lite(
     'num_dancers_required',
     'num_musos_required',
     'deleted',
+    'group_notified_date',
     'date_created',
     'date_updated',
 #        'email',
@@ -255,10 +256,11 @@ sub save {
         num_dancers_required,
         num_musos_required,
         deleted,
+        group_notified_date,
         date_created,
         date_updated
     )
-    VALUES (?,?,?,?,?,?,?,?,?,?,?);
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?);
 EOL
 
     if (! $self->date_created) {
@@ -284,6 +286,7 @@ EOL
             num_dancers_required
             num_musos_required
             deleted
+            group_notified_date
             date_created
             date_updated
         /
@@ -338,6 +341,7 @@ sub update {
             deleted = ?,
             num_dancers_required = ?,
             num_musos_required = ?,
+            group_notified_date = ?,
             date_updated = ?
             /* date_created not updatable */
         WHERE id = ?
@@ -359,8 +363,9 @@ EOL
             deleted
             num_dancers_required
             num_musos_required
+            group_notified_date
             date_updated
-           id
+            id
         /
     );
 }
@@ -409,8 +414,33 @@ with "+" show the current status.
 
 EOL
 
-    print STDERR "$text$diff";
+    #print STDERR "$text$diff"; # add if -t STDIN ?
     return $text . $diff;
+}
+
+sub get_pending_new_event_notifications {
+    my ($class) = @_;
+
+    # yesterday just as a failsafe
+    my $yesterday = yesterday_ymd();
+
+    my $sql = <<EOL;
+    SELECT *
+    FROM event
+    WHERE
+        group_notified_date IS NULL
+        AND date >= '$yesterday';
+EOL
+
+    my $dbh = get_dbh();
+    my $sth = $dbh->prepare($sql);
+    $sth->execute();
+    my @found;
+    while (my $row = $sth->fetchrow_hashref) {
+        push @found, bless $row, $class;
+    }
+
+    return @found;
 }
 
 sub create_table {
@@ -429,6 +459,7 @@ CREATE TABLE event (
     num_dancers_required INT default 10,
     num_musos_required INT default 1,
     deleted BOOLEAN NOT NULL DEFAULT 0,
+    group_notified_date TEXT(20),
     date_created TEXT(20),
     date_updated TEXT(20)
 );
