@@ -15,22 +15,18 @@ my $today = today_ymd();
 
 foreach my $event (@events) {
     send_group_notification($event);
-    print STDERR "would send event for ".$event->name." ".$event->date."\n";
     $event->group_notified_date($today);
     $event->update;
-    last;
 }
 
 
 sub send_group_notification {
     my ($event) = @_;
 
-
-    my $target_address = 'kevin@goess.org';
-    #my $target_address = 'berkmorris-business@berkeley-morris.org';
+    my $target_address = 'berkmorris-business@berkeley-morris.org';
     $ENV{REPLYTO} = 'berkmorris-business@berkeley-morris.org';
 
-    my ($name, $date) = ($event->name, $event->date);
+    my ($name, $date, $type) = ($event->name, $event->date, $event->type);
 
     (my $clean_name = $name) =~ s/[^\w _.-]//g;
     $date =~ s/[^\d-]//g;
@@ -38,10 +34,10 @@ sub send_group_notification {
     my $exhortation = exhortation();
 
 
-    open my $fh, '|-', "/usr/bin/mail -s 'a new party on the grid: $clean_name' $target_address"
+    open my $fh, '|-', "/usr/bin/mail -s 'a new $type on the grid: $clean_name' $target_address"
         or die "can't pipe to mail $!";
     print $fh <<EOL;
-A new party has been added to the grid of committment!
+A new $type has been added to the grid of committment!
 
     $date $name
 
@@ -71,7 +67,7 @@ sub exhortation {
         q{Only you can change your life. No one can do it for you. The grid is waiting for your answer.},
         q{The will to win, the desire to succeed, the urge to reach your full potential...these are the things that will lead you to putting your answer on the grid.},
         q{We shall fight on the beaches, we shall fight on the landing grounds, we shall fight in the fields and in the streets, we shall fight in the hills; we will let the rest of the team know what we're doing and mark up the grid.},
-        q{He that outlives this day, and comes safe home, will stand a tip-toe when this day is nam'd, and rouse him at the name of Crispian, and will add his name to the grid with with whether he's going to come or no.},
+        q{He that outlives this day, and comes safe home, will stand a tip-toe when this day is nam'd, and rouse him at the name of Crispian, and will add his name to the grid with whether he's going to come or no.},
         q{And now abideth faith, hope, charity, these three; but the greatest of these is updating the grid with your plans.},
         q{Who acts from love is greater than who acts from fear. And who updates the grid beats them all.},
         q{There is no such thing as a small act; there are only small people. And the ones who don't update the grid.},
