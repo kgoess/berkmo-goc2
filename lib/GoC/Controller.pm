@@ -108,7 +108,7 @@ sub login_page {
          my $cookie = CGI::Cookie->new(
             -name  => 'Berkmo-GoC',
             -value => "user_id:$id",
-         #   -expires => '-1y',
+            -expires => '+3M',
          );
 
         GoC::Logger->new(current_user => $person)->debug("logged in");
