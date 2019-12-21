@@ -29,7 +29,7 @@ tr {
 <h3>Mainly Dancing</h3>
 [% PROCESS eventtable
     events = parties
-    role = "muso"
+    role = "dancer"
     people = people
 %]
 
@@ -39,7 +39,7 @@ tr {
 <h3>Mainly Playing</h3>
 [% PROCESS eventtable
     events = parties
-    role = "dancer"
+    role = "muso"
     people = people
 %]
 
