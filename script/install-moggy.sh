@@ -10,5 +10,5 @@ cp script/send-attendee-updates.pl ~/bin/
 
 cp script/send-event-notifications.pl ~/bin/
 
-cp -rf templates ~/web/docs/templates/
+cp -rf templates ~/web/
 
