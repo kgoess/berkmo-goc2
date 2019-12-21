@@ -460,7 +460,7 @@ sub create_person {
     } elsif ($p{method} eq 'POST') {
 
         my @errors;
-         if (! scalar($p{request}->param('person-name'))) {
+        if (! scalar($p{request}->param('person-name'))) {
                 push @errors, "I need a name for the person";
         }
         if (@errors) {
@@ -478,7 +478,7 @@ sub create_person {
         my $r = $p{request};
         my $person = GoC::Model::Person->new(
             name  => scalar($r->param('person-name')),
-            status  => 'active',
+            status  => scalar($r->param('person-status')),
         );
         $person->save;
         my $person_log_str = join '', $person->name, '[', $person->id, ']';
