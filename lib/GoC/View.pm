@@ -287,6 +287,7 @@ sub create_person_page {
         errors => $p{errors},
         request => $p{request},
         person => $p{person},
+        action => $p{action},
     );
     my $output = '';
 
@@ -333,6 +334,7 @@ sub edit_person_page {
         current_user      => $p{current_user},
         errors            => $p{errors},
         request           => $p{request},
+        action            => $p{action},
     );
     my $output = '';
 

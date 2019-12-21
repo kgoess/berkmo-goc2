@@ -453,6 +453,7 @@ sub create_person {
             content => GoC::View->create_person_page(
                 current_user => $p{current_user},
                 request => EmptyRequest->new(),
+                action => 'create',
             ),
         }
 
@@ -469,6 +470,7 @@ sub create_person {
                     current_user => $p{current_user},
                     errors       => \@errors,
                     request      => $p{request},
+                    action => 'create',
                 ),
             }
         }
@@ -504,6 +506,7 @@ sub edit_person {
                 content => GoC::View->create_person_page(
                     current_user => $p{current_user},
                     person =>  $person,
+                    action => 'edit',
                 ),
             }
         } else {
@@ -536,6 +539,7 @@ sub edit_person {
                     errors       => \@errors,
                     request      => $p{request},
                     person       => $person,
+                    action       => 'edit',
                 ),
             }
         }

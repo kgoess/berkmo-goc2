@@ -10,7 +10,15 @@
     </div>
 [% END %]
 
-<form method="POST" action="[% uri_for( path => "/edit-person" ) %]">
+[% IF action == 'create';
+     form_path = '/create-person';
+   ELSIF action == 'edit';
+     form_path = '/edit-person';
+   ELSE;
+     THROW template.param.missing "missing 'action' in call to person-editor.tt";
+   END;
+%]
+<form method="POST" action="[% uri_for( path => form_path ) %]">
     <input type="hidden" name="person-id" value="[% person.id | html %]">
     <input type="hidden" name="path" value="/edit-person">
 
