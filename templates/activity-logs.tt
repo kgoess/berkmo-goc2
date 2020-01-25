@@ -3,7 +3,7 @@
 <table class="logtable">
 [% FOR line IN logs %]
     <tr>
-        <td>[% line.timestamp %]</td>
+        <td>[% line.timestamp.replace('T', ' ') %]</td>
         <td>[% line.level %]</td>
         <td>[% line.actor_id %]</td>
         <td>[% line.actor_name %]</td>
