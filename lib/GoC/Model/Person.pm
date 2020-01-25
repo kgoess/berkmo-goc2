@@ -49,9 +49,6 @@ sub load {
 
     my $sql = 'SELECT * FROM person WHERE id = ?';
 
-    $sql .= " AND status='active'"
-        unless ($p{include_everybody});
-
     my $dbh = get_dbh();
     my $sth = $dbh->prepare($sql);
     $sth->execute($id);

@@ -26,8 +26,8 @@
         <label for="person-name">Person Name:</label>
         <input type="text" size="40" id="person-name" name="person-name" value="[% person.name | html %]">
         <select name="person-status">
-            <option name="active"   [% IF person_status == "active"   %]selected="selected"[% END %]>active
-            <option name="inactive" [% IF person_status == "inactive" %]selected="selected"[% END %]>inactive
+            <option name="active"   [% IF person.status == "active"   %]selected="selected"[% END %]>active
+            <option name="inactive" [% IF person.status == "inactive" %]selected="selected"[% END %]>inactive
         </select>
     </div>
 

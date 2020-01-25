@@ -54,7 +54,7 @@ sub go {
         my ($id) = $cookies->{'Berkmo-GoC'}->value =~ /user_id:([0-9]+)/
             or die "can't parse cookie: $cookies->{'Berkmo-GoC'}";
 
-        my $current_user = GoC::Model::Person->load($id, include_everybody => 1)
+        my $current_user = GoC::Model::Person->load($id)
             or die "no user found for id $id";;
 
         $p{current_user} = $current_user;
@@ -102,7 +102,7 @@ sub login_page {
         my $id = scalar($p{request}->param('login_id'))
             or die "missing login_id";
 
-        my $person = GoC::Model::Person->load($id, include_everybody => 1)
+        my $person = GoC::Model::Person->load($id)
             or die "no user found for id $id";;
 
          my $cookie = CGI::Cookie->new(

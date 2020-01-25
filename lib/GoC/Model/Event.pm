@@ -189,7 +189,8 @@ EOL
     my @rc;
 
     while (my $row = $sth->fetchrow_hashref) {
-        push @rc, GoC::Model::Person->load($row->{person_id});
+        my $person = GoC::Model::Person->load($row->{person_id});
+        push @rc, $person if $person->status eq 'active';
     }
     @rc = sort { $a->name cmp $b->name } @rc;
     return @rc;
