@@ -199,13 +199,10 @@ EOL
 sub get_prev_next_ids {
     my ($self) = @_;
 
-    my $yesterday = yesterday_ymd();
-
     my $sql_prev = <<EOL;
         SELECT id, date, name
         FROM event
         WHERE date <= ?
-        AND date >= '$yesterday'
         AND id != ?
         AND type = ?
         AND deleted != 1
@@ -224,7 +221,6 @@ EOL
         SELECT id, date, name
         FROM event
         WHERE date >= ?
-        AND date >= '$yesterday'
         AND id != ?
         AND type = ?
         AND deleted != 1

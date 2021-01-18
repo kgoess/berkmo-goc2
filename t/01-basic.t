@@ -8,7 +8,7 @@ use Test::More tests => 37;
 use GoC::Model::Person;
 use GoC::Model::Event;
 use GoC::Model::PersonEventMap;
-use GoC::Utils qw/get_dbh today_ymd/;
+use GoC::Utils qw/get_dbh today_ymd yesterday_ymd/;
 
 $ENV{SQLITE_FILE} = 'goctest';
 unlink $ENV{SQLITE_FILE};
