@@ -7,6 +7,7 @@ use Apache2::RequestRec (); # for $r->content_type
 use Apache2::RequestIO ();  # for print
 use Apache2::Const -compile => ':common';
 use Apache2::Request;
+use URI::Escape qw/uri_escape/;
 
 use GoC::Controller __PACKAGE__;
 use GoC::View __PACKAGE__;
@@ -63,7 +64,6 @@ sub handler {
     }
 }
 
-# TODO need to worry about escaping here
 sub uri_for {
     my %p;
     if (ref $_[0] eq 'HASH') { # TT sends a hashref
@@ -79,7 +79,7 @@ sub uri_for {
     my $url_params = '';
     if (keys %p) {
         $url_params = '?'; # will also be different for mod_perl
-        $url_params .= join '&', map { "$_=$p{$_}" } sort keys %p;
+        $url_params .= join '&', map { "$_=".uri_escape($p{$_}) } sort keys %p;
     }
 
     return "$base$path$url_params";
