@@ -11,7 +11,6 @@ use GoC::Logger;
 use GoC::Model::Event;
 use GoC::Model::Person;
 use GoC::Model::PersonEventMap;
-use GoC::Utils qw/uri_escape/;
 
 my %handler_for_path = (
     ''               => sub { shift->main_page(@_) },
@@ -303,7 +302,7 @@ sub create_event {
         my $event_log_str  = join '', $event->name,  '[', $event->id, ']';
         $p{logger}->info("created event $event_log_str by $person_log_str");
 
-        my $msg = uri_escape("Event successfully created");
+        my $msg = "Event successfully created";
         return {
             action => 'redirect',
             headers => {
@@ -397,7 +396,7 @@ sub edit_event {
         my $event_log_str  = join '', $event->name,  '[', $event->id, ']';
         $p{logger}->info($event->type." event edited: $event_log_str by $person_log_str changing $delta_log_str");
 
-        my $msg = uri_escape('Event "'.$event->name.'" successfully edited');
+        my $msg = 'Event "'.$event->name.'" successfully edited';
         return {
             action => 'redirect',
             headers => {
@@ -436,7 +435,7 @@ sub delete_event {
         my $event_log_str  = join '', $event->name,  '[', $event->id, ']';
         $p{logger}->info($event->type." event marked deleted: $event_log_str by $person_log_str");
 
-        my $msg = uri_escape('Event "'.$event->name.'" has been marked as deleted');
+        my $msg = 'Event "'.$event->name.'" has been marked as deleted';
         return {
             action => 'redirect',
             headers => {
@@ -485,7 +484,7 @@ sub create_person {
         my $user_log_str = join '', $p{current_user}->name, '[', $p{current_user}->id, ']';
         $p{logger}->info("New user $person_log_str created by $user_log_str");
 
-        my $msg = uri_escape("Person successfully created");
+        my $msg = "Person successfully created";
         return {
             action => 'redirect',
             headers => {
@@ -562,7 +561,7 @@ sub edit_person {
         my $user_log_str = join '', $p{current_user}->name, '[', $p{current_user}->id, ']';
         $p{logger}->info("User $person_log_str edited by $user_log_str, changing $delta_log_str");
 
-        my $msg = uri_escape('Person "'.$person->name.'" has been updated');
+        my $msg = 'Person "'.$person->name.'" has been updated';
         return {
             action => 'redirect',
             headers => {

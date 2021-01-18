@@ -7,7 +7,7 @@ use Apache2::RequestRec (); # for $r->content_type
 use Apache2::RequestIO ();  # for print
 use Apache2::Const -compile => ':common';
 use Apache2::Request;
-use URI::Escape qw/uri_escape/;
+use GoC::Utils qw/uri_escape/;
 
 use GoC::Controller __PACKAGE__;
 use GoC::View __PACKAGE__;

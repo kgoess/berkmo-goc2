@@ -7,7 +7,7 @@ use CGI;
 
 use GoC::Controller 'GoC::Controller::CGI';
 use GoC::View 'GoC::Controller::CGI';
-use URI::Escape qw/uri_escape/;
+use GoC::Utils qw/uri_escape/;
 
 sub handler {
     my $class = 'GoC::Controller';

@@ -156,7 +156,7 @@ sub test_edit_event {
     # test failure, missing date
     my $request = MockRequest->new(
         'event-id' => $event->id,
-        'event-name' => 'christmas in july (edited)',
+        'event-name' => 'christmas & fun in july (edited)',
         #'event-date' => '2019-09-01',
         'event-type' => 'party',
         'event-notification-email' => 'changed@email.com',
@@ -183,10 +183,10 @@ sub test_edit_event {
         current_user => $user,
     );
     is $result->{action}, 'redirect';
-    is $result->{headers}{Location}, '/goc2?path=/event&id=3&message=Event%20%22christmas%20in%20july%20%28edited%29%22%20successfully%20edited';
+    is $result->{headers}{Location}, '/goc2?path=/event&id=3&message=Event%20%22christmas%20%26%20fun%20in%20july%20%28edited%29%22%20successfully%20edited';
 
     $event = GoC::Model::Event->load($event->id);
-    is $event->name, 'christmas in july (edited)';
+    is $event->name, 'christmas & fun in july (edited)';
     is $event->type, 'party';
     is $event->notification_email, 'changed@email.com';
     is $event->notes, 'blah de blah';
@@ -196,7 +196,7 @@ sub test_edit_event {
     is   $log_lines->[0]{level}, 'info';
     is   $log_lines->[0]{actor_id}, $user->id;
     is   $log_lines->[0]{actor_name}, $user->name;
-    like $log_lines->[0]{message}, qr/party event edited: christmas in july \(edited\)\[\d+\] by loggedinuser\[\d+\]/;
+    like $log_lines->[0]{message}, qr/party event edited: christmas & fun in july \(edited\)\[\d+\] by loggedinuser\[\d+\]/;
 }
 
 sub test_delete_event {
