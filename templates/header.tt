@@ -38,7 +38,7 @@
 
 <div id="page-header">
     <div id="site-title">
-        <a href="[% uri_for( path => '/' ) %]"># The Grid #</a>
+        <a href="[% uri_for( path => '/' ) %]">* The Grid *</a>
     </div>
     <div id="current-user">
         [% IF current_user %]
