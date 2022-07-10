@@ -14,6 +14,7 @@ my @events = GoC::Model::Event->get_pending_new_event_notifications;
 my $today = today_ymd();
 
 foreach my $event (@events) {
+    print "looking at ".$event->name."\n" if -t STDIN;
     send_group_notification($event);
     $event->group_notified_date($today);
     $event->update;
@@ -43,7 +44,7 @@ A new $type has been added to the grid of committment!
 
 $exhortation
 
-http://www.berkeley-morris.org/cgi-bin/grid.cgi
+https://www.berkeleymorris.org/goc2.cgi
 
 
 --The Grid of Committment
