@@ -14,7 +14,7 @@ my @events = GoC::Model::Event->get_pending_new_event_notifications;
 my $today = today_ymd();
 
 foreach my $event (@events) {
-    print "looking at ".$event->name."\n" if -t STDIN;
+    print "sending event notification for ".$event->name."\n" if -t STDIN;
     send_group_notification($event);
     $event->group_notified_date($today);
     $event->update;
@@ -26,6 +26,7 @@ sub send_group_notification {
 
     my $target_address = 'berkmorris-business@berkeley-morris.org';
     $ENV{REPLYTO} = 'berkmorris-business@berkeley-morris.org';
+    #$ENV{REPLYTO} = 'kevin@goess.org';
 
     my ($name, $date, $type) = ($event->name, $event->date, $event->type);
 
@@ -50,6 +51,25 @@ https://www.berkeleymorris.org/goc2.cgi
 --The Grid of Committment
 
 EOL
+    close $fh or die "can't write to mail $!";
+
+
+    open $fh, '|-', "/usr/bin/mail -s 'testing body: a new $type on the grid: $clean_name' kevin\@goess.org"
+        or die "can't pipe to mail $!";
+    print $fh <<EOL;
+A new $type has been added to the grid of committment!
+
+    $date $name
+
+$exhortation
+
+https://www.berkeleymorris.org/goc2.cgi
+
+
+--The Grid of Committment
+
+EOL
+    close $fh or die "can't write to mail $!";
 }
 
 sub exhortation {
