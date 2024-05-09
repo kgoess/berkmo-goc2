@@ -3,12 +3,32 @@
 # this is run from cron:
 # 8	8	*	*	2
 
-use strict;
+use 5.16.0;
 use warnings;
 use utf8;
 
 use Email::Stuffer;
+use Getopt::Long;
 
+my ($from, $to, $help);
+GetOptions(
+    'from=s' => \$from,
+    'to=s' => \$to,
+    'h|help' => \$help,
+);
+
+if (!($from && $to) || $help) {
+    my $usage = <<'EOL';
+
+    usage: $0
+        --from    'alice <aliace@example.com>'
+        --to      'bob <bob@example.com>'
+
+        -h|--help this help
+EOL
+    say $usage;
+    exit 1;
+}
 
 my $html_part = <<EOL;
 <div>
@@ -17,13 +37,6 @@ Hello everyone,
 
 <div>
 Practice tonight will be held in the hall at Christ Church, 2138 Cedar St, Berkeley, CA 94709.
-</div>
-
-<div>
-If Zoom is still a thing, <a
-href="https://us02web.zoom.us/j/82579720636?pwd=OEp6MUlrcHNJSjREeGk5NjEvY3JkZz09">here's
-the link</a>. We're bad at this, so if you want it, remind us to start the
-meeting.
 </div>
 
 <div>
@@ -50,24 +63,22 @@ Luke
 
 EOL
 
-# works
-# my $to = 'kgtesting@groups.io';
-# untested
-my $to = 'berkmorris-business@groups.io';
+my $sendmail_to = $to;
+if ($sendmail_to =~ /<(.+)?>/) {
+    $sendmail_to = $1;
+}
+
 my $subject = 'Practice reminder + excuses thread';
 
 my $stuffer = Email::Stuffer
-    # works
-    #->from       ('Luke Hillman <kevin@goess.org>')
-    # untested
-    ->from       ('Luke Hillman <contact@lukehillman.net>')
-    ->to         ("Berkeley Morris <$to>")
+    ->from       ($from)
+    ->to         ($to)
     ->subject    ($subject)
     #->text_body  ($text_part)
     ->html_body($html_part)
 ;
 
-open my $fh, '|-', "/usr/sbin/sendmail -i $to" 
+open my $fh, '|-', "/usr/sbin/sendmail -i $sendmail_to"
     or die "can't pipe to mail $!";
 
 print $fh $stuffer->as_string;
