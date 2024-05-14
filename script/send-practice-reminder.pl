@@ -38,6 +38,7 @@ Hello everyone,
 <div>
 Practice tonight will be held in the hall at Christ Church, 2138 Cedar St, Berkeley, CA 94709.
 </div>
+<br>
 
 <div>
 <b>🚨 COVID precautions 🚨</b>
