@@ -39,7 +39,7 @@ sub send_group_notification {
     open my $fh, '|-', "/usr/bin/mail -s 'a new $type on the grid: $clean_name' $target_address"
         or die "can't pipe to mail $!";
     print $fh <<EOL;
-A new $type has been added to the grid of committment!
+A new $type has been added to the grid of commitment!
 
     $date $name
 
@@ -57,7 +57,7 @@ EOL
     open $fh, '|-', "/usr/bin/mail -s 'testing body: a new $type on the grid: $clean_name' kevin\@goess.org"
         or die "can't pipe to mail $!";
     print $fh <<EOL;
-A new $type has been added to the grid of committment!
+A new $type has been added to the grid of commitment!
 
     $date $name
 
