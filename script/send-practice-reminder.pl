@@ -36,7 +36,7 @@ Hello everyone,
 </div>
 
 <div>
-Practice tonight will be held <strong>IN THE NEW HALL<strong> at the Berkeley Fellowship of
+Practice tonight will be held <strong>IN THE NEW HALL</strong> at the Berkeley Fellowship of
 Unitarian Universalists hall at 1606 Bonita Ave., Berkeley, CA 94709
 </div>
 <br>
