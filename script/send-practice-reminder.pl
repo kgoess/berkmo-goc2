@@ -60,7 +60,7 @@ and make everyone's inboxes easier to manage.
 
 <div>
 Cheers,<br>
-Luke
+Your Friendly Neighborhood Practice Reminder Bot
 </div>
 
 EOL
