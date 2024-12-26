@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use Data::Dump qw/dump/;
-use Test::More tests => 37;
+use Test::More tests => 41;
 
 use GoC::Model::Person;
 use GoC::Model::Event;
@@ -148,6 +148,23 @@ sub test_person_event_map_CRUD {
     $bob->save();
     ($status, $role) = $event->get_status_for_person($bob);
     ok ! $status;
+
+    # test get_num_persons with a tive/inactive
+    is $event->get_num_persons(role => 'muso'), 1;
+    my $carlos = GoC::Model::Person->new(
+        name => 'carlos',
+        status => 'active',
+    );
+    $carlos->save();
+    GoC::Model::PersonEventMap->add_person_to_event($carlos, $event, 'muso', 'y');
+    is $event->get_num_persons(role => 'muso'), 2;
+    $carlos->status('inactive');
+    $carlos->save;
+    is $event->get_num_persons(role => 'muso'), 1;
+    GoC::Model::PersonEventMap->delete_person_from_event($carlos, $event);
+    is $event->get_num_persons(role => 'muso'), 1;
+
+
 
     GoC::Model::PersonEventMap->delete_person_from_event($person, $event);
     ok ! $event->get_persons(role => 'muso', status => 'y');

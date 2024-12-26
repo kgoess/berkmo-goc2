@@ -107,9 +107,13 @@ sub get_num_persons {
     # TODO: move this into PersonEventMap.pm?
     my $sql = <<EOL;
     SELECT count(*)
-    FROM person_to_event_map
-    WHERE event_id = ?
+    FROM person
+        JOIN person_to_event_map
+        ON person.id = person_to_event_map.person_id
+    WHERE person.status = 'active'
+        AND event_id = ?
 EOL
+    #sqlite> select * from person join person_to_event_map on person.id = person_to_event_map.person_id where event_id = 85 and role = 'dancer' and person_to_event_map.status = 'y' and person.status = 'inactive';
 
     my @sql_args = ($self->id);
 
@@ -118,7 +122,7 @@ EOL
         push @sql_args, $p{role};
     }
     if ($p{status}) {
-        $sql .= 'AND status = ? ';
+        $sql .= 'AND person_to_event_map.status = ? ';
         push @sql_args, $p{status};
     }
 
