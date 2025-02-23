@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Carp qw/croak/;
+use DateTime;
 use File::Temp qw/tempfile tempdir/;
 
 use GoC::Model::Person;
@@ -24,6 +25,8 @@ use Class::Accessor::Lite(
     'num_musos_required',
     'deleted',
     'group_notified_date',
+    'go_nogo_date',
+    '_days_until_go_nogo',
     'date_created',
     'date_updated',
 #        'email',
@@ -113,7 +116,6 @@ sub get_num_persons {
     WHERE person.status = 'active'
         AND event_id = ?
 EOL
-    #sqlite> select * from person join person_to_event_map on person.id = person_to_event_map.person_id where event_id = 85 and role = 'dancer' and person_to_event_map.status = 'y' and person.status = 'inactive';
 
     my @sql_args = ($self->id);
 
@@ -135,6 +137,30 @@ EOL
     my $row = $sth->fetchrow_arrayref;
     return $row->[0];
 }
+
+sub get_days_until_go_nogo {
+    my ($self) = @_;
+
+    if (my $days_until = $self->_days_until_go_nogo) {
+        return $days_until
+    }
+    my ($y, $m, $d);
+
+    my $go_nogo_str = $self->go_nogo_date
+        or return;
+    ($y, $m, $d) = $go_nogo_str =~ /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/
+        or return;
+    my $go_nogo_dt = DateTime->new(year => $y, month => $m, day => $d);
+
+    my $now = DateTime->now();
+
+    my $delta = $go_nogo_dt->subtract_datetime($now)->delta_days();
+
+    $self->_days_until_go_nogo($delta);
+
+    return $delta;
+}
+
 
 sub count_is_ok {
     my ($self) = @_;
@@ -258,10 +284,11 @@ sub save {
         num_musos_required,
         deleted,
         group_notified_date,
+        go_nogo_date,
         date_created,
         date_updated
     )
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?);
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);
 EOL
 
     if (! $self->date_created) {
@@ -288,6 +315,7 @@ EOL
             num_musos_required
             deleted
             group_notified_date
+            go_nogo_date
             date_created
             date_updated
         /
@@ -343,6 +371,7 @@ sub update {
             num_dancers_required = ?,
             num_musos_required = ?,
             group_notified_date = ?,
+            go_nogo_date = ?,
             date_updated = ?
             /* date_created not updatable */
         WHERE id = ?
@@ -365,6 +394,7 @@ EOL
             num_dancers_required
             num_musos_required
             group_notified_date
+            go_nogo_date
             date_updated
             id
         /
@@ -460,6 +490,7 @@ CREATE TABLE event (
     num_dancers_required INT default 10,
     num_musos_required INT default 1,
     deleted BOOLEAN NOT NULL DEFAULT 0,
+    go_nogo_date TEXT(20),
     group_notified_date TEXT(20),
     date_created TEXT(20),
     date_updated TEXT(20)

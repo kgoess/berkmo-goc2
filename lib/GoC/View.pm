@@ -220,6 +220,7 @@ sub create_event_page {
         event_notes              => ($param->('event-notes') // default_notes()),
         num_dancers_required     => ($param->('num-dancers-required') // 10),
         num_musos_required       => ($param->('num-musos-required') // 1),
+        go_nogo_date             => $param->('go-nogo-date'),
     );
     my $output = '';
 
@@ -265,6 +266,7 @@ sub edit_event_page {
         event_notes       => $param_or_field->('event-notes', $event->notes),
         num_dancers_required => $param_or_field->('num-dancers-required', $event->num_dancers_required),
         num_musos_required   => $param_or_field->('num-musos-required', $event->num_musos_required),
+        go_nogo_date      => $param_or_field->('go-nogo-date', $event->go_nogo_date),
     );
     my $output = '';
 

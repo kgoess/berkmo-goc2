@@ -6,6 +6,7 @@ use warnings;
 use Carp qw/croak/;
 use CGI::Cookie;
 use Data::Dump qw/dump/;
+use DateTime;
 
 use GoC::Logger;
 use GoC::Model::Event;
@@ -267,6 +268,18 @@ sub create_event {
         my $event_date = scalar($p{request}->param('event-date')) // '';
         if ($event_date !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
                 push @errors, "wrong format for event-date, should be yyyy-mm-dd, not '$event_date'";
+        } else {
+            validate_date($event_date, \@errors);
+        }
+        my $go_nogo_date;
+       if ($go_nogo_date = scalar($p{request}->param('go-nogo-date')) // '') {
+            if ($go_nogo_date !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
+                    push @errors, "wrong format for go-nogo-date-date, should be yyyy-mm-dd, not '$go_nogo_date'";
+            }
+            validate_date($go_nogo_date, \@errors);
+            if ($go_nogo_date gt $event_date) {
+                push @errors, "go/no-go date $go_nogo_date can't be after event_date $event_date";
+            }
         }
         if (my $email = scalar($p{request}->param('event-notification-email'))) {
             if ($email !~ /^[^@]+@[^@]+\.[a-zA-Z]+$/) {
@@ -294,6 +307,7 @@ sub create_event {
             notes => scalar($r->param('event-notes')),
             num_dancers_required => scalar($r->param('num-dancers-required')),
             num_musos_required => scalar($r->param('num-musos-required')),
+            go_nogo_date => scalar($r->param('go-nogo-date')),
         );
         $event->save;
 
@@ -343,9 +357,26 @@ sub edit_event {
                 push @errors, "value for $f out of range";
             }
         }
-        if (scalar($p{request}->param('event-date'))  !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
-                push @errors, "wrong format for event-date, should be yyyy-mm-dd";
+
+        my $event_date = scalar($p{request}->param('event-date')) ;
+        if ($event_date !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
+                push @errors, qq{wrong format for event-date "$event_date", should be yyyy-mm-dd};
+        } else {
+            validate_date($event_date, \@errors);
         }
+
+        my $go_nogo_date;
+        if ($go_nogo_date = scalar($p{request}->param('go-nogo-date'))) {
+            if ($go_nogo_date !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
+                    push @errors, qq{wrong format for go-nogo-date "$go_nogo_date", should be yyyy-mm-dd};
+            }
+            validate_date($go_nogo_date, \@errors);
+            if ($go_nogo_date gt $event_date) {
+                push @errors, "go/no-go date $go_nogo_date can't be after event_date $event_date";
+            }
+        }
+
+
         if (my $email = scalar($p{request}->param('event-notification-email'))) {
             if ($email !~ /^[^@]+@[^@]+$/) {
                 push @errors, "that doesn't look like an email to me";
@@ -376,6 +407,7 @@ sub edit_event {
         $event->notes(scalar($r->param('event-notes')));
         $event->num_dancers_required(scalar($r->param('num-dancers-required')));
         $event->num_musos_required(scalar($r->param('num-musos-required')));
+        $event->go_nogo_date(scalar($r->param('go-nogo-date')));
         $event->update;
 
         my @delta_log_str;
@@ -588,6 +620,24 @@ sub past_events {
             current_user => $p{current_user},
         ),
     }
+}
+
+sub validate_date {
+    my ($s, $errors) = @_;
+
+    $s =~ /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/
+        or do {
+            push @$errors, "invalid date format, should be yyyy-mm-dd: $s";
+            return;
+        };
+
+     eval {
+         DateTime->new(year => $1, month => $2, day => $3);
+     };
+     if ($@) {
+         push @$errors, qq{date "$s" is not a valid date};
+         return;
+     }
 }
 
 1;

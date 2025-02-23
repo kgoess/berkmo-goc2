@@ -51,6 +51,12 @@
     <br>
     <label for="num-musos-required">Num Musos Required</label>
     <input type="text" size="3" id="num-musos-required" name="num-musos-required" value="[% num_musos_required | html %]">
+    <br>
+    <label for="go-nogo-date">Go/No-Go Date</label>
+    <input type="text" size="10" id="go-nogo-date" name="go-nogo-date" value="[% go_nogo_date | html %]">
+    <script>
+    $( "#go-nogo-date" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    </script>
 </div>
 <div style="margin-top: 10px">
     <label for="event-notes">Notes:</label> <span style="font-size: 75%; font-style: italic;"><a href="https://daringfireball.net/projects/markdown/basics">markdown help</a></span><br>

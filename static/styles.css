@@ -267,6 +267,12 @@ body {
     font-size: 80%;
     font-style: italic;
 }
+#event-card .go-nogo-in {
+    font-size: 80%;
+    font-style: italic;
+    /* slightly less-saturated pink than the default */
+    color:hsl(0deg 100% 37.65% / 67%);
+}
 
 .edit-event-button {
     margin-top: 10px;

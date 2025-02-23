@@ -1,10 +1,11 @@
-#!/Users/kevin/perl5/perlbrew/perls/perl-5.28.2/bin/perl
-#!/usr/bin/perl
+#!/Users/kevin/perl5/perlbrew/perls/perl-5.34.0/bin/perl
 
 use strict;
 use warnings;
 
 use lib '/Users/kevin/git/berkmo-goc2/lib';
+use lib '/Users/kevin/goc-lib/lib/perl5';
+
 
 $ENV{SQLITE_FILE} = '/var/lib/goc/goc.sqlite';
 $ENV{TT_INCLUDE_PATH} = '/Users/kevin/git/berkmo-goc2/templates';
