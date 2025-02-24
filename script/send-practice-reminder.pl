@@ -7,7 +7,7 @@ use 5.16.0;
 use warnings;
 use utf8;
 
-$ENV{GOC_URI_BASE} = '/goc2.cgi';
+$ENV{GOC_URI_BASE} = 'https://berkeleymorris.org/goc2.cgi';
 
 use Email::Stuffer;
 use Getopt::Long;
