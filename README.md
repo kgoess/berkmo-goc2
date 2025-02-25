@@ -6,11 +6,9 @@ A new Grid of Committment
 # Misc notes:
 
 
-/usr/bin/sqlite3 -column -header ~/goc2/db/goc-live.sqlite
-
-
 eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
-# or the old way PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+
+(or the old way PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;)
 
 SQLITE_FILE=$HOME/goc2/db/goc-live.sqlite perl bin/send-attendee-updates.pl
 
@@ -22,6 +20,7 @@ Use e.g. "cpanm DBD::SQLite" to install things (which is in in
 ~/perl5/bin/cpanm but that eval above should set that up for you).
 
 or the old way:
+
     cpan> install Class::Accessor:Lite
     cpan> install DBD::SQLite
     cpan> install DBI
