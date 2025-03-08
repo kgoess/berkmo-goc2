@@ -65,15 +65,15 @@ and make everyone's inboxes easier to manage.
 </div>
 
 <div>
-<div>
+<p>
 <b>Upcoming Gigs:</b>
-</div>
+</p>
 [% PROCESS eventtable
     events = gigs
 -%]
-<div>
+<p>
 <b>Upcoming Parties:</b>
-</div>
+</p>
 [% PROCESS eventtable
     events = parties
 -%]
@@ -94,10 +94,10 @@ and make everyone's inboxes easier to manage.
 [% END -%]
 </div>
 
-<div>
+<p>
 Cheers,<br>
 Your Friendly Neighborhood Practice Reminder Bot
-</div>
+</p>
 
 EOL
 
