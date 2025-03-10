@@ -3,23 +3,20 @@ use strict;
 use warnings;
 
 use Data::Dump qw/dump/;
-use Test::More tests => 41;
+use Test::More tests => 51;
 
 use GoC::Model::Person;
 use GoC::Model::Event;
 use GoC::Model::PersonEventMap;
 use GoC::Utils qw/get_dbh today_ymd yesterday_ymd/;
 
-$ENV{SQLITE_FILE} = 'goctest';
-unlink $ENV{SQLITE_FILE};
-
-GoC::Model::Person->create_table;
-GoC::Model::Event->create_table;
-GoC::Model::PersonEventMap->create_table;
+reset_db();
 
 test_person_CRUD();
 test_event_CRUD();
 test_event_prev_next();
+test_event_prev_next_same_day();
+test_event_prev_may_day();
 test_person_event_map_CRUD();
 test_upcoming_events();
 test_attendee_list_notifications();
@@ -74,6 +71,49 @@ sub test_event_CRUD {
     ok ! GoC::Model::Event->load(1232123);
 }
 sub test_event_prev_next {
+    reset_db();
+
+    my $armistice_day = GoC::Model::Event->new(
+        name => 'armistice day',
+        date => '2021-11-11',
+        type => 'gig',
+    );
+    $armistice_day->save;
+    my $armistice_eve = GoC::Model::Event->new(
+        name => 'armistice eve',
+        date => '2021-11-10',
+        type => 'gig',
+    );
+    $armistice_eve->save;
+    my $day_after_armistice = GoC::Model::Event->new(
+        name => 'day after armistice',
+        date => '2021-11-12',
+        type => 'gig',
+    );
+    $day_after_armistice->save;
+    my $zzz_day_after = GoC::Model::Event->new(
+        name => 'zzz alphabetically after',
+        date => '2021-11-12',
+        type => 'gig',
+    );
+    $zzz_day_after->save;
+    my $party = GoC::Model::Event->new(
+        # first alphabetically, but not a gig
+        name => 'armistice party',
+        date => '2021-11-12',
+        type => 'party',
+    );
+    $party->save;
+
+    my ($prev, $next) = $armistice_day->get_prev_next_ids;
+
+    is $prev, $armistice_eve->id, GoC::Model::Event->load($prev)->name." is the previous event";
+    is $next, $day_after_armistice->id, GoC::Model::Event->load($next)->name." is the next event";
+}
+
+sub test_event_prev_next_same_day {
+    reset_db();
+
     my $event = GoC::Model::Event->new(
         name => 'armistice day',
         date => '2020-11-11',
@@ -110,6 +150,55 @@ sub test_event_prev_next {
 
     is $prev, $event_prev->id, "$prev is the previous event";
     is $next, $event_next->id, "$next is the next event";
+}
+
+# trying to repro the bug
+sub test_event_prev_may_day {
+    reset_db();
+
+    my $event_apr_30 = GoC::Model::Event->new(
+        name => 'april event',
+        date => '2025-04-30',
+        type => 'gig',
+    );
+    $event_apr_30->save;
+    my $event_may1_a = GoC::Model::Event->new(
+        name => 'May Day morning',
+        date => '2025-05-01',
+        type => 'gig',
+    );
+    $event_may1_a->save;
+    my $event_may1_b = GoC::Model::Event->new(
+        name => 'May Day tour',
+        date => '2025-05-01',
+        type => 'gig',
+    );
+    $event_may1_b->save;
+    my $event_may_2 = GoC::Model::Event->new(
+        name => 'may 2 event',
+        date => '2025-05-02',
+        type => 'gig',
+    );
+    $event_may_2->save;
+
+    my ($prev, $next);
+    ($prev, $next) = $event_apr_30->get_prev_next_ids;
+    ok! $prev, 'no prev event to apr 30' or diag "prev is $prev";
+    is $next, $event_may1_a->id, "may 1 b $next is the next event";
+
+    ($prev, $next) = $event_may1_a->get_prev_next_ids;
+    is $prev, $event_apr_30->id, "apr 3 $prev is the previous event $prev";
+    is $next, $event_may1_b->id, "may 1 b $next is the next event" or diag "next is $next";
+
+    ($prev, $next) = $event_may1_b->get_prev_next_ids;
+    is $prev, $event_may1_a->id, "may 1 a $prev is the previous event";
+    is $next, $event_may_2->id, "may 2 $next is the next event" or dump $next;
+
+    ($prev, $next) = $event_may_2->get_prev_next_ids;
+    is $prev, $event_may1_b->id, "may 1 b $prev is the previous event";
+    ok ! $next, "may 2 is the last event" or diag "next is $next";
+
+    GoC::Utils::clear_dbh();
 }
 
 sub test_person_event_map_CRUD {
@@ -341,6 +430,16 @@ sub test_person_get_all {
     is scalar @people, 1;
     is $people[0]->name, 'bob';
 
+}
+
+sub reset_db {
+    GoC::Utils::clear_dbh();
+    $ENV{SQLITE_FILE} = 'goctest';
+    unlink $ENV{SQLITE_FILE};
+
+    GoC::Model::Person->create_table;
+    GoC::Model::Event->create_table;
+    GoC::Model::PersonEventMap->create_table;
 }
 
 

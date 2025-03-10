@@ -233,35 +233,49 @@ sub get_prev_next_ids {
         SELECT id, date, name
         FROM event
         WHERE date <= ?
-        AND id != ?
         AND type = ?
         AND deleted != 1
-        ORDER BY date DESC, name ASC
-        LIMIT 1
+        ORDER BY date DESC, id DESC
+        LIMIT 20 -- will break if > 20 events in a day
 EOL
 
     my $dbh = get_dbh();
     my $sth = $dbh->prepare($sql_prev);
-    $sth->execute($self->date, $self->id, $self->type);
+    $sth->execute($self->date, $self->type);
+    my $pick_next_row;
     my $prev_id;
-    if (my $row = $sth->fetchrow_hashref) {
-        $prev_id = $row->{id};
+    while (my $row = $sth->fetchrow_hashref) {
+        if ($row->{id} == $self->id) {
+            $pick_next_row = 1;
+            next;
+        }
+        if ($pick_next_row) {
+            $prev_id = $row->{id};
+            last;
+        }
     }
     my $sql_next = <<EOL;
         SELECT id, date, name
         FROM event
         WHERE date >= ?
-        AND id != ?
         AND type = ?
         AND deleted != 1
-        ORDER BY date ASC, name ASC
-        LIMIT 1
+        ORDER BY date ASC, id ASC
+        LIMIT 20 -- will break if > 20 events in a day
 EOL
     $sth = $dbh->prepare($sql_next);
-    $sth->execute($self->date, $self->id, $self->type);
+    $sth->execute($self->date, $self->type);
+    $pick_next_row = 0;
     my $next_id;
-    if (my $row = $sth->fetchrow_hashref) {
-        $next_id = $row->{id};
+    while (my $row = $sth->fetchrow_hashref) {
+        if ($row->{id} == $self->id) {
+            $pick_next_row = 1;
+            next;
+        }
+        if ($pick_next_row) {
+            $next_id = $row->{id};
+            last;
+        }
     }
     return $prev_id, $next_id;
 }

@@ -34,6 +34,8 @@ sub get_dbh {
     return $_dbh;
 }
 
+sub clear_dbh { undef $_dbh }; # for tests
+
 $ENV{TZ} = 'America/Los_Angeles';
 
 sub today_ymd {
