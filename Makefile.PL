@@ -6,6 +6,7 @@ WriteMakefile(
     NAME              => 'GoC',
     VERSION_FROM      => 'lib/GoC.pm', # finds $VERSION
     PREREQ_PM         => {
+        'Email::Stuffer' => 0.020,
         'CGI::Cookie' => 4.59,
         DateTime => 1.65,
         JSON => 2.59,
