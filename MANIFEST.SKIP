@@ -1,0 +1,10 @@
+.*\.tar
+.*\.tar.gz
+\.git
+Makefile
+Makefile.old
+MANIFEST.bak
+MYMETA.json
+MYMETA.yml
+goctest
+
