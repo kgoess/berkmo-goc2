@@ -241,7 +241,7 @@ sub get_prev_next_ids {
           AND deleted != 1
         ORDER BY id
     )
-    where id = ?
+    WHERE id = ?
 EOL
     my $dbh = get_dbh();
     my $sth = $dbh->prepare($sql_prev_next);
@@ -485,6 +485,16 @@ EOL
     my $dbh = get_dbh();
     my $sth = $dbh->prepare($sql);
     $sth->execute;
+
+    $sth = $dbh->prepare('CREATE INDEX event_date_idx ON event (date)');
+    $sth->execute;
+    $sth = $dbh->prepare('CREATE INDEX event_date_multi_idx ON event (date, type, deleted)');
+    $sth->execute;
+    $sth = $dbh->prepare('CREATE INDEX event_id_multi_idx ON event (id, type, deleted)');
+    $sth->execute;
+    $sth = $dbh->prepare('CREATE INDEX event_type_idx ON event (type, deleted)');
+    $sth->execute;
+
 }
 
 1;
