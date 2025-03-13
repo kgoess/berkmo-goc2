@@ -229,56 +229,27 @@ EOL
 sub get_prev_next_ids {
     my ($self) = @_;
 
-    my $sql_prev = <<EOL;
-        SELECT id, date, name
+    # https://stackoverflow.com/questions/79498428/how-to-get-previous-next-ids
+    my $sql_prev_next = <<EOL;
+    SELECT id, date, name, prev_id, next_id
+    FROM (
+        SELECT id, date, name,
+        LAG(id, 1) OVER (ORDER BY date,id) AS prev_id,
+        LEAD(id, 1) OVER (ORDER BY date,id) AS next_id
         FROM event
-        WHERE date <= ?
-        AND type = ?
-        AND deleted != 1
-        ORDER BY date DESC, id DESC
-        LIMIT 20 -- will break if > 20 events in a day
+        WHERE type = ?
+          AND deleted != 1
+        ORDER BY id
+    )
+    where id = ?
 EOL
-
     my $dbh = get_dbh();
-    my $sth = $dbh->prepare($sql_prev);
-    $sth->execute($self->date, $self->type);
-    my $pick_next_row;
-    my $prev_id;
-    while (my $row = $sth->fetchrow_hashref) {
-        if ($row->{id} == $self->id) {
-            $pick_next_row = 1;
-            next;
-        }
-        if ($pick_next_row) {
-            $prev_id = $row->{id};
-            last;
-        }
-    }
-    my $sql_next = <<EOL;
-        SELECT id, date, name
-        FROM event
-        WHERE date >= ?
-        AND type = ?
-        AND deleted != 1
-        ORDER BY date ASC, id ASC
-        LIMIT 20 -- will break if > 20 events in a day
-EOL
-    $sth = $dbh->prepare($sql_next);
-    $sth->execute($self->date, $self->type);
-    $pick_next_row = 0;
-    my $next_id;
-    while (my $row = $sth->fetchrow_hashref) {
-        if ($row->{id} == $self->id) {
-            $pick_next_row = 1;
-            next;
-        }
-        if ($pick_next_row) {
-            $next_id = $row->{id};
-            last;
-        }
-    }
-    return $prev_id, $next_id;
+    my $sth = $dbh->prepare($sql_prev_next);
+    $sth->execute($self->type, $self->id);
+    my $row = $sth->fetchrow_hashref;
+    return $row->{prev_id}, $row->{next_id};
 }
+
 sub save {
     my ($self) = @_;
 
