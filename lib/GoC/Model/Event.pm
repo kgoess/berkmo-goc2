@@ -234,12 +234,11 @@ sub get_prev_next_ids {
     SELECT id, date, name, prev_id, next_id
     FROM (
         SELECT id, date, name,
-        LAG(id, 1) OVER (ORDER BY date,id) AS prev_id,
-        LEAD(id, 1) OVER (ORDER BY date,id) AS next_id
+        LAG(id, 1) OVER (ORDER BY date, name, id) AS prev_id,
+        LEAD(id, 1) OVER (ORDER BY date, name, id) AS next_id
         FROM event
         WHERE type = ?
           AND deleted != 1
-        ORDER BY id
     )
     WHERE id = ?
 EOL
