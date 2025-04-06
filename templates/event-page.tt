@@ -7,29 +7,29 @@
 
 <style>
 /* https://www.w3schools.com/howto/howto_css_next_prev.asp */
-#event-name a {
+.event-name a {
   text-decoration: none;
   display: inline-block;
   padding: 4px 8px;
 }
 
-#event-name a:hover {
+.event-name a:hover {
   background-color: #ddd;
   color: black;
 }
 
 
-#event-name .previous {
+.event-name .previous {
   background-color: #ffd0ff;
   color: #C00000;
 }
 
-#event-name .next {
+.event-name .next {
   background-color: #ffd0ff;
   color: #C00000;
 }
 
-#event-name .round {
+.event-name .round {
   border-radius: 50%;
 }
 
