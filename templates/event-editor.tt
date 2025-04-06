@@ -10,7 +10,7 @@
     </div>
 [% END %]
 
-<form method="POST">
+<form method="POST" onsubmit="alert('If these changes warrant, please email the list with a reminder to update the performances page on the website.')" >
 
 [% IF event_id %]
     <input type="hidden" name="event-id" value="[% event_id | html %]">
