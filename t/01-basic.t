@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use Data::Dump qw/dump/;
-use Test::More tests => 51;
+use Test::More tests => 54;
 
 use GoC::Model::Person;
 use GoC::Model::Event;
@@ -17,6 +17,7 @@ test_event_CRUD();
 test_event_prev_next();
 test_event_prev_next_same_day();
 test_event_prev_may_day();
+test_event_go_nogo();
 test_person_event_map_CRUD();
 test_upcoming_events();
 test_attendee_list_notifications();
@@ -200,6 +201,37 @@ sub test_event_prev_may_day {
 
     GoC::Utils::clear_dbh();
 }
+
+sub test_event_go_nogo {
+    reset_db();
+
+    my $event = GoC::Model::Event->new(
+        name => 'april event',
+        date => '2025-04-30',
+        type => 'gig',
+    );
+
+    $event->go_nogo_date('2025-04-20');
+
+    my $now;
+
+    # from April 1
+    $now = DateTime->new(year => 2025, month => 4, day => 1);
+    is $event->get_days_until_go_nogo($now), 19, '4/1-4/20 is 19 days';
+    # reset the cached value
+    $event->_days_until_go_nogo(undef);
+
+    # from March 1
+    $now = DateTime->new(year => 2025, month => 3, day => 1);
+    is $event->get_days_until_go_nogo($now), 50, '3/1-4/20 is 50 days';
+    # reset the cached value
+    $event->_days_until_go_nogo(undef);
+
+    # from a year ago
+    $now = DateTime->new(year => 2024, month => 4, day => 20);
+    is $event->get_days_until_go_nogo($now), 365, "a year's difference is 365 days";
+}
+
 
 sub test_person_event_map_CRUD {
 

@@ -139,7 +139,9 @@ EOL
 }
 
 sub get_days_until_go_nogo {
-    my ($self) = @_;
+    my ($self, $now) = @_;
+
+    $now ||= DateTime->now();
 
     if (my $days_until = $self->_days_until_go_nogo) {
         return $days_until
@@ -152,9 +154,7 @@ sub get_days_until_go_nogo {
         or return;
     my $go_nogo_dt = DateTime->new(year => $y, month => $m, day => $d);
 
-    my $now = DateTime->now();
-
-    my $delta = $go_nogo_dt->subtract_datetime($now)->delta_days();
+    my $delta = $go_nogo_dt->delta_days($now)->delta_days();
 
     $self->_days_until_go_nogo($delta);
 
