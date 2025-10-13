@@ -93,6 +93,23 @@ sub exhortation {
         q{Who acts from love is greater than who acts from fear. And who updates the grid beats them all.},
         q{There is no such thing as a small act; there are only small people. And the ones who don't update the grid.},
         q{Who is wise? He who learns from all men. And who is coming to this event? He who updates the grid.},
+        q{Go placidly amid the noise and haste and remember what peace there may be in updating the grid.},
+        q{Beyond a wholesome discipline, be gentle with yourself. You are a child of the universe no less than the trees and the stars; you have a right to be here. But you should still update the grid with your plans.},
+        q{Blessed are the meek, for they shall inherit the earth. Except the ones who didn't upgrade the grid; they don't get nothin.},
+        q{Neither a borrower, nor a lender be;
+For loan oft loses both itself and friend,
+And borrowing dulls the edge of husbandry.
+This above all: to thine own self be true,
+And it must follow, as the night the day,
+That thou will update the grid.},
+        q{Whan that Aprille with his shoures soote,
+The droghte of March hath perced to the roote,
+And bathed every veyne in swich licóur
+Of which vertú engendred is the flour;
+Whan Dancers eek with their keene pens
+The grid updated, so their plans we ken,
+The Musos also, soon to be playing
+Their golden songs, to set us all heying.}
     );
     my $exhortation = $exhortations[rand @exhortations];
     return $exhortation;
