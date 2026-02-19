@@ -44,22 +44,9 @@ Hello everyone,
 </div>
 
 <div>
-Practice tonight will be held <strong>IN THE NEW HALL</strong> at the Berkeley Fellowship of
+Practice tonight will be held at the Berkeley Fellowship of
 Unitarian Universalists hall at 1606 Bonita Ave., Berkeley, CA 94709
 </div>
-<br>
-
-<div>
-<b>🚨 COVID precautions 🚨</b>
-<ul>
-    <li>You must have received a negative result (and not a positive result) on a
-    rapid test sometime in the 24 hours leading up to practice. If you're out of
-    tests, just ask! We can help each other out.
-    <li>You must be fully vaccinated + boosted
-    <li>Masks encouraged
-</ul>
-</div>
-
 <div>
 Not going to make it? Reply to this message with your best excuse, real or
 fictional. This will keep practice-related conversation confined to one thread
