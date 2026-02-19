@@ -5,9 +5,17 @@
 
 use strict;
 use warnings;
+use utf8;
 
+use Encode qw/encode_utf8/;
+
+use GoC::MailSender;
 use GoC::Model::Event;
 use GoC::Utils qw/today_ymd/;
+
+if (@ARGV) {
+    die "this script takes no arguments";
+}
 
 my @events = GoC::Model::Event->get_pending_new_event_notifications;
 
@@ -24,21 +32,16 @@ foreach my $event (@events) {
 sub send_group_notification {
     my ($event) = @_;
 
-    my $target_address = 'berkmorris-business@berkeley-morris.org';
-    $ENV{REPLYTO} = 'berkmorris-business@berkeley-morris.org';
-    #$ENV{REPLYTO} = 'kevin@goess.org';
+    my $target_address = 'Berkeley Morris <berkmorris-business@groups.io>';
 
     my ($name, $date, $type) = ($event->name, $event->date, $event->type);
 
-    (my $clean_name = $name) =~ s/[^\w _.-]//g;
     $date =~ s/[^\d-]//g;
 
+    my $subject = "a new $type on the grid: $name";
+
     my $exhortation = exhortation();
-
-
-    open my $fh, '|-', "/usr/bin/mail -s 'a new $type on the grid: $clean_name' $target_address"
-        or die "can't pipe to mail $!";
-    print $fh <<EOL;
+    my $text_part = <<EOL;
 A new $type has been added to the grid of commitment!
 
     $date $name
@@ -51,25 +54,19 @@ https://www.berkeleymorris.org/goc2.cgi
 --The Grid of Committment
 
 EOL
-    close $fh or die "can't write to mail $!";
 
+    my $sender = GoC::MailSender->new(
+        to => $target_address,
+        subject => encode_utf8($subject),
+    );
 
-    open $fh, '|-', "/usr/bin/mail -s 'a new $type on the grid: $clean_name' kevin\@goess.org"
-        or die "can't pipe to mail $!";
-    print $fh <<EOL;
-A new $type has been added to the grid of commitment!
+    $sender->attach(
+        Data => encode_utf8($text_part),
+        Type => 'text/plain',
+        Encoding => 'binary',
+    );
 
-    $date $name
-
-$exhortation
-
-https://www.berkeleymorris.org/goc2.cgi
-
-
---The Grid of Committment
-
-EOL
-    close $fh or die "can't write to mail $!";
+    $sender->send();
 }
 
 sub exhortation {

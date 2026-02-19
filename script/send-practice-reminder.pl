@@ -9,28 +9,30 @@ use utf8;
 
 $ENV{GOC_URI_BASE} = 'https://berkeleymorris.org/goc2.cgi';
 
-use Email::Stuffer;
+use Encode qw/encode_utf8/;
 use Getopt::Long;
 
 use GoC::View;
+use GoC::MailSender;
 use GoC::Model::Event;
 use GoC::Utils qw/uri_escape/;
 
-my ($from, $to, $help);
+my ($to, $help);
 GetOptions(
-    'from=s' => \$from,
     'to=s' => \$to,
     'h|help' => \$help,
 );
 
-if (!($from && $to) || $help) {
-    my $usage = <<'EOL';
+if (!($to) || $help) {
+    my $usage = <<EOL;
 
     usage: $0
-        --from    'alice <alice@example.com>'
-        --to      'bob <bob@example.com>'
+        --to 'bob <bob\@example.com>'
+        --debug
 
         -h|--help this help
+
+    set SMTP_DEBUG=1 for some output
 EOL
     say $usage;
     exit 1;
@@ -114,35 +116,20 @@ my %vars = (
 $tt->process(\$html_part_template, \%vars, \$html_part)
     or die $tt->error;
 
-my $sendmail_to = $to;
-if ($sendmail_to =~ /<(.+)?>/) {
-    $sendmail_to = $1;
-}
-
 my $subject = 'Practice reminder + excuses thread';
 
-my $stuffer = Email::Stuffer
-    ->from       ($from)
-    ->to         ($to)
-    ->subject    ($subject)
-    #->text_body  ($text_part)
-    ->html_body($html_part)
-;
+my $sender = GoC::MailSender->new(
+    to => $to,
+    subject => $subject,
+);
 
-#open my $logfh, ">", "/home/lucybear/berkeleymorris.org/kgtesting.html";
-#say $logfh '<html>';
-#say $logfh scalar localtime;
-#say $logfh $stuffer->as_string;
-#say $logfh '</html>';
-#close $logfh;
-#exit;
+$sender->attach(
+    Data => encode_utf8($html_part),
+    Type => 'text/html',
+    Encoding => 'binary',
+);
 
-open my $fh, '|-', "/usr/sbin/sendmail -i $sendmail_to"
-    or die "can't pipe to mail $!";
-
-print $fh $stuffer->as_string;
-
-close $fh or die "can't write to mail $!";
+$sender->send();
 
 
 # copied from GoC::Controller::ModPerl because moving it to a shared spot is

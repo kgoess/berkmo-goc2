@@ -3,7 +3,14 @@
 use strict;
 use warnings;
 
+use Encode qw/encode_utf8/;
+
+use GoC::MailSender;
 use GoC::Model::Event;
+
+if (@ARGV) {
+    die "this script takes no arguments";
+}
 
 my $gigs = GoC::Model::Event->get_upcoming_events(type => 'gig');
 
@@ -15,17 +22,21 @@ foreach my $gig (@$gigs) {
 
     next unless $updates;
 
-    (my $clean_event_name = $gig->name) =~ s/[^\w _.-]//g;
+    my $event_name = $gig->name;
 
-    my $target_address = quotemeta $notification_email;
+    my $sender = GoC::MailSender->new(
+        to => $notification_email,
+        subject => encode_utf8($event_name),
+    );
 
-    print "sending update for $clean_event_name to $notification_email:\n$updates\n\n" if -t STDIN;
-    open my $fh, '|-', "/usr/bin/mail -s 'attendee list has changed for $clean_event_name' $target_address" 
-        or die "can't pipe to mail $!";
+    $sender->attach(
+        Data => encode_utf8($updates),
+        Type => 'text/plain',
+        Encoding => 'binary',
+    );
 
-    print $fh $updates;
+    $sender->send();
 
-    close $fh or die "can't write to mail $!";
-    # bvh doesn't have /usr/bin/mail, see /usr/local/bin/check-dyn-ip.pl for alternative
+    print "sending update for $event_name to $notification_email:\n$updates\n\n" if -t STDIN;
 }
 
