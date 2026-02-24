@@ -37,6 +37,6 @@ and in crontab -e
 
     3   *   *   *   *   /home/lucybear/bin/send-event-notifications.pl
     5   5   *   *   *   /home/lucybear/bin/send-attendee-updates.pl
-    8   8   *   *   2   /home/lucybear/bin/send-practice-reminder.pl --from 'Berkmo Bot <notifications@berkeleymorris.org>' --to 'Berkeley Morris <berkmorris-business@groups.io>'
+    8   8   *   *   2   /home/lucybear/bin/send-practice-reminder.pl --to 'Berkeley Morris <berkmorris-business@groups.io>'
     15  3   *   *   *   cp $SQLITE_FILE $SQLITE_FILE.bak
     17  3   *   *   *   cp $SQLITE_FILE $SQLITE_FILE.`date +\%Y-\%m`.bak
