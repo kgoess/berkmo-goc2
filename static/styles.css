@@ -34,6 +34,7 @@ body {
     color: #C00000;
     font-family: Verdana,Arial,sans-serif;
     background: #ffd0ff;
+    background: radial-gradient(circle, rgba(255, 184, 255, 1) 0%, rgba(247, 136, 247, 1) 52%, rgba(255, 208, 255, 1) 100%);
     margin: 80px;
     max-width: 70em;
 }
@@ -219,9 +220,23 @@ body {
     text-align: center;
     border-radius: 25px;
 }
-#site-title:active {
-    color:red;
+#site-title:hover {
+    color: #fa6164;
 }
+
+/* animate the "The Grid" element, this is just me being whimsical
+ * too much? distracting? I'll bet a nickel no one will ever mention it
+ * */
+@keyframes colorChange {
+  0%  { background-color: #ffe5ff; }
+  50%   { background-color: #ffd0ff; }
+  100% { background-color: #f57ff5; }
+}
+#site-title {
+  /* name | duration | timing-function | iteration-count */
+  animation: colorChange 10s infinite alternate;
+}
+
 #current-user {
     float: right;
 }
