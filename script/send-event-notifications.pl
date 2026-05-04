@@ -106,7 +106,40 @@ Of which vertú engendred is the flour;
 Whan Dancers eek with their keene pens
 The grid updated, so their plans we ken,
 The Musos also, soon to be playing
-Their golden songs, to set us all heying.}
+Their golden songs, to set us all heying.},
+        q{Gregor Samsa awoke one morning from a night of uneasy dreams to find he had not updated the grid. Don't be Gregor Samsa!},
+        q{It was about eleven o'clock on the morning, mid October, with the sun not shing and a look of hard wet rain in the clarness of the foothills I was weaering my powder-blue suit, with dark blue shirt, tie and display handkerchief, black brogues, black wool socks with dark blue clocks on them. I was neat, clean, shaved and sober, and I didn't care who knew it. I was everything the well-dressed private detective out to be. I was updating the grid.},
+        q{Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people's hats off - then, I account it high time to sign up for things on the grid.},
+        q{Squeeze! Squeeze! Squeeze! all the morning long; I squeezed that sperm till I myself almost melted into it; I squeezed that sperm till a strange sort of insanity came over me, and I found myself unwittingly squeezing my co-labourers' hands in it, mistaking their hands for the gentle globules. Such an abounding, affectionate, friendly, loving feeling did this avocation beget; that at last I was continually squeezing their hands, and looking up into their eyes sentimentally, as much as to say,—Oh! my dear fellow beings, why should we longer cherish any social acerbities, or know the slightest ill humour or envy! Come; let us squeeze hands all round; nay, let us all squeeze ourselves into each other; let us squeeze ourselves universally into the very milk and sperm of kindness. Let us click on the link to the grid and share our plans, hopes, dreams and aspirations with our beloved teammates and fellow dancers!},
+        q{Full fathom five thy father lies;
+Of his bones are coral made;
+Those are pearls that were his eyes:
+Nothing of him that doth fade,
+But doth suffer a sea-change
+Into something rich and worth updating the grid about.},
+        q{In a hole in the ground there lived a hobbit. Not a nasty, dirty, wet hole, filled with the ends of worms and an oozy smell, nor yet a dry, bare, sandy hole with nothing in it to sit down on or to eat: it was a hobbit-hole, and that means updating the grid.},
+        q{Build thee more stately mansions, O my soul,
+As the swift seasons roll!
+Leave thy low-vaulted past!
+Let each new temple, nobler than the last,
+Shut thee from heaven with a dome more vast,
+Till thou at length art free,
+And can include your teammates in your plans by updating the grid!},
+        q{The sun rises and the sun sets, and hurries back to where it rises.
+The wind blows to the south and turns to the north;
+round and round it goes, ever returning on its course.
+All streams flow into the sea, yet the sea is never full.
+Gigs are added to the grid, and teammates faithfully update it with their plans. Right? Right? That means you!},
+        q{And those who were seen dancing were thought to be insane by those who could not hear the music. But at least they had updated the grid.},
+        q{I do not promise you much,
+Because it is almost nothing.
+At most, the green of spring,
+And sunny days.
+At most, a smiling face,
+And a hand in need.
+I do not promise you much,
+For I offer simply myself.
+So why don't you update the grid already?},
     );
     my $exhortation = $exhortations[rand @exhortations];
     return $exhortation;
