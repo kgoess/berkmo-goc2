@@ -428,7 +428,7 @@ sub past_events {
 
     my $tt = get_tt();
 
-    my $events = GoC::Model::Event->get_past_events(limit => 50);
+    my $events = GoC::Model::Event->get_past_events(limit => 100);
 
     my $template = 'past-events.tt';
     my $vars = get_vars(
