@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use Data::Dump qw/dump/;
-
+use HTML::Entities qw/decode_entities/;
 use Test::More tests => 52;
 
 use GoC::Controller;
@@ -299,7 +299,7 @@ sub test_edit_person {
         current_user => $user,
     );
     is $result->{action}, 'display';
-    like $result->{content}, qr/You can't change the person's name to a blank/;
+    like decode_entities($result->{content}), qr/You can't change the person's name to a blank/;
 
     # test success
     $request->{'person-name'} = 'Faithe the Healer';
